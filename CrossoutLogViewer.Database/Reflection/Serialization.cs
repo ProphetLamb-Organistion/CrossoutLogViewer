@@ -3,6 +3,7 @@ using CrossoutLogView.Database.Connection;
 
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,7 +12,7 @@ namespace CrossoutLogView.Database.Reflection
 {
     public static class Serialization
     {
-        private static Dictionary<Guid, TableRepresentation> generatedTableRepresentations = new Dictionary<Guid, TableRepresentation>();
+        private static ConcurrentDictionary<Guid, TableRepresentation> generatedTableRepresentations = new ConcurrentDictionary<Guid, TableRepresentation>();
         public static TableRepresentation GetTableRepresentation(Type type, Type[] databaseReferenceTypes)
         {
             if (Types.IsGenericIEnumerable(type))
@@ -26,12 +27,12 @@ namespace CrossoutLogView.Database.Reflection
                 rep = databaseReferenceTypes.Contains(type)
                     ? TableRepresentation.Reference
                     : TableRepresentation.Store;
-                generatedTableRepresentations.Add(type.GUID, rep);
+                generatedTableRepresentations.AddOrUpdate(type.GUID, rep, (guid, r) => rep);
                 return rep;
             }
         }
 
-        private static Dictionary<Guid, Func<object, string>> generatedSerializers = new Dictionary<Guid, Func<object, string>>();
+        private static ConcurrentDictionary<Guid, Func<object, string>> generatedSerializers = new ConcurrentDictionary<Guid, Func<object, string>>();
         public static Func<object, string> GetSerializer(Type primitiveType)
         {
             if (generatedSerializers.TryGetValue(primitiveType.GUID, out var func)) return func;
@@ -49,10 +50,10 @@ namespace CrossoutLogView.Database.Reflection
                 || primitiveType == typeof(long))
                 func = x => Base85.Encode(Convert.ToInt64(x));
             else throw new InvalidOperationException();
-            generatedSerializers.Add(primitiveType.GUID, func);
+            generatedSerializers.AddOrUpdate(primitiveType.GUID, func, (guid, s) => func);
             return func;
         }
-        private static Dictionary<Guid, Func<string, object>> generatedDeserializers = new Dictionary<Guid, Func<string, object>>();
+        private static ConcurrentDictionary<Guid, Func<string, object>> generatedDeserializers = new ConcurrentDictionary<Guid, Func<string, object>>();
         public static Func<string, object> GetDeserializer(Type primitiveType)
         {
             if (generatedDeserializers.TryGetValue(primitiveType.GUID, out var func)) return func;
@@ -68,7 +69,7 @@ namespace CrossoutLogView.Database.Reflection
                 || primitiveType == typeof(long))
                 func = x => Convert.ChangeType(Base85.DecodeInt64(x), primitiveType);
             else throw new InvalidOperationException();
-            generatedDeserializers.Add(primitiveType.GUID, func);
+            generatedDeserializers.AddOrUpdate(primitiveType.GUID, func, (guid, s) => func);
             return func;
         }
 

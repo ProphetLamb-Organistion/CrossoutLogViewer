@@ -4,6 +4,7 @@ using CrossoutLogView.Statistics;
 
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
@@ -350,41 +351,43 @@ namespace CrossoutLogView.Database.Connection
                                 conditions[i] = RowIdName + " = " + rowIds[i];
                             }
                             var requestCommand = GetRequestString(itemType, true) + " WHERE " + String.Join(" OR ", conditions);
-                            var additions = new List<object>();
+                            var additions = new ConcurrentQueue<object>();
                             RequestRowIds.Clear();
                             if (vi.Name.Equals(nameof(User.Weapons), StringComparison.InvariantCulture))
                             {
                                 var weapons = ExecuteRequest<Weapon>(requestCommand);
+                                var requestRowIds = RequestRowIds.ToArray();
                                 Parallel.ForEach(user.Weapons, new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount * 2 },
                                 delegate (Weapon userWeapon)
                                 {
                                     var dbWeaponIndex = weapons.FindIndex(x => Strings.NameEquals(x.Name, userWeapon.Name));
                                     if (dbWeaponIndex == -1) //add new weapon
                                     {
-                                        lock (additions) additions.Add(userWeapon);
+                                        additions.Enqueue(userWeapon);
                                     }
                                     else //merge & update existing weapon
                                     {
                                         UpdateValues(weapons[dbWeaponIndex].Merge(userWeapon), VariableInfo.FromType(itemType), itemType.Name,
-                                            RowIdName + " == " + RequestRowIds[dbWeaponIndex]);
+                                            RowIdName + " == " + requestRowIds[dbWeaponIndex]);
                                     }
                                 });
                             }
                             else if (vi.Name.Equals(nameof(User.Stripes), StringComparison.InvariantCulture))
                             {
                                 var stripes = ExecuteRequest<Stripe>(requestCommand);
+                                var requestRowIds = RequestRowIds.ToArray();
                                 Parallel.ForEach(user.Stripes, new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount * 2 },
                                 delegate (Stripe userStripe)
                                 {
                                     var dbStripeIndex = stripes.FindIndex(x => Strings.NameEquals(x.Name, userStripe.Name));
                                     if (dbStripeIndex == -1) //add new stripe
                                     {
-                                        lock (additions) additions.Add(userStripe);
+                                        additions.Enqueue(userStripe);
                                     }
                                     else //merge & update existing stripe
                                     {
                                         UpdateValues(Stripe.Merge(stripes[dbStripeIndex], userStripe), VariableInfo.FromType(itemType), itemType.Name,
-                                            "rowid == " + RequestRowIds[dbStripeIndex]);
+                                            "rowid == " + requestRowIds[dbStripeIndex]);
                                     }
                                 });
                             }

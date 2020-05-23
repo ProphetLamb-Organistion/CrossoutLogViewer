@@ -1,6 +1,7 @@
 ﻿using CrossoutLogView.Common;
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -33,7 +34,7 @@ namespace CrossoutLogView.Database.Reflection
             Header = header;
         }
 
-        private static Dictionary<Guid, MemberDefinitionData> memberDefintionData = new Dictionary<Guid, MemberDefinitionData>();
+        private static ConcurrentDictionary<Guid, MemberDefinitionData> memberDefintionData = new ConcurrentDictionary<Guid, MemberDefinitionData>();
         public static MemberDefinitionData FromType(Type type)
         {
             //try to return cached data
@@ -50,7 +51,7 @@ namespace CrossoutLogView.Database.Reflection
             Array.Sort(columns, sortingKeys);
             varInfos = varInfos.SortByKeys(sortingKeys);
             data = new MemberDefinitionData(varInfos, String.Join(", ", columns));
-            memberDefintionData.Add(type.GUID, data);
+            memberDefintionData.AddOrUpdate(type.GUID, data, (guid, memb) => data);
             return data;
         }
     }

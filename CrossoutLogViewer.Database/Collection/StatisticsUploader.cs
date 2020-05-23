@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace CrossoutLogView.Database.Collection
 {
@@ -19,26 +20,40 @@ namespace CrossoutLogView.Database.Collection
 
         public static InvalidateCachedDataEventHandler InvalidateCachedData;
 
-        public StatisticsUploader(long beginTimeStamp)
+        public StatisticsUploader(long beginTimeStamp, UploaderOperatingMode operatingMode = UploaderOperatingMode.Incremental)
         {
             LogEntryTimeStampLowerLimit = beginTimeStamp;
+            OperatingMode = operatingMode;
         }
 
         public long LogEntryTimeStampLowerLimit { get; private set; }
 
+        public UploaderOperatingMode OperatingMode { get; }
+
         public void Commit()
         {
+            if (OperatingMode != UploaderOperatingMode.Incremental) throw new InvalidOperationException();
             List<ILogEntry> delta;
             using (var logCon = new LogConnection())
             {
                 logCon.Open();
-                delta = logCon.RequestAll(LogEntryTimeStampLowerLimit).ToList();
+                delta = logCon.RequestAll(LogEntryTimeStampLowerLimit);
                 logCon.Close();
             }
             if (delta.Count == 0) return;
-
             delta.Sort(new LogEntryTimeStampAscendingComparer());
-            LogEntryTimeStampLowerLimit = delta[delta.Count - 1].TimeStamp + 1; //move begin to after latest logentry
+            InternalCommit(delta);
+        }
+
+        public void Commit(IEnumerable<ILogEntry> sortedLogs)
+        {
+            if (OperatingMode != UploaderOperatingMode.Unchecked) throw new InvalidOperationException();
+            InternalCommit(sortedLogs);
+        }
+
+        private void InternalCommit(IEnumerable<ILogEntry> delta)
+        {
+            LogEntryTimeStampLowerLimit = delta.Last().TimeStamp + 1; //move begin to after latest logentry
 
             bool hasFinish = false;
             foreach (var l in delta)
@@ -57,7 +72,7 @@ namespace CrossoutLogView.Database.Collection
                 {
                     gameLog.Add(l);
                     if (l is GameFinish) hasFinish = true;
-                }                
+                }
             }
             if (games.Count != 0) //games were finished in the added logs
             {
@@ -78,10 +93,6 @@ namespace CrossoutLogView.Database.Collection
                             statCon.UpdateUser(u);
                             userIDs.Add(u.UserID);
                         }
-                        trans.Commit();
-                    }
-                    using (var trans = statCon.BeginTransaction())
-                    {
                         foreach (var w in WeaponGlobal.ParseWeapons(games))
                         {
                             statCon.UpdateWeaponGlobal(w);
@@ -107,6 +118,13 @@ namespace CrossoutLogView.Database.Collection
                 FinalizeGameLog();
             }
             gameLog.Clear();
+            yield = false;
+        }
+
+        public void Clear()
+        {
+            gameLog.Clear();
+            games.Clear();
             yield = false;
         }
 

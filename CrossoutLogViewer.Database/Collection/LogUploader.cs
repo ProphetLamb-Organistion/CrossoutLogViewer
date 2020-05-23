@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace CrossoutLogView.Database.Collection
 {
@@ -18,7 +20,9 @@ namespace CrossoutLogView.Database.Collection
         private StreamReader streamReader;
         private long linePosition = 0;
 
-        public LogUploader(string logPath)
+        public static LogUploadEventEventHandler LogUploadEvent;
+
+        public LogUploader(string logPath, UploaderOperatingMode operatingMode = UploaderOperatingMode.Incremental)
         {
             if (!PathUtility.TryParseCrossoutLogDirectoryName(PathUtility.GetDirectoryName(logPath), out var logDate))
                 throw new ArgumentException("Directory name doesnot fullfill format requirement.", nameof(logPath));
@@ -26,14 +30,13 @@ namespace CrossoutLogView.Database.Collection
             collector = new LogCollector(logDate);
             fileStream = new FileStream(logPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             streamReader = new StreamReader(fileStream);
+            OperatingMode = operatingMode;
         }
 
-        public LogUploader(DateTime logDate, StreamReader reader)
-        {
-            collector = new LogCollector(logDate);
-            fileStream = null;
-            streamReader = reader;
-        }
+        public UploaderOperatingMode OperatingMode { get; }
+
+        private List<ILogEntry> _combined = new List<ILogEntry>();
+        public IEnumerable<ILogEntry> Combined { get => OperatingMode == UploaderOperatingMode.Unchecked ? _combined : throw new InvalidOperationException(); }
 
         public void Reposition(long linePos)
         {
@@ -58,7 +61,7 @@ namespace CrossoutLogView.Database.Collection
             string lineStr;
             while ((lineStr = streamReader.ReadLine()) != null)
             {
-                collector.TryAdd(lineStr);
+                if (collector.TryAdd(lineStr) && OperatingMode == UploaderOperatingMode.Unchecked) _combined.Add(collector.Current);
                 read++;
             }
             linePosition += read;
@@ -69,9 +72,11 @@ namespace CrossoutLogView.Database.Collection
         {
             using var logCon = new LogConnection();
             logCon.Open();
+            var oldTimeStamp = OperatingMode == UploaderOperatingMode.Incremental ? logCon.RequestNewestLogEntryTimeStamp() : 0;
             //upload collected logs
-            using (var trans = logCon.BeginTransaction())
+            Task.WaitAll(Task.Run(async delegate
             {
+                using var trans = await logCon.BeginTransactionAsync();
                 logCon.Insert(collector.DamageList);
                 logCon.Insert(collector.DecalList);
                 logCon.Insert(collector.FinishGameList);
@@ -86,7 +91,9 @@ namespace CrossoutLogView.Database.Collection
                 logCon.Insert(collector.StartGameList);
                 logCon.Insert(collector.StartTestDriveList);
                 trans.Commit();
-            }
+            }));
+            if (OperatingMode == UploaderOperatingMode.Incremental)
+                LogUploadEvent?.Invoke(this, new LogUploadEventArgs(new DateTime(oldTimeStamp), new DateTime(logCon.RequestNewestLogEntryTimeStamp())));
             logCon.Dispose();
             collector.ClearAll();
         }

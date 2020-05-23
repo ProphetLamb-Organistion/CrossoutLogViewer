@@ -169,10 +169,11 @@ namespace CrossoutLogView.Database
                 Parallel.ForEach(unprocessedLogs, new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount * 2 },
                     delegate (string dir)
                 {
-                    using var uploader = new LogUploader(dir);
-                    uploader.Parse();
-                    uploader.Upload();
-                    uploader.Dispose();
+                    using var logUploader = new LogUploader(dir, UploaderOperatingMode.Unchecked);
+                    using var statUploader = new StatisticsUploader(-1, UploaderOperatingMode.Unchecked);
+                    logUploader.Parse();
+                    logUploader.Upload();
+                    statUploader.Commit(logUploader.Combined);
                 });
             }
             else Logging.WriteLine<ControlService>("Found none.");

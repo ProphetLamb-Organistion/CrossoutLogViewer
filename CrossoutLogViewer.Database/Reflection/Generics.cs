@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -23,7 +24,7 @@ namespace CrossoutLogView.Database.Reflection
             return ienumerable;
         }
 
-        private static Dictionary<Guid, MethodInfo> generatedGernericIEnumerableCast = new Dictionary<Guid, MethodInfo>();
+        private static ConcurrentDictionary<Guid, MethodInfo> generatedGernericIEnumerableCast = new ConcurrentDictionary<Guid, MethodInfo>();
         public static MethodInfo GetEnumerableCast(Type itemType)
         {
             //try to get cached or make generic cast method for the type
@@ -31,12 +32,12 @@ namespace CrossoutLogView.Database.Reflection
             {
                 method = typeof(Enumerable).GetMethod(nameof(Enumerable.Cast)).MakeGenericMethod(itemType);
                 //cache methodinfo
-                generatedGernericIEnumerableCast.Add(itemType.GUID, method);
+                generatedGernericIEnumerableCast.AddOrUpdate(itemType.GUID, method, (guid, mi) => method);
             }
             return method;
         }
 
-        private static Dictionary<Guid, MethodInfo> generatedGernericToList = new Dictionary<Guid, MethodInfo>();
+        private static ConcurrentDictionary<Guid, MethodInfo> generatedGernericToList = new ConcurrentDictionary<Guid, MethodInfo>();
         public static MethodInfo GetGenericToList(Type itemType)
         {
             //try to get cached or make generic cast method for the type
@@ -44,12 +45,12 @@ namespace CrossoutLogView.Database.Reflection
             {
                 method = typeof(Enumerable).GetMethod(nameof(Enumerable.ToList)).MakeGenericMethod(itemType);
                 //cache methodinfo
-                generatedGernericToList.Add(itemType.GUID, method);
+                generatedGernericToList.AddOrUpdate(itemType.GUID, method, (guid, mi) => method);
             }
             return method;
         }
 
-        private static Dictionary<Guid, MethodInfo> generatedGernericToArray = new Dictionary<Guid, MethodInfo>();
+        private static ConcurrentDictionary<Guid, MethodInfo> generatedGernericToArray = new ConcurrentDictionary<Guid, MethodInfo>();
         public static MethodInfo GetGenericToArray(Type itemType)
         {
             //try to get cached or make generic cast method for the type
@@ -57,7 +58,7 @@ namespace CrossoutLogView.Database.Reflection
             {
                 method = typeof(Enumerable).GetMethod(nameof(Enumerable.ToArray)).MakeGenericMethod(itemType);
                 //cache methodinfo
-                generatedGernericToList.Add(itemType.GUID, method);
+                generatedGernericToList.AddOrUpdate(itemType.GUID, method, (guid, mi) => method);
             }
             return method;
         }

@@ -3,12 +3,13 @@ using CrossoutLogView.Database.Reflection;
 
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
 using System.Linq;
 using System.Reflection;
-
+using System.Threading.Tasks;
 using static CrossoutLogView.Common.SQLiteFormat;
 using static CrossoutLogView.Database.Reflection.Serialization;
 
@@ -36,11 +37,16 @@ namespace CrossoutLogView.Database.Connection
 
         public long LastInsertRowId => connection.LastInsertRowId;
 
-        public List<long> RequestRowIds { get; } = new List<long>();
+        public ConcurrentBag<long> RequestRowIds { get; } = new ConcurrentBag<long>();
 
         public SQLiteTransaction BeginTransaction()
         {
             return connection.BeginTransaction();
+        }
+
+        public async ValueTask<IDbTransaction> BeginTransactionAsync()
+        {
+            return await connection.BeginTransactionAsync();
         }
 
         /// <summary>
@@ -276,7 +282,7 @@ namespace CrossoutLogView.Database.Connection
             return obj;
         }
 
-        private static Dictionary<(Guid GUID, TableRepresentation Included), string> requestVariableInfos = new Dictionary<(Guid GUID, TableRepresentation Incuded), string>();
+        private static ConcurrentDictionary<(Guid GUID, TableRepresentation Included), string> requestVariableInfos = new ConcurrentDictionary<(Guid GUID, TableRepresentation Incuded), string>();
         /// <summary>
         /// Returns the SQLite REQUEST string for a given type, requesting only reference and stored fields, never arrays or refernce arrays.
         /// </summary>
@@ -288,9 +294,10 @@ namespace CrossoutLogView.Database.Connection
         {
             if (!requestVariableInfos.TryGetValue((type.GUID, includedTableRepresentation), out var varInfoString))
             {
-                requestVariableInfos.Add((type.GUID, includedTableRepresentation), varInfoString = String.Join(", ", includedTableRepresentation == TableRepresentation.All
+                requestVariableInfos.AddOrUpdate((type.GUID, includedTableRepresentation), varInfoString = String.Join(", ", includedTableRepresentation == TableRepresentation.All
                     ? VariableInfo.FromType(type).Select(x => x.Name.ToLowerInvariant())
-                    : VariableInfo.FromType(type).Where(x => MaskFilter(GetTableRepresentation(x.VariableType, DatabaseTableTypes), includedTableRepresentation)).Select(x => x.Name.ToLowerInvariant())));
+                    : VariableInfo.FromType(type).Where(x => MaskFilter(GetTableRepresentation(x.VariableType, DatabaseTableTypes), includedTableRepresentation)).Select(x => x.Name.ToLowerInvariant())),
+                    ((Guid, TableRepresentation) key, string value) => value);
             }
             return String.Format(FormatRequest, (includeRowId ? RowIdName + ", " : String.Empty) + varInfoString, type.Name);
         }
