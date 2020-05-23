@@ -1,0 +1,174 @@
+﻿<Page x:Class="CrossoutLogView.GUI.Navigation.PlayerPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      mc:Ignorable="d"
+      xmlns:models="clr-namespace:CrossoutLogView.GUI.Models"
+      xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+      d:DesignHeight="500"
+      d:DesignWidth="600"
+      Title="PlayerPage">
+    <Page.Resources>
+        <Style x:Key="WonLostBackground"
+               TargetType="WrapPanel">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Won}" Value="True">
+                    <Setter Property="Background"
+                            Value="{DynamicResource TeamWon}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Won}"
+                             Value="False">
+                    <Setter Property="Background"
+                            Value="{DynamicResource TeamLost}" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </Page.Resources>
+    
+    <Grid>
+        <WrapPanel Orientation="Horizontal"
+                   Style="{DynamicResource WonLostBackground}"
+                   Grid.ColumnSpan="3">
+            <Label Content="{Binding Title}"
+                   Style="{DynamicResource LabelHeader}"
+                   Margin="8,0"
+                   MouseDoubleClick="OpenUser"
+                   VerticalAlignment="Center" />
+        </WrapPanel>
+        <StackPanel Orientation="Horizontal"
+                    Grid.Row="1"
+                    Grid.Column="0">
+            <TextBlock Style="{DynamicResource Content}">
+                <Run Text="Score" />
+                <Run Text="{Binding Score, Mode=OneWay}" />
+            </TextBlock>
+            <TextBlock Style="{DynamicResource Content}"
+                       Margin="8,0,0,0">
+                <Run Text="Kills" />
+                <Run Text="{Binding Kills, Mode=OneWay}" />
+            </TextBlock>
+            <TextBlock Style="{DynamicResource Content}"
+                       Margin="8,0,0,0">
+                <Run Text="Assists" />
+                <Run Text="{Binding Assists, Mode=OneWay}" />
+            </TextBlock>
+            <TextBlock Style="{DynamicResource Content}"
+                       Margin="8,0,0,0">
+                <Run Text="Deaths" />
+                <Run Text="{Binding Deaths, Mode=OneWay}" />
+            </TextBlock>
+        </StackPanel>
+        <Grid Grid.Row="2">
+            <GroupBox Header="Damage Dealt"
+                      Style="{DynamicResource GroupBox}">
+                <WrapPanel>
+                    <TextBlock Style="{DynamicResource Content}">
+                        <Run Text="Total" />
+                        <Run Text="{Binding TotalDamageDealt, StringFormat=0.##, Mode=OneWay}"
+                             Foreground="{DynamicResource TotalDamage}" />
+                    </TextBlock>
+                    <TextBlock Style="{DynamicResource Content}"
+                               Margin="8,0,0,0">
+                        <Run Text="Critical" />
+                        <Run Text="{Binding CriticalDamageDealt, StringFormat=0.##, Mode=OneWay}"
+                             Foreground="{DynamicResource CriticalDamage}" />
+                    </TextBlock>
+                    <TextBlock Style="{DynamicResource Content}"
+                               Margin="8,0,0,0">
+                        <Run Text="Armor" />
+                        <Run Text="{Binding ArmorDamageDealt, StringFormat=0.##, Mode=OneWay}"
+                             Foreground="{DynamicResource ArmorDamage}" />
+                    </TextBlock>
+                </WrapPanel>
+            </GroupBox>
+            <GroupBox Header="Damage Taken"
+                      Style="{DynamicResource GroupBox}"
+                      Grid.Column="1">
+                <WrapPanel>
+                    <TextBlock Style="{DynamicResource Content}">
+                        <Run Text="Total" />
+                        <Run Text="{Binding TotalDamageTaken, StringFormat=0.##, Mode=OneWay}"
+                             Foreground="{DynamicResource TotalDamage}" />
+                    </TextBlock>
+                    <TextBlock Style="{DynamicResource Content}"
+                               Margin="8,0,0,0">
+                        <Run Text="Critical" />
+                        <Run Text="{Binding CriticalDamageTaken, StringFormat=0.##, Mode=OneWay}"
+                             Foreground="{DynamicResource CriticalDamage}" />
+                    </TextBlock>
+                    <TextBlock Style="{DynamicResource Content}"
+                               Margin="8,0,0,0">
+                        <Run Text="Armor" />
+                        <Run Text="{Binding ArmorDamageTaken, StringFormat=0.##, Mode=OneWay}"
+                             Foreground="{DynamicResource ArmorDamage}" />
+                    </TextBlock>
+                </WrapPanel>
+            </GroupBox>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+        </Grid>
+        <DataGrid x:Name="DataGridWeapons"
+                  Background="Transparent"
+                  Style="{DynamicResource MahApps.Styles.DataGrid.Azure}"
+                  AutoGenerateColumns="False"
+                  SelectionMode="Single"
+                  SelectionUnit="FullRow"
+                  Margin="0,4,0,0"
+                  Grid.Row="3">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Weapon Name"
+                                    Width="120"
+                                    Binding="{Binding Name}" />
+                <DataGridTextColumn Header="Total damage"
+                                    Binding="{Binding TotalDamage, StringFormat=0.##}" />
+                <DataGridTextColumn Header="Total damage"
+                                    Binding="{Binding CriticalDamage, StringFormat=0.##}" />
+                <DataGridTextColumn Header="Total damage"
+                                    Binding="{Binding ArmorDamage, StringFormat=0.##}" />
+                <DataGridTextColumn Header="Uses"
+                                    Binding="{Binding Uses}" />
+            </DataGrid.Columns>
+        </DataGrid>
+        <GroupBox Header="Stripes"
+                  Style="{DynamicResource GroupBox}"
+                  Grid.Row="1"
+                  Grid.Column="2"
+                  Grid.RowSpan="3">
+            <ItemsControl x:Name="ItemsControlStripes"
+                          Background="Transparent">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding ListItemString}"
+                                   Background="Transparent" 
+                                   Margin="4,2"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </GroupBox>
+
+        <GridSplitter Style="{DynamicResource MahApps.Styles.GridSplitter}"
+                      Margin="0,1,0,1"
+                      Width="5"
+                      HorizontalAlignment="Stretch"
+                      Grid.Row="1"
+                      Grid.Column="1"
+                      Grid.RowSpan="3" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="52" />
+            <RowDefinition Height="48" />
+            <RowDefinition Height="84" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="5*"
+                              MinWidth="200" />
+            <ColumnDefinition Width="5" />
+            <ColumnDefinition Width="2*"
+                              MinWidth="100"
+                              MaxWidth="500" />
+        </Grid.ColumnDefinitions>
+    </Grid>
+</Page>

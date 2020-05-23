@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>CrossoutLogView.GUI</RootNamespace>
+    <ApplicationIcon />
+    <StartupObject />
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" Version="2020.1.0" />
+    <PackageReference Include="MahApps.Metro" Version="2.0.0-alpha0872" />
+    <PackageReference Include="MahApps.Metro.IconPacks.Modern" Version="4.1.0" />
+    <PackageReference Include="System.ServiceProcess.ServiceController" Version="5.0.0-preview.4.20251.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CrossoutLogViewer.Common\CrossoutLogViewer.Common.csproj" />
+    <ProjectReference Include="..\CrossoutLogViewer.Database\CrossoutLogViewer.Database.csproj" />
+    <ProjectReference Include="..\CrossoutLogViewer.Log\CrossoutLogViewer.Log.csproj" />
+    <ProjectReference Include="..\CrossoutLogViewer.Statistics\CrossoutLogViewer.Statistics.csproj" />
+  </ItemGroup>
+
+</Project>

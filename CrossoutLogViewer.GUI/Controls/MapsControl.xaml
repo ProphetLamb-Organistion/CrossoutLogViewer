@@ -1,0 +1,62 @@
+﻿<UserControl x:Class="CrossoutLogView.GUI.Controls.MapsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:CrossoutLogView.GUI.Controls"
+             mc:Ignorable="d"
+             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             d:DesignHeight="450"
+             d:DesignWidth="800">
+    <Grid>
+        <GroupBox Header="Maps"
+                  Style="{DynamicResource GroupBox}">
+            <ListBox x:Name="ListBoxMaps"
+                     Background="Transparent"
+                     SelectionChanged="ListBoxMaps_SelectionChanged">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock>
+                            <Run Text="{Binding Name, Mode=OneWay}" />
+                            <Run Text="•" />
+                            <Run Text="{Binding GamesPlayed}" />
+                        </TextBlock>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </GroupBox>
+        <Grid Grid.Column="2">
+            <local:UserOverview x:Name="UserOverview" />
+            <GroupBox Header="Games"
+                      Style="{DynamicResource GroupBox}"
+                      Grid.Row="1">
+                <Grid>
+                    <local:GameListFilter x:Name="GameListFilter"
+                                          FilterChanged="GameListFilter_FilterChanged"
+                                          Grid.Row="1" />
+                    <Button Content="Open Users"
+                            Style="{DynamicResource MahApps.Styles.Button}"
+                            Click="OpenUsersClick"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Right"
+                            Margin="0,0,5,0"
+                            RenderTransformOrigin="0.056,0.463" />
+                </Grid>
+            </GroupBox>
+            <local:PlayerGamesDataGrid x:Name="PlayerGamesDataGrid"
+                                       Grid.Row="2" />
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+        </Grid>
+        <GridSplitter Style="{DynamicResource MahApps.Styles.GridSplitter}"
+                      Grid.Column="1" />
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150" />
+            <ColumnDefinition Width="5" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+    </Grid>
+</UserControl>

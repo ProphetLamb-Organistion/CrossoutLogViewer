@@ -1,0 +1,76 @@
+﻿<Page x:Class="CrossoutLogView.GUI.Navigation.UserPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:core="clr-namespace:CrossoutLogView.GUI.Core"
+      mc:Ignorable="d"
+      xmlns:models="clr-namespace:CrossoutLogView.GUI.Models"
+      xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+      xmlns:UserControls="clr-namespace:CrossoutLogView.GUI.Controls"
+      d:DesignHeight="500"
+      d:DesignWidth="600"
+      Title="UserPage">
+    <Grid Background="{DynamicResource MahApps.Brushes.ThemeBackground}">
+        <WrapPanel Orientation="Horizontal"
+                   Grid.ColumnSpan="3">
+            <Label Content="{Binding Title}"
+                   Style="{DynamicResource LabelHeader}"
+                   Margin="8,0"
+                   VerticalAlignment="Center" />
+
+        </WrapPanel>
+        <UserControls:UserGamesView x:Name="UserGamesViewGames"
+                                Grid.Row="2" />
+        <Grid Grid.Row="1"
+              Grid.Column="2">
+            <GroupBox Header="Weapons"
+                      Style="{DynamicResource GroupBox}">
+                <ListBox x:Name="ListBoxWeapons"
+                         Background="Transparent">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding ListItemString}" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </GroupBox>
+            <GroupBox Header="Stripes"
+                      Style="{DynamicResource GroupBox}"
+                      Grid.Row="1">
+                <ListBox x:Name="ListBoxStripes"
+                         Background="Transparent">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding ListItemString}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ListBox>
+            </GroupBox>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+        </Grid>
+
+        <GridSplitter Style="{DynamicResource MahApps.Styles.GridSplitter}"
+                      Margin="0,1,0,1"
+                      Width="5"
+                      HorizontalAlignment="Stretch"
+                      Grid.Row="1"
+                      Grid.Column="1"
+                      Grid.RowSpan="2" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="52" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="5*"
+                              MinWidth="200" />
+            <ColumnDefinition Width="5" />
+            <ColumnDefinition Width="2*"
+                              MinWidth="100"
+                              MaxWidth="500" />
+        </Grid.ColumnDefinitions>
+    </Grid>
+</Page>

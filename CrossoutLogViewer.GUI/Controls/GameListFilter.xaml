@@ -1,0 +1,41 @@
+﻿<UserControl x:Class="CrossoutLogView.GUI.Controls.GameListFilter"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:CrossoutLogView.GUI.Controls"
+             mc:Ignorable="d"
+             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             BorderThickness="0"
+             MinHeight="48"
+             d:DesignHeight="48"
+             d:DesignWidth="500">
+    <StackPanel Orientation="Horizontal"
+                VerticalAlignment="Center">
+        <TextBlock Text="Start"
+                   Margin="0,0,4,0"
+                   VerticalAlignment="Center" />
+        <Controls:DateTimePicker x:Name="DateTimePickerStart"
+                                 SelectedDateTimeChanged="DateTimePickerStart_SelectedDateTimeChanged"
+                                 VerticalAlignment="Center" />
+        <TextBlock Text="End"
+                   Margin="4,0"
+                   VerticalAlignment="Center" />
+        <Controls:DateTimePicker x:Name="DateTimePickerEnd"
+                                 SelectedDateTimeChanged="DateTimePickerStart_SelectedDateTimeChanged"
+                                 VerticalAlignment="Center" />
+        <TextBlock Text="Filter"
+                   Margin="4,0"
+                   VerticalAlignment="Center" />
+        <ComboBox x:Name="ComboBoxGameMode"
+                  SelectionChanged="GameFilterSelectionChanged"
+                  VerticalAlignment="Center" />
+        <Button x:Name="clearFilter"
+                Content="✕"
+                FontWeight="Bold"
+                FontSize="18"
+                Style="{DynamicResource MahApps.Styles.Button.Chromeless}"
+                Click="ClearFilter"
+                Width="{Binding ElementName=clearFilter, Path=ActualHeight}" />
+    </StackPanel>
+</UserControl>
