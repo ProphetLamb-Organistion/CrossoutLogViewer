@@ -21,12 +21,13 @@
 
         </WrapPanel>
         <UserControls:UserGamesView x:Name="UserGamesViewGames"
-                                Grid.Row="2" />
+                                    Grid.Row="2" />
         <Grid Grid.Row="1"
               Grid.Column="2">
             <GroupBox Header="Weapons"
                       Style="{DynamicResource GroupBox}">
                 <ListBox x:Name="ListBoxWeapons"
+                         ItemContainerStyle="{DynamicResource ListBoxHideSelection}"
                          Background="Transparent">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
@@ -39,6 +40,7 @@
                       Style="{DynamicResource GroupBox}"
                       Grid.Row="1">
                 <ListBox x:Name="ListBoxStripes"
+                         ItemContainerStyle="{DynamicResource ListBoxHideSelection}"
                          Background="Transparent">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>

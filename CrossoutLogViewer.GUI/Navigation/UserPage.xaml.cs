@@ -25,7 +25,7 @@ namespace CrossoutLogView.GUI.Navigation
         public UserPage(Frame frame, UserModel userViewModel)
         {
             this.frame = frame;
-            DataProvider.CompleteUser(userViewModel.Object.UserID);
+            DataProvider.CompleteUser(userViewModel.Object);
             userViewModel.UpdateCollections();
             InitializeComponent();
             DataContext = UserGamesViewGames.User = userViewModel;
@@ -40,6 +40,11 @@ namespace CrossoutLogView.GUI.Navigation
             {
                 Logging.WriteLine<UserPage>("Navigate to game");
                 frame.Navigate(new GamePage(frame, pgc.Game));
+            }
+            else if (e.ViewModel is UserListModel ul)
+            {
+                Logging.WriteLine<UserPage>("Navigate to userlist");
+                frame.Navigate(new UserListPage(frame, ul));
             }
         }
     }
