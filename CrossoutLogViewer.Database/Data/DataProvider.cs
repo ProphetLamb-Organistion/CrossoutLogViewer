@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace CrossoutLogView.Database.Data
 {
@@ -18,11 +19,19 @@ namespace CrossoutLogView.Database.Data
         private static Dictionary<int, User> users = new Dictionary<int, User>();
         private static SortedSet<int> usersCompleted = new SortedSet<int>();
         private static Dictionary<int, long[]> userParticipationRowIds = new Dictionary<int, long[]>();
+
         private static Dictionary<long, Game> games = new Dictionary<long, Game>();
+        private static Dictionary<DateTime, long> gamesStartRowIds = new Dictionary<DateTime, long>();
         private static Dictionary<long, long[]> gamesPlayerRowIds = new Dictionary<long, long[]>();
         private static SortedSet<long> gamesCompleted = new SortedSet<long>();
+
         private static Dictionary<int, WeaponGlobal> weapons = new Dictionary<int, WeaponGlobal>();
-        private static Dictionary<string, GameMap> maps = new Dictionary<string, GameMap>();
+        private static SortedSet<int> completedWeapons = new SortedSet<int>();
+
+        private static Dictionary<long, GameMap> gameMaps = new Dictionary<long, GameMap>();
+        private static Dictionary<string, long> gameMapRowIds = new Dictionary<string, long>();
+
+        public static InvalidateCachedDataEventHandler InvalidateCachedData;
 
         static DataProvider()
         {
@@ -31,16 +40,37 @@ namespace CrossoutLogView.Database.Data
 
         private static void OnInvalidateCachedData(object sender, InvalidateCachedDataEventArgs e)
         {
-            foreach (var uid in e.UsersChanged)
+            Task.WaitAll(
+            Task.Run(delegate
             {
-                users.Remove(uid);
-                usersCompleted.Remove(uid);
-                userParticipationRowIds.Remove(uid);
-            }
-            foreach (var wName in e.WeaponsChanged)
+                foreach (var uid in e.UsersChanged)
+                {
+                    users.Remove(uid);
+                    usersCompleted.Remove(uid);
+                    userParticipationRowIds.Remove(uid);
+                }
+            }),
+            Task.Run(delegate
             {
-                weapons.Remove(wName.GetHashCode());
-            }
+                foreach (var wName in e.WeaponsChanged)
+                {
+                    var nHash = wName.GetHashCode();
+                    weapons.Remove(nHash);
+                    completedWeapons.Remove(nHash);
+                }
+            }),
+            Task.Run(delegate
+            {
+                foreach (var mName in e.MapsPlayed)
+                {
+                    if (gameMapRowIds.TryGetValue(mName, out var mapRowId))
+                    {
+                        gameMapRowIds.Remove(mName);
+                        gameMaps.Remove(mapRowId);
+                    }
+                }
+            }));
+            InvalidateCachedData?.Invoke(sender, e);
         }
 
         public static IEnumerable<User> GetUsers()
@@ -60,7 +90,6 @@ namespace CrossoutLogView.Database.Data
             using var statCon = new StatisticsConnection();
             user = statCon.RequestUser(userId, TableRepresentation.Varialbe);
             var refs = statCon.RequestUserParticipationRowIds(userId);
-            user.Participations = new List<Game>();
             for (int i = 0; i < refs.Length; i++)
             {
                 user.Participations.Add(GetGame(refs[i]));
@@ -72,27 +101,22 @@ namespace CrossoutLogView.Database.Data
             return user;
         }
 
-        public static void CompleteUser(User user)
+        public static bool CompleteUser(User user)
         {
-            if (usersCompleted.Contains(user.UserID)) return;
+            if (usersCompleted.Contains(user.UserID)) return false;
             using var statCon = new StatisticsConnection();
-            user.Weapons = statCon.RequestUserWeapons(user.UserID);
-            user.Stripes = statCon.RequestUserStripes(user.UserID);
+            Task.WaitAll(
+            Task.Run(delegate
+            {
+                user.Weapons = statCon.RequestUserWeapons(user.UserID);
+            }),
+            Task.Run(delegate
+            {
+                user.Stripes = statCon.RequestUserStripes(user.UserID);
+            }));
             usersCompleted.Add(user.UserID);
             statCon.Close();
-        }
-
-        public static Game GetGame(long rowId)
-        {
-            if (games.TryGetValue(rowId, out var game)) return game;
-            using var statCon = new StatisticsConnection();
-            game = statCon.RequestGame(rowId, TableRepresentation.Varialbe);
-            var playerRowIds = statCon.RequestGamePlayerRowIds(rowId);
-            game.Players = statCon.RequestGamePlayers(playerRowIds, TableRepresentation.Varialbe);
-            statCon.Close();
-            games.Add(rowId, game);
-            gamesPlayerRowIds.Add(rowId, playerRowIds);
-            return game;
+            return true;
         }
 
         public static IEnumerable<Game> GetGames(IEnumerable<long> rowIds)
@@ -103,31 +127,52 @@ namespace CrossoutLogView.Database.Data
             }
         }
 
-        public static void CompleteGame(Game game)
+        public static Game GetGame(long rowId)
         {
-            var rowId = games.First(x => x.Value.Start == game.Start && x.Value.End == game.End).Key;
-            if (gamesCompleted.Contains(rowId)) return;
-            using var statCon = new StatisticsConnection();
-            CompleteGame(rowId, game, statCon);
-            statCon.Close();
+            if (games.TryGetValue(rowId, out var game)) return game;
+            long[] playerRowIds;
+            using (var statCon = new StatisticsConnection())
+            {
+                game = statCon.RequestGame(rowId, TableRepresentation.Varialbe);
+                playerRowIds = statCon.RequestGamePlayerRowIds(rowId);
+                game.Players = statCon.RequestGamePlayers(playerRowIds, TableRepresentation.Varialbe);
+            }
+            games.Add(rowId, game);
+            gamesStartRowIds.Add(game.Start, rowId);
+            gamesPlayerRowIds.Add(rowId, playerRowIds);
+            return game;
         }
 
-        private static void CompleteGame(long rowId, Game game, StatisticsConnection con)
+        public static bool CompleteGame(Game game)
         {
-            var playerRowIds = con.RequestGamePlayerRowIds(rowId);
-            var complement = con.RequestGamePlayers(playerRowIds, TableRepresentation.Array);
-            for (int i = 0; i < playerRowIds.Length; i++)
+            if (!gamesStartRowIds.TryGetValue(game.Start, out var rowId)) throw new ArgumentOutOfRangeException(nameof(game.Start));
+            if (gamesCompleted.Contains(rowId)) return false;
+            using var statCon = new StatisticsConnection();
+            Task.WaitAll(
+            Task.Run(delegate
             {
-                foreach (var vi in VariableInfo
-                    .FromType(typeof(Player))
-                    .Where(x => (TableRepresentation.Array & Serialization.GetTableRepresentation(x.VariableType, IStatisticData.Implementations)) == Serialization.GetTableRepresentation(x.VariableType, IStatisticData.Implementations)))
+                var playerRowIds = statCon.RequestGamePlayerRowIds(rowId);
+                var complement = statCon.RequestGamePlayers(playerRowIds, TableRepresentation.Array);
+                for (int i = 0; i < playerRowIds.Length; i++)
                 {
-                    vi.SetValue(game.Players[i], vi.GetValue(complement[i]));
+                    foreach (var vi in VariableInfo
+                        .FromType(typeof(Player))
+                        .Where(x => (TableRepresentation.Array & Serialization.GetTableRepresentation(x.VariableType, IStatisticData.Implementations)) == Serialization.GetTableRepresentation(x.VariableType, IStatisticData.Implementations)))
+                    {
+                        vi.SetValue(game.Players[i], vi.GetValue(complement[i]));
+                    }
                 }
-            }
-            game.Rounds = con.RequestGameRounds(rowId);
-            game.Weapons = con.RequestGameWeapons(rowId);
+            }),
+            Task.Run(delegate
+            {
+                game.Rounds = statCon.RequestGameRounds(rowId);
+            }),
+            Task.Run(delegate
+            {
+                game.Weapons = statCon.RequestGameWeapons(rowId);
+            }));
             gamesCompleted.Add(rowId);
+            return true;
         }
 
         public static List<WeaponGlobal> GetWeapons()
@@ -147,15 +192,31 @@ namespace CrossoutLogView.Database.Data
             if (weapons.TryGetValue(hash, out var weapon)) return weapon;
             using var statCon = new StatisticsConnection();
             weapons.Add(hash, weapon = statCon.RequestWeapon(name, TableRepresentation.All & ~TableRepresentation.ReferenceArray));
-            foreach (var uid in statCon.RequestWeaponUserIDs(name))
-            {
-                weapon.Users.Add(GetUser(uid));
-            }
-            foreach (var rid in statCon.RequestWeaponGamesRowIDs(name))
-            {
-                weapon.Games.Add(GetGame(rid));
-            }
             return weapon;
+        }
+
+        public static bool CompleteWeapon(WeaponGlobal weapon)
+        {
+            var nHash = weapon.Name.GetHashCode();
+            if (completedWeapons.Contains(nHash)) return false;
+            using var statCon = new StatisticsConnection();
+            Task.WaitAll(
+            Task.Run(delegate
+            {
+                foreach (var uid in statCon.RequestWeaponUserIDs(weapon.Name))
+                {
+                    weapon.Users.Add(GetUser(uid));
+                }
+            }),
+            Task.Run(delegate
+            {
+                foreach (var rid in statCon.RequestWeaponGamesRowIDs(weapon.Name))
+                {
+                    weapon.Games.Add(GetGame(rid));
+                }
+            }));
+            completedWeapons.Add(nHash);
+            return true;
         }
 
         public static List<GameMap> GetMaps()
@@ -164,11 +225,48 @@ namespace CrossoutLogView.Database.Data
             var maps = new List<GameMap>();
             foreach (var mapRowId in statCon.RequestMapRowIds())
             {
-                var map = statCon.RequestMap(mapRowId);
-                var games = GetGames(statCon.RequestMapGameRowIds(mapRowId)).OrderByDescending(x => x.Start);
-                maps.Add(new GameMap(map, games));
+                if (!gameMaps.TryGetValue(mapRowId, out var gameMap))
+                {
+                    var map = statCon.RequestMap(mapRowId);
+                    var games = GetGames(statCon.RequestMapGameRowIds(mapRowId)).OrderByDescending(x => x.Start);
+                    AddMap(mapRowId, gameMap = new GameMap(map, games));
+                }
+                maps.Add(gameMap);
             }
             return maps;
+        }
+
+        public static GameMap GetMap(string mapName)
+        {
+            GameMap gameMap;
+            if (gameMapRowIds.TryGetValue(mapName, out var mapRowId))
+            {
+                gameMap = gameMaps[mapRowId];
+            }
+            else
+            {
+                using var statCon = new StatisticsConnection();
+                mapRowId = statCon.RequestMapRowId(mapName);
+                Map map = default;
+                IEnumerable<Game> games = default;
+                Task.WaitAll(
+                Task.Run(delegate
+                {
+                    map = statCon.RequestMap(mapRowId);
+                }),
+                Task.Run(delegate
+                {
+                     games = GetGames(statCon.RequestMapGameRowIds(mapRowId)).OrderByDescending(x => x.Start);
+                }));
+                AddMap(mapRowId, gameMap = new GameMap(map, games));
+            }
+            return gameMap;
+        }
+
+        private static void AddMap(long mapRowId, GameMap gameMap)
+        {
+            gameMaps.Add(mapRowId, gameMap);
+            gameMapRowIds.Add(gameMap.Map.Name, mapRowId);
         }
     }
 }
