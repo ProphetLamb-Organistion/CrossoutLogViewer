@@ -146,5 +146,23 @@ namespace CrossoutLogView.GUI.Controls
                 e.Handled = true;
             }
         }
+
+        private void SetFilterNoonClick(object sender, RoutedEventArgs e)
+        {
+            StartLimit = DateTime.Today.AddHours(12);
+            EndLimit = DateTime.Today.AddHours(17);
+        }
+
+        private void SetFilterAfternoonClick(object sender, RoutedEventArgs e)
+        {
+            StartLimit = DateTime.Today.AddHours(18);
+            EndLimit = DateTime.Today.AddHours(22);
+        }
+
+        private void SetFilterNightClick(object sender, RoutedEventArgs e)
+        {
+            StartLimit = DateTime.Today.AddDays(1);
+            EndLimit = DateTime.Today.AddDays(1).AddHours(5);
+        }
     }
 }

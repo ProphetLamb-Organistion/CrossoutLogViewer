@@ -8,34 +8,68 @@
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              BorderThickness="0"
              MinHeight="48"
+             MaxWidth="100000000"
              d:DesignHeight="48"
-             d:DesignWidth="500">
-    <StackPanel Orientation="Horizontal"
-                VerticalAlignment="Center">
-        <TextBlock Text="Start"
-                   Margin="0,0,4,0"
-                   VerticalAlignment="Center" />
-        <Controls:DateTimePicker x:Name="DateTimePickerStart"
-                                 SelectedDateTimeChanged="DateTimePickerStart_SelectedDateTimeChanged"
-                                 VerticalAlignment="Center" />
-        <TextBlock Text="End"
-                   Margin="4,0"
-                   VerticalAlignment="Center" />
-        <Controls:DateTimePicker x:Name="DateTimePickerEnd"
-                                 SelectedDateTimeChanged="DateTimePickerStart_SelectedDateTimeChanged"
-                                 VerticalAlignment="Center" />
-        <TextBlock Text="Filter"
-                   Margin="4,0"
-                   VerticalAlignment="Center" />
-        <ComboBox x:Name="ComboBoxGameMode"
-                  SelectionChanged="GameFilterSelectionChanged"
-                  VerticalAlignment="Center" />
+             d:DesignWidth="650">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <Thickness x:Key="ContentMargin"
+                       Left="0"
+                       Top="4"
+                       Right="2"
+                       Bottom="4" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <WrapPanel Orientation="Horizontal"
+               VerticalAlignment="Center">
+        <StackPanel Orientation="Horizontal">
+            <Button Content="Noon"
+                    Style="{DynamicResource MahApps.Styles.Button.Flat}"
+                    Click="SetFilterNoonClick"
+                    Margin="{StaticResource ContentMargin}" />
+            <Button Content="Afternoon"
+                    Style="{DynamicResource MahApps.Styles.Button.Flat}"
+                    Click="SetFilterAfternoonClick"
+                    Margin="{StaticResource ContentMargin}" />
+            <Button Content="Night"
+                    Style="{DynamicResource MahApps.Styles.Button.Flat}"
+                    Click="SetFilterNightClick"
+                    Margin="{StaticResource ContentMargin}" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="Start"
+                       Margin="{StaticResource ContentMargin}"
+                       VerticalAlignment="Center" />
+            <Controls:DateTimePicker x:Name="DateTimePickerStart"
+                                     SelectedDateTimeChanged="DateTimePickerStart_SelectedDateTimeChanged"
+                                     Margin="{StaticResource ContentMargin}"
+                                     VerticalAlignment="Center" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="End"
+                       Margin="{StaticResource ContentMargin}"
+                       VerticalAlignment="Center" />
+            <Controls:DateTimePicker x:Name="DateTimePickerEnd"
+                                     SelectedDateTimeChanged="DateTimePickerStart_SelectedDateTimeChanged"
+                                     Margin="{StaticResource ContentMargin}"
+                                     VerticalAlignment="Center" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="Filter"
+                       Margin="{StaticResource ContentMargin}"
+                       VerticalAlignment="Center" />
+            <ComboBox x:Name="ComboBoxGameMode"
+                      SelectionChanged="GameFilterSelectionChanged"
+                      Margin="{StaticResource ContentMargin}"
+                      VerticalAlignment="Center" />
+        </StackPanel>
         <Button x:Name="clearFilter"
                 Content="✕"
                 FontWeight="Bold"
                 FontSize="18"
                 Style="{DynamicResource MahApps.Styles.Button.Chromeless}"
                 Click="ClearFilter"
-                Width="{Binding ElementName=clearFilter, Path=ActualHeight}" />
-    </StackPanel>
+                Width="{Binding ElementName=clearFilter, Path=ActualHeight}"
+                Margin="{StaticResource ContentMargin}" />
+    </WrapPanel>
 </UserControl>
