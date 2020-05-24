@@ -117,12 +117,13 @@ namespace CrossoutLogView.Database.Connection
             var request = GetRowIdRequestString(typeof(Game), rowId, includeTableRepresentation);
             return ExecuteRequestSingleObject<Game>(request, includeTableRepresentation);
         }
-        
+
         public Map RequestMap(string name)
         {
             var request = String.Concat(GetRequestString(typeof(Map)), " WHERE ", nameof(Map.Name), " == ", name);
             return ExecuteRequestSingleObject<Map>(request);
         }
+
         public Map RequestMap(long rowId)
         {
             var request = GetRowIdRequestString(typeof(Map), rowId);
@@ -270,6 +271,11 @@ namespace CrossoutLogView.Database.Connection
             return userIDs;
         }
 
+        public long[] RequestWeaponGamesRowIDs(string weaponName)
+        {
+            return RequestReferences(nameof(WeaponGlobal.Name) + " == " + SQLiteVariable(weaponName), typeof(WeaponGlobal), nameof(WeaponGlobal.Games));
+        }
+
         public List<string> RequestWeaponNames()
         {
             var names = new List<string>();
@@ -406,7 +412,7 @@ namespace CrossoutLogView.Database.Connection
             InvokeNonQuery(String.Format(FormatUpdate, nameof(User), sets.Remove(0, 2).ToString(),
                 String.Format("{0} == {1}", nameof(User.UserID), user.UserID)),
                 connection);
-            
+
         }
 
         public void UpdateWeaponGlobal(WeaponGlobal weapon)
@@ -489,7 +495,7 @@ namespace CrossoutLogView.Database.Connection
             return reader.GetInt32(0);
         }
 
-        private static Dictionary<long, long> gameRowIdStart = new Dictionary<long, long>();
+        private static ConcurrentDictionary<long, long> gameRowIdStart = new ConcurrentDictionary<long, long>();
         public long RequestGameRowId(long startTicks)
         {
             if (gameRowIdStart.TryGetValue(startTicks, out var rowId)) return rowId;
@@ -497,7 +503,7 @@ namespace CrossoutLogView.Database.Connection
             using var cmd = new SQLiteCommand(request, connection);
             using var reader = cmd.ExecuteReader();
             if (!reader.Read()) return -1;
-            gameRowIdStart.Add(startTicks, rowId = ReadField<long>(RowIdName, reader));
+            gameRowIdStart.AddOrUpdate(startTicks, rowId = ReadField<long>(RowIdName, reader), (rid, st) => rowId);
             return rowId;
         }
 
@@ -533,13 +539,12 @@ namespace CrossoutLogView.Database.Connection
             //{ typeof(Map).GUID, nameof(Map.Name) },
             { typeof(User).GUID, nameof(User.UserID) },
         };
-
         public override void InitializeDataStructure()
         {
             if (!Directory.Exists(Strings.DataBaseRootPath)) Directory.CreateDirectory(Strings.DataBaseRootPath);
             if (!File.Exists(Strings.DataBaseStatisticsPath)) SQLiteConnection.CreateFile(Strings.DataBaseStatisticsPath);
             connection = new SQLiteConnection("Data Source = " + Strings.DataBaseStatisticsPath);
-            Open();
+            connection.Open();
             //create datatables
             foreach (var type in IStatisticData.Implementations)
             {
@@ -547,7 +552,6 @@ namespace CrossoutLogView.Database.Connection
                     CreateDataTable(type, primaryKey, connection);
                 else CreateDataTable(type, connection);
             }
-            Close();
         }
     }
 }

@@ -12,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using static CrossoutLogView.Common.SQLiteFormat;
 
 namespace CrossoutLogView.Database.Connection
@@ -124,13 +125,12 @@ namespace CrossoutLogView.Database.Connection
             if (!Directory.Exists(Strings.DataBaseRootPath)) Directory.CreateDirectory(Strings.DataBaseRootPath);
             if (!File.Exists(Strings.DataBaseLogPath)) SQLiteConnection.CreateFile(Strings.DataBaseLogPath);
             connection = new SQLiteConnection("Data Source = " + Strings.DataBaseLogPath);
-            Open();
+            connection.Open();
             CreateDataTable(typeof(LogMetadata), connection);
             foreach (var t in ILogEntry.Implementations)
             {
                 CreateDataTable(t, connection);
             }
-            Close();
         }
     }
 }

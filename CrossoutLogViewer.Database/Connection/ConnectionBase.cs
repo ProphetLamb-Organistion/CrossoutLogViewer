@@ -8,8 +8,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
+
 using static CrossoutLogView.Common.SQLiteFormat;
 using static CrossoutLogView.Database.Reflection.Serialization;
 
@@ -32,7 +32,9 @@ namespace CrossoutLogView.Database.Connection
         /// Returns the state of the SQLite connection.
         /// </summary>
         public ConnectionState State => connection.State;
+
         public void Open() => connection.Open();
+
         public void Close() => connection.Close();
 
         public long LastInsertRowId => connection.LastInsertRowId;
@@ -50,7 +52,7 @@ namespace CrossoutLogView.Database.Connection
         }
 
         /// <summary>
-        /// Creates the database, and the tables (if not already exisiting)
+        /// Creates the database, and the tables (if not already exisiting).
         /// </summary>
         public abstract void InitializeDataStructure();
 
@@ -431,12 +433,12 @@ namespace CrossoutLogView.Database.Connection
         }
 
         /// <summary>
-        /// Handles specific variables where the default behaviour is not appropriate. If the return value is <see cref="null"/>, the default behaviour will be executed, otherwise the the returned <see cref="object"/> is handled as the value of the variable in context of SQLite database.
-        /// The returned object must be a primitive datatype (integer, floating point, <see cref="string"/>), a <see cref="DateTime"/> or <see cref="null"/>.
+        /// Handles specific variables where the default behaviour is not appropriate. If the return value is <see cref="null"/>, the default behaviour will be executed, otherwise the the returned <see cref="Object"/> is handled as the value of the variable in context of SQLite database.
+        /// The returned object must be a primitive datatype (integer, floating point, <see cref="String"/>), a <see cref="DateTime"/> or <see cref="null"/>.
         /// </summary>
         /// <param name="obj">The instance of the variable.<param>
         /// <param name="variableInfo">The <see cref="VariableInfo"/> describing the variable.</param>
-        /// <returns><see cref="null"/> if the default behaviour should be executed, otherwise the <see cref="object"/> represensting the value of the variable in context of SQLite database.</returns>
+        /// <returns><see cref="null"/> if the default behaviour should be executed, otherwise the <see cref="Object"/> represensting the value of the variable in context of SQLite database.</returns>
         protected abstract object InsertVariableHandler(in object obj, in VariableInfo variableInfo);
 
         private string GenerateInsertValuesString(object obj, VariableInfo[] varInfos, TableRepresentation filterTableRepresentation)
@@ -459,23 +461,23 @@ namespace CrossoutLogView.Database.Connection
                     continue;
                 }
                 else switch (varTableRepresentation)
-                {
-                    case TableRepresentation.Store:
-                        current = vi.GetValue(obj);
-                        break;
-                    case TableRepresentation.Reference:
-                        Insert(vi.GetValue(obj), type);
-                        current = connection.LastInsertRowId;
-                        break;
-                    case TableRepresentation.StoreArray:
-                        current = SerializeArray((IEnumerable)vi.GetValue(obj), GetSerializer(Types.GetEnumerableBaseType(vi.VariableType)));
-                        break;
-                    case TableRepresentation.ReferenceArray:
-                        current = ReferenceFromInsertEnumerable((IEnumerable)vi.GetValue(obj), type);
-                        break;
-                    default:
-                        throw new InvalidOperationException();
-                }
+                    {
+                        case TableRepresentation.Store:
+                            current = vi.GetValue(obj);
+                            break;
+                        case TableRepresentation.Reference:
+                            Insert(vi.GetValue(obj), type);
+                            current = connection.LastInsertRowId;
+                            break;
+                        case TableRepresentation.StoreArray:
+                            current = SerializeArray((IEnumerable)vi.GetValue(obj), GetSerializer(Types.GetEnumerableBaseType(vi.VariableType)));
+                            break;
+                        case TableRepresentation.ReferenceArray:
+                            current = ReferenceFromInsertEnumerable((IEnumerable)vi.GetValue(obj), type);
+                            break;
+                        default:
+                            throw new InvalidOperationException();
+                    }
                 values[i++] = SQLiteVariable(current);
             }
             return '(' + String.Join(", ", values) + ')';
