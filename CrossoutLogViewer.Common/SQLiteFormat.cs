@@ -5,6 +5,7 @@ namespace CrossoutLogView.Common
     public static class SQLiteFormat
     {
         public const string FormatRequest = @"SELECT {0} FROM {1}";
+        public const string FormatRequestWhere = @"SELECT {0} FROM {1} WHERE {2}";
         public const string FormatDataTimeStampRequest = FormatRequest + @"WHERE timestamp >= {2} AND timestamp <= {3}";
         public const string FormatInsert = @"INSERT INTO {0} ({1}) VALUES {2}";
         public const string FormatDelete = @"DELETE FROM {0} WHERE timestamp >= {1} AND timestamp <= {2}";
