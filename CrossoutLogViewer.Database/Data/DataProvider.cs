@@ -23,7 +23,7 @@ namespace CrossoutLogView.Database.Data
         private static SortedSet<long> gamesCompleted = new SortedSet<long>();
         private static Dictionary<int, WeaponGlobal> weapons = new Dictionary<int, WeaponGlobal>();
         private static Dictionary<string, GameMap> maps = new Dictionary<string, GameMap>();
-        
+
         static DataProvider()
         {
             StatisticsUploader.InvalidateCachedData += OnInvalidateCachedData;
@@ -46,7 +46,6 @@ namespace CrossoutLogView.Database.Data
         public static IEnumerable<User> GetUsers()
         {
             using var statCon = new StatisticsConnection();
-            statCon.Open();
             var userIds = statCon.RequestUserIDs();
             statCon.Dispose();
             foreach (var userId in userIds)
@@ -59,7 +58,6 @@ namespace CrossoutLogView.Database.Data
         {
             if (users.TryGetValue(userId, out var user)) return user;
             using var statCon = new StatisticsConnection();
-            statCon.Open();
             user = statCon.RequestUser(userId, TableRepresentation.Varialbe);
             var refs = statCon.RequestUserParticipationRowIds(userId);
             user.Participations = new List<Game>();
@@ -74,15 +72,13 @@ namespace CrossoutLogView.Database.Data
             return user;
         }
 
-        public static void CompleteUser(int userId)
+        public static void CompleteUser(User user)
         {
-            if (usersCompleted.Contains(userId)) return;
-            var user = GetUser(userId);
+            if (usersCompleted.Contains(user.UserID)) return;
             using var statCon = new StatisticsConnection();
-            statCon.Open();
-            user.Weapons = statCon.RequestUserWeapons(userId);
-            user.Stripes = statCon.RequestUserStripes(userId);
-            usersCompleted.Add(userId);
+            user.Weapons = statCon.RequestUserWeapons(user.UserID);
+            user.Stripes = statCon.RequestUserStripes(user.UserID);
+            usersCompleted.Add(user.UserID);
             statCon.Close();
         }
 
@@ -90,7 +86,6 @@ namespace CrossoutLogView.Database.Data
         {
             if (games.TryGetValue(rowId, out var game)) return game;
             using var statCon = new StatisticsConnection();
-            statCon.Open();
             game = statCon.RequestGame(rowId, TableRepresentation.Varialbe);
             var playerRowIds = statCon.RequestGamePlayerRowIds(rowId);
             game.Players = statCon.RequestGamePlayers(playerRowIds, TableRepresentation.Varialbe);
@@ -102,7 +97,7 @@ namespace CrossoutLogView.Database.Data
 
         public static IEnumerable<Game> GetGames(IEnumerable<long> rowIds)
         {
-            foreach(var rowId in rowIds)
+            foreach (var rowId in rowIds)
             {
                 yield return GetGame(rowId);
             }
@@ -113,17 +108,7 @@ namespace CrossoutLogView.Database.Data
             var rowId = games.First(x => x.Value.Start == game.Start && x.Value.End == game.End).Key;
             if (gamesCompleted.Contains(rowId)) return;
             using var statCon = new StatisticsConnection();
-            statCon.Open();
             CompleteGame(rowId, game, statCon);
-            statCon.Close();
-        }
-
-        public static void CompleteGame(long rowId)
-        {
-            if (gamesCompleted.Contains(rowId)) return;
-            using var statCon = new StatisticsConnection();
-            statCon.Open();
-            CompleteGame(rowId, GetGame(rowId), statCon);
             statCon.Close();
         }
 
@@ -149,7 +134,6 @@ namespace CrossoutLogView.Database.Data
         {
             var weapons = new List<WeaponGlobal>();
             using var statCon = new StatisticsConnection();
-            statCon.Open();
             foreach (var name in statCon.RequestWeaponNames())
             {
                 weapons.Add(GetWeapon(name));
@@ -162,13 +146,14 @@ namespace CrossoutLogView.Database.Data
             var hash = name.GetHashCode();
             if (weapons.TryGetValue(hash, out var weapon)) return weapon;
             using var statCon = new StatisticsConnection();
-            statCon.Open();
             weapons.Add(hash, weapon = statCon.RequestWeapon(name, TableRepresentation.All & ~TableRepresentation.ReferenceArray));
-            var userIds = statCon.RequestWeaponUserIDs(name);
-            weapon.Users = new List<User>();
-            foreach (var uid in userIds)
+            foreach (var uid in statCon.RequestWeaponUserIDs(name))
             {
                 weapon.Users.Add(GetUser(uid));
+            }
+            foreach (var rid in statCon.RequestWeaponGamesRowIDs(name))
+            {
+                weapon.Games.Add(GetGame(rid));
             }
             return weapon;
         }
@@ -176,7 +161,6 @@ namespace CrossoutLogView.Database.Data
         public static List<GameMap> GetMaps()
         {
             using var statCon = new StatisticsConnection();
-            statCon.Open();
             var maps = new List<GameMap>();
             foreach (var mapRowId in statCon.RequestMapRowIds())
             {
