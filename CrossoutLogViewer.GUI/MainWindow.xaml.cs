@@ -1,4 +1,5 @@
 ﻿using ControlzEx.Theming;
+
 using CrossoutLogView.Common;
 using CrossoutLogView.Database;
 using CrossoutLogView.Database.Collection;
@@ -39,14 +40,41 @@ namespace CrossoutLogView.GUI
 
         public MainWindow()
         {
-            App.InitializeEnvironment();
-
             Logging.WriteLine<MainWindow>("Loading main UserInterface", true);
             InitializeComponent();
 
-            viewModel = new MainWindowViewModel();
+            Settings.Update();
+            if (!String.IsNullOrEmpty(Settings.Current.BaseColorScheme) && !String.IsNullOrEmpty(Settings.Current.ColorScheme))
+                App.Theme = ThemeManager.Current.ChangeTheme(App.Current, Settings.Current.BaseColorScheme, Settings.Current.ColorScheme);
+            DataContext = viewModel = new MainWindowViewModel();
             viewModel.PropertyChanged += OnPropertyChanged;
-            DataContext = viewModel;
+
+            Loaded += OnLoad;
+
+            Logging.WriteLine<MainWindow>("Main UserInterface loaded in {TP}");
+        }
+
+        private void OnInvalidateCachedData(object sender, InvalidateCachedDataEventArgs e)
+        {
+            this.BeginInvoke(delegate
+            {
+                UserListViewUsers.ItemsSource = MainWindowViewModel.UserListModels;
+                CollectionViewSource.GetDefaultView(UserListViewUsers.ItemsSource).Refresh();
+                WeaponListViewWeapons.ItemsSource = MainWindowViewModel.WeaponModels;
+            });
+        }
+
+        private async void OnLoad(object sender, RoutedEventArgs e)
+        {
+            var controller = await this.ShowProgressAsync("Initializing", "Initializing datastructure, installing troyan, and parsing logs.\r\nPlease stand by...", settings: new MetroDialogSettings
+            {
+                AnimateHide = false,
+                AnimateShow = false,
+                ColorScheme = MetroDialogOptions.ColorScheme
+            });
+            controller.SetIndeterminate();
+            await Task.Run(delegate { App.InitializeEnvironment(); });
+            await controller.CloseAsync();
 
             UserGamesViewGames.User = MainWindowViewModel.MeUser;
             UserGamesViewGames.DataGridGames.OpenViewModel += GamesOpenGameDoubleClick;
@@ -62,25 +90,8 @@ namespace CrossoutLogView.GUI
 
             MainWindowViewModel.InvalidatedCachedData += OnInvalidateCachedData;
 
-            Loaded += OnLoad;
-        }
-
-        private void OnInvalidateCachedData(object sender, InvalidateCachedDataEventArgs e)
-        {
-            this.BeginInvoke(delegate
-            {
-                UserListViewUsers.ItemsSource = MainWindowViewModel.UserListModels;
-                CollectionViewSource.GetDefaultView(UserListViewUsers.ItemsSource).Refresh();
-                WeaponListViewWeapons.ItemsSource = MainWindowViewModel.WeaponModels;
-            });
-        }
-
-        private void OnLoad(object sender, RoutedEventArgs e)
-        {
             Title = String.Concat(Title, " (", MainWindowViewModel.MeUser.Object.Name, ")");
             HamburgerMenuControl.Focus();
-
-            Logging.WriteLine<MainWindow>("Main UserInterface loaded in {TP}");
         }
 
         private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -189,6 +200,8 @@ namespace CrossoutLogView.GUI
         {
             var settings = new MetroDialogSettings
             {
+                AnimateHide = false,
+                AnimateShow = false,
                 AffirmativeButtonText = "Proceed",
                 NegativeButtonText = "Cancel",
                 MaximumBodyHeight = 300,

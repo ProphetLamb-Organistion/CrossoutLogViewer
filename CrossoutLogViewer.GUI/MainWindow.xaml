@@ -225,7 +225,7 @@
                                 <TextBlock Text="Name"
                                            Margin="0,0,4,0"
                                            VerticalAlignment="Center" />
-                                <TextBox Text="{Binding UserNameFilter, UpdateSourceTrigger=PropertyChanged}"
+                                <TextBox Text="{Binding UserNameFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                          Width="150"
                                          Controls:TextBoxHelper.AutoWatermark="True"
                                          Controls:TextBoxHelper.Watermark="Nickname"
@@ -239,14 +239,14 @@
                                                    Grid.Row="2" />
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto" />
-                            <RowDefinition Height="68" />
+                            <RowDefinition Height="58" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                     </Grid>
                 </Controls:MetroTabItem>
                 <!--=================================================== Weapons ==================================================-->
                 <Controls:MetroTabItem Header="Weapons">
-                    <UserControls:WeaponDataGrid x:Name="WeaponListViewWeapons"
+                    <UserControls:WeaponControl x:Name="WeaponListViewWeapons"
                                                  OpenViewModelDoubleClick="WeaponOpenUserDoubleClick" />
                 </Controls:MetroTabItem>
                 <!--=================================================== Maps =====================================================-->
