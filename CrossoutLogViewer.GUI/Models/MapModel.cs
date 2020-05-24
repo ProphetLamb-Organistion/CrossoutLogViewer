@@ -13,7 +13,7 @@ namespace CrossoutLogView.GUI.Models
     {
         public MapModel(GameMap map)
         {
-            Map = map;
+            Object = map;
             UpdateCollections();
             UpdateProperties();
             Name = DisplayStringFactory.MapName(map.Map.Name);
@@ -34,7 +34,7 @@ namespace CrossoutLogView.GUI.Models
 
         public string DamageGroup => StatDisplayMode == DisplayMode.Average ? "Damage Dealt (per battle)" : "Damage Dealt";
 
-        public GameMap Map { get; }
+        public GameMap Object { get; }
 
         public string Name { get; }
 
@@ -89,10 +89,10 @@ namespace CrossoutLogView.GUI.Models
         public override void UpdateCollections()
         {
             var games = new List<PlayerGameCompositeModel>();
-            foreach (var g in Map.Games)
+            foreach (var g in Object.Games)
             {
                 var game = new GameModel(g);
-                games.Add(new PlayerGameCompositeModel(game, game.Players.First(x => x.Object.UserID == MainWindowViewModel.MeUser.Object.UserID)));
+                games.Add(new PlayerGameCompositeModel(game, game.Players.First(x => x.Object.UserID == Settings.Current.MyUserID)));
             }
             Games = games;
         }

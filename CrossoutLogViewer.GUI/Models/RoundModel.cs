@@ -1,4 +1,5 @@
-﻿using CrossoutLogView.GUI.Core;
+﻿using CrossoutLogView.Database.Data;
+using CrossoutLogView.GUI.Core;
 using CrossoutLogView.Statistics;
 
 using System;
@@ -71,7 +72,7 @@ namespace CrossoutLogView.GUI.Models
 
         public byte Winner => Object.Winner;
 
-        public bool Won => Object.Winner == Parent.Players.First(x => x.UserID == MainWindowViewModel.MeUser.UserID).Team;
+        public bool Won => Object.Winner == Parent.Players.First(x => x.UserID == Settings.Current.MyUserID).Team;
 
         public Brush Background => App.Current.Resources[Won ? "TeamWon" : "TeamLost"] as Brush;
     }
