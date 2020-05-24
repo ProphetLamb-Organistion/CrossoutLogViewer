@@ -118,7 +118,7 @@ namespace CrossoutLogView.Database
                     Logging.WriteLine<ControlService>("New log found. Path: \"" + updated.Path + "\"");
                     AddLogMetadata(updated);
                     if (!current.Equals(default)) //finish previous log
-                    { 
+                    {
                         ParseLogDelta();
                     }
                     current = updated;
@@ -175,6 +175,8 @@ namespace CrossoutLogView.Database
                     logUploader.Upload();
                     statUploader.Commit(logUploader.Combined);
                 });
+                using var logCon = new LogConnection();
+                uploader.LogEntryTimeStampLowerLimit = logCon.RequestNewestLogEntryTimeStamp();
             }
             else Logging.WriteLine<ControlService>("Found none.");
             Logging.WriteLine<ControlService>("Finished in {TP}");
@@ -186,7 +188,6 @@ namespace CrossoutLogView.Database
             var unprocessedLogs = new List<string>();
             using (var con = new LogConnection())
             {
-                con.Open();
                 //compare logs in database to logs in directory, missing logs are unprocessed logs
                 var logsInDB = con.RequestMetadata().Select(x => x.Path);
                 var logsInDir = Directory.GetDirectories(Settings.Current.LogRootPath);
@@ -206,7 +207,6 @@ namespace CrossoutLogView.Database
         private static void AddLogMetadata(LogConfig newConfig)
         {
             using var logCon = new LogConnection();
-            logCon.Open();
             logCon.InsertMetadata(new LogMetadata(PathUtility.GetDirectoryPath(newConfig.Path), newConfig.DateTime));
             logCon.Dispose();
         }

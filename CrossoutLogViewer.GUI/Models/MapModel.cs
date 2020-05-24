@@ -1,6 +1,7 @@
 ﻿using CrossoutLogView.Database.Data;
 using CrossoutLogView.GUI.Core;
 using CrossoutLogView.Statistics;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -88,7 +89,7 @@ namespace CrossoutLogView.GUI.Models
         public override void UpdateCollections()
         {
             var games = new List<PlayerGameCompositeModel>();
-            foreach(var g in Map.Games)
+            foreach (var g in Map.Games)
             {
                 var game = new GameModel(g);
                 games.Add(new PlayerGameCompositeModel(game, game.Players.First(x => x.Object.UserID == MainWindowViewModel.MeUser.Object.UserID)));
@@ -107,8 +108,8 @@ namespace CrossoutLogView.GUI.Models
             Score = Games.Sum(x => x.Score) * mult;
             Kills = Games.Sum(x => x.Kills) * mult;
             Assists = Games.Sum(x => x.Assists) * mult;
-            Deaths = Games.Sum(x => x.Kills) *mult;
-            ArmorDamageDealt = Games.Sum(x => x.ArmorDamageDealt) *mult;
+            Deaths = Games.Sum(x => x.Kills) * mult;
+            ArmorDamageDealt = Games.Sum(x => x.ArmorDamageDealt) * mult;
             CriticalDamageDealt = Games.Sum(x => x.ArmorDamageDealt) * mult;
             OnPropertyChanged(nameof(TotalDamageDealt));
             ArmorDamageTaken = Games.Sum(x => x.ArmorDamageDealt) * mult;

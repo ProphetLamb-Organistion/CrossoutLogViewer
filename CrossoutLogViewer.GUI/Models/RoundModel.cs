@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Media;
+
 using static CrossoutLogView.Common.Strings;
 
 namespace CrossoutLogView.GUI.Models

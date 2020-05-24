@@ -29,7 +29,7 @@
             </StackPanel>
         </GroupBox>
         <UserControls:UserDataGrid x:Name="UserListViewUsers"
-                                   OpenViewModelDoubleClick="UserOpenUserDoubleClick"
+                                   OpenViewModelDoubleClick="UserOpenUserClick"
                                    SelectionChanged="UserSelectUser"
                                    SelectedIndex="0"
                                    Grid.Row="2" />

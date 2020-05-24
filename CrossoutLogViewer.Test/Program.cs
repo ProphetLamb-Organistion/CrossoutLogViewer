@@ -34,19 +34,15 @@ namespace CrossoutLogView.Test
         static void Test_Request()
         {
             using var logCon = new LogConnection();
-            logCon.Open();
             var logs = logCon.RequestAll(DateTime.Now.AddDays(-3).Ticks);
             logCon.Dispose();
             using var statCon = new StatisticsConnection();
-            statCon.Open();
             var user = statCon.RequestUser("InkyBusiness");
             var game = statCon.RequestGame(new DateTime(637239526409140000));
         }
 
         static void Test_Connections()
         {
-            using var logCon = new LogConnection();
-            using var statCon = new StatisticsConnection();
             var dmg = new Damage[]
             {
                 new Damage(1214, "vic1", "atk1", "weap1", 666.66666666, DamageFlag.None),
@@ -61,7 +57,7 @@ namespace CrossoutLogView.Test
                 new KillAssist(1235, "atk1", "weap1", 0.0, 420.42 + 666.66666666, DamageFlag.HUD_IMPORTANT),
                 new KillAssist(1235, "atk2", "weap1", 0.0, 2.6,  DamageFlag.None)
             };
-            logCon.Open();
+            using var logCon = new LogConnection();
             logCon.Insert(dmg);
             logCon.Insert(kills);
             logCon.Insert(assists);
@@ -76,7 +72,7 @@ namespace CrossoutLogView.Test
         static void Test_Dataprovider()
         {
             var me = DataProvider.GetUser(Settings.Current.MyUserID);
-            DataProvider.CompleteUser(Settings.Current.MyUserID);
+            DataProvider.CompleteUser(me);
             var typhoon = DataProvider.GetWeapon("CarPart_Gun_BigCannon_EX_Relic");
         }
 

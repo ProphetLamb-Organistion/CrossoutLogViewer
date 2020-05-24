@@ -1,4 +1,5 @@
 ﻿using ControlzEx.Theming;
+
 using CrossoutLogView.Common;
 using CrossoutLogView.Database;
 using CrossoutLogView.Database.Collection;
@@ -6,6 +7,7 @@ using CrossoutLogView.Database.Data;
 using CrossoutLogView.Database.Events;
 using CrossoutLogView.GUI.Core;
 using CrossoutLogView.GUI.Models;
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -44,9 +46,6 @@ namespace CrossoutLogView.GUI
                 .Select(x => new AccentColorMenuData { Name = x.Name, ColorBrush = new SolidColorBrush((Color)x.GetValue(null)) })
                 .ToList();
         }
-
-        private string _userName;
-        internal string UserNameFilter { get => _userName; set => Set(ref _userName, value?.TrimStart()); }
 
         internal static List<PlayerGameCompositeModel> PlayerGameModels { get; set; }
 
@@ -92,6 +91,10 @@ namespace CrossoutLogView.GUI
                 Settings.Current.ColorWindowTitlebar = value;
             }
         }
+
+        private string _userName;
+        public string UserNameFilter { get => _userName; set => Set(ref _userName, value?.TrimStart()); }
+
 
         internal static void UpdateStaticCollections()
         {

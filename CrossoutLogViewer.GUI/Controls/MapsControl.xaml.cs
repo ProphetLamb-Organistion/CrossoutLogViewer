@@ -1,7 +1,9 @@
 ﻿using CrossoutLogView.GUI.Events;
 using CrossoutLogView.GUI.Models;
 using CrossoutLogView.Statistics;
+
 using MahApps.Metro.Controls;
+
 using System;
 using System.Collections;
 using System.Collections.Generic;

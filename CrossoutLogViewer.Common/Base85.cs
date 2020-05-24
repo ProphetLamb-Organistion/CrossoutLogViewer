@@ -48,7 +48,7 @@ namespace CrossoutLogView.Common
             }
             return integer;
         }
-        
+
         public static long DecodeInt64(string encodedValue)
         {
             if (String.IsNullOrEmpty(encodedValue)) throw new ArgumentNullException(nameof(encodedValue));

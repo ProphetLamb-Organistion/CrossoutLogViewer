@@ -49,7 +49,7 @@ namespace CrossoutLogView.Common
 
         public static void WriteLine(Exception exception, [CallerMemberName] string callerName = "")
         {
-            WriteString(String.Concat(exception.GetType().Name, ": ", exception.Message, "\r\nSource: ", exception.Source, "\r\n", exception.StackTrace, "\r\nInner exception: ", exception.InnerException), callerName, false);
+            WriteString(String.Concat(exception.GetType().Name, ": ", exception.Message, "\r\nSource: ", exception.Source, "\r\nStacktrace: ", exception.StackTrace, "\r\nInner exception: ", exception.InnerException), callerName, false);
         }
 
         public static void WriteLine(string message, bool setBookmark = false, [CallerMemberName] string callerName = "")
@@ -114,7 +114,7 @@ namespace CrossoutLogView.Common
         private static void ScheduleClose()
         {
             //restart closeTimer
-            if (closeTimer.Enabled) 
+            if (closeTimer.Enabled)
                 closeTimer.Stop();
             closeTimer.Start();
         }

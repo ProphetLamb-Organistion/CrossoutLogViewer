@@ -1,6 +1,7 @@
 ﻿using CrossoutLogView.GUI.Core;
 using CrossoutLogView.GUI.Models;
 using CrossoutLogView.Statistics;
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;

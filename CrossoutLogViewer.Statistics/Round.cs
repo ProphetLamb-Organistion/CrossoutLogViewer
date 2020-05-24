@@ -74,11 +74,11 @@ namespace CrossoutLogView.Statistics
             }
             var kills = gameLog.Where(x => x is Killing).Cast<Killing>();
             var assists = gameLog.Where(x => x is KillAssist).Cast<KillAssist>().GroupBy(x => x.TimeStamp);
-            foreach(var assistKillGroup in assists)
+            foreach (var assistKillGroup in assists)
             {
                 var kill = kills.FirstOrDefault(x => x.TimeStamp == assistKillGroup.Key);
                 if (kill == null) continue;
-                foreach(var r in rounds)
+                foreach (var r in rounds)
                 {
                     r.TryAddKill(parent, kill, assistKillGroup);
                 }

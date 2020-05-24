@@ -12,7 +12,7 @@ namespace CrossoutLogView.Statistics
             Name = name;
             GamesPlayed = gamesPlayed;
         }
-        
+
         public override bool Equals(object obj) => obj is Map map && Equals(map);
         public bool Equals(Map other) => Name == other.Name && GamesPlayed == other.GamesPlayed;
         public override int GetHashCode() => HashCode.Combine(Name, GamesPlayed);

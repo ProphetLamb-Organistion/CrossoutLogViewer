@@ -1,5 +1,6 @@
 ﻿using CrossoutLogView.Common;
 using CrossoutLogView.Log;
+
 using Newtonsoft.Json;
 
 using System;
@@ -14,8 +15,8 @@ namespace CrossoutLogView.Database.Data
     public class Settings
     {
         private string _myName;
-        public string MyName 
-        { 
+        public string MyName
+        {
             get => _myName;
             set
             {

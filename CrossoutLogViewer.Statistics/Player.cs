@@ -1,7 +1,9 @@
 ﻿using CrossoutLogView.Log;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using static CrossoutLogView.Common.Strings;
 
 namespace CrossoutLogView.Statistics
@@ -105,10 +107,10 @@ namespace CrossoutLogView.Statistics
             }
             //merge players from different rounds
             var playersDistinct = new List<Player>();
-            foreach(IGrouping<int, Player> group in players.GroupBy(x => x.UserID))
+            foreach (IGrouping<int, Player> group in players.GroupBy(x => x.UserID))
             {
                 Player distinct = null;
-                foreach(var player in group)
+                foreach (var player in group)
                 {
                     if (distinct == null) distinct = player;
                     else PlayerBase.Merge(distinct, player);

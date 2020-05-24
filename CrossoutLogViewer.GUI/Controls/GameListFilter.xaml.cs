@@ -1,6 +1,8 @@
 ﻿using CrossoutLogView.GUI.Events;
 using CrossoutLogView.Statistics;
+
 using MahApps.Metro.Controls;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -116,7 +118,7 @@ namespace CrossoutLogView.GUI.Controls
             }
         }
         public static readonly DependencyProperty GameModeProperty = DependencyProperty.Register(nameof(GameModes), typeof(GameMode), typeof(GameListFilter));
-        
+
         public void ClearFilter() => ClearFilter(null, null);
         private void ClearFilter(object sender, RoutedEventArgs e)
         {

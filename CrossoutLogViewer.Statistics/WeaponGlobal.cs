@@ -1,7 +1,9 @@
 ﻿using CrossoutLogView.Common;
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Text;
 
 namespace CrossoutLogView.Statistics
@@ -10,11 +12,13 @@ namespace CrossoutLogView.Statistics
     {
         public List<User> Users;
         public List<int> Uses;
+        public List<Game> Games;
 
         public WeaponGlobal() : base()
-        { 
+        {
             Users = new List<User>();
             Uses = new List<int>();
+            Games = new List<Game>();
         }
 
         public WeaponGlobal(WeaponBase weapon) : this()
@@ -62,6 +66,8 @@ namespace CrossoutLogView.Statistics
                         else weapon.Uses[userIndex] += 1;
                         weapon.ArmorDamage += w.ArmorDamage;
                         weapon.CriticalDamage += w.CriticalDamage;
+                        if (!weapon.Games.Any(x => x.Start == g.Start))
+                            weapon.Games.Add(g);
                     }
                 }
             }

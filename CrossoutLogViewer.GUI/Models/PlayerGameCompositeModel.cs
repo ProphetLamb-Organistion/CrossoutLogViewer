@@ -25,7 +25,7 @@ namespace CrossoutLogView.GUI.Models
             Map = DisplayStringFactory.MapName(Game.Object.Map.Name);
         }
 
-        public override void UpdateCollections() 
+        public override void UpdateCollections()
         {
             Game.UpdateCollections();
             Player.UpdateCollections();

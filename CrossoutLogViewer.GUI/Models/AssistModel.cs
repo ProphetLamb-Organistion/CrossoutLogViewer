@@ -1,4 +1,5 @@
 ﻿using CrossoutLogView.Common;
+using CrossoutLogView.Database.Data;
 using CrossoutLogView.GUI.Core;
 using CrossoutLogView.Log;
 using CrossoutLogView.Statistics;
@@ -45,7 +46,7 @@ namespace CrossoutLogView.GUI.Models
             }
         }
 
-        public string WeaponName => Object.Weapon.Name;
+        public string WeaponName => DisplayStringFactory.AssetName(Object.Weapon.Name);
 
         public string Assistant => Object.Assistant;
 

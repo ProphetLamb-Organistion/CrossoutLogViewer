@@ -2,6 +2,7 @@
 using CrossoutLogView.GUI.Events;
 using CrossoutLogView.GUI.Models;
 using CrossoutLogView.Statistics;
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -82,7 +83,7 @@ namespace CrossoutLogView.GUI.Controls
         {
             if (ItemsSource == null) return;
             var games = new List<Game>();
-            foreach(var item in CollectionViewSource.GetDefaultView(ItemsSource)) //items in collectionview respect filter
+            foreach (var item in CollectionViewSource.GetDefaultView(ItemsSource)) //items in collectionview respect filter
             {
                 if (item is PlayerGameCompositeModel pgm) games.Add(pgm.Game.Object);
             }

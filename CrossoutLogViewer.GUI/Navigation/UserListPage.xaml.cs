@@ -1,8 +1,10 @@
 ﻿using CrossoutLogView.Common;
+using CrossoutLogView.Database.Data;
 using CrossoutLogView.GUI.Controls;
 using CrossoutLogView.GUI.Events;
 using CrossoutLogView.GUI.Models;
 using CrossoutLogView.Statistics;
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -60,7 +62,7 @@ namespace CrossoutLogView.GUI.Navigation
             }
         }
 
-        private void UserOpenUserDoubleClick(object sender, OpenModelViewerEventArgs e)
+        private void UserOpenUserClick(object sender, OpenModelViewerEventArgs e)
         {
             if (e.ViewModel is UserModel user)
             {

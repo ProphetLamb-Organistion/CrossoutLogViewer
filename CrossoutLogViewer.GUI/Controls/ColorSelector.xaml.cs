@@ -69,7 +69,7 @@ namespace CrossoutLogView.GUI.Controls
         }
         private static void OnComboBoxWidthChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            if (sender is ColorSelector colorSelector && e.NewValue is double newValue && newValue != (double)e.OldValue )
+            if (sender is ColorSelector colorSelector && e.NewValue is double newValue && newValue != (double)e.OldValue)
                 colorSelector.ComboBoxColors.Width = newValue;
         }
     }

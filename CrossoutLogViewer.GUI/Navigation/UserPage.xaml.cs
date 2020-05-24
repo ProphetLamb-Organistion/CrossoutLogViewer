@@ -31,10 +31,10 @@ namespace CrossoutLogView.GUI.Navigation
             DataContext = UserGamesViewGames.User = userViewModel;
             ListBoxWeapons.ItemsSource = userViewModel.Weapons;
             ListBoxStripes.ItemsSource = userViewModel.Stripes;
-            UserGamesViewGames.DataGridGames.OpenViewModel += OpenViewModelDoubleClick;
+            UserGamesViewGames.DataGridGames.OpenViewModel += OpenViewModelClick;
         }
 
-        private void OpenViewModelDoubleClick(object sender, OpenModelViewerEventArgs e)
+        private void OpenViewModelClick(object sender, OpenModelViewerEventArgs e)
         {
             if (e.ViewModel is PlayerGameCompositeModel pgc)
             {

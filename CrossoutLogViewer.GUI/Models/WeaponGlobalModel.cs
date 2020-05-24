@@ -2,6 +2,7 @@
 using CrossoutLogView.Database.Data;
 using CrossoutLogView.GUI.Core;
 using CrossoutLogView.Statistics;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,8 +43,7 @@ namespace CrossoutLogView.GUI.Models
             for (int i = 0; i < count; i++)
             {
                 var user = Object.Users[i];
-                DataProvider.CompleteUser(user.UserID);
-                var weapon = user.Weapons.Find(x => x.Name == Object.Name);
+                var weapon = user.Weapons.Find(x => Strings.NameEquals(x.Name, Object.Name));
                 if (weapon == null)
                 {
                     Logging.WriteLine<WeaponGlobalModel>(new WeaponNotFoundException(String.Format("Weapon '{0}' for user '{1}' {2} not found.",

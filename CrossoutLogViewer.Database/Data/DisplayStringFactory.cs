@@ -60,6 +60,7 @@ namespace CrossoutLogView.Database.Data
             { "CarPart_Gun_GrenadeLauncher_Auto", "Gl-55 Impulse" },
             { "CarPart_Quadrocopter_epic", "MD-3 Owl" },
             { "Cabin_Famine", "Howl" },
+            { "CarPart_PowerGiver_legend", "Appollo" },
         };
 
         private static readonly Dictionary<string, string> defaultStripes = new Dictionary<string, string>()
@@ -95,7 +96,7 @@ namespace CrossoutLogView.Database.Data
             { "red_rocks_territory", "Blood Rocks" }
         };
 
-        private static readonly string[] weaponNamePrefixes = new string[]
+        private static readonly string[] assetNamePrefixes = new string[]
         {
             "CarPart_",
             "Wheel_",
@@ -110,7 +111,7 @@ namespace CrossoutLogView.Database.Data
             if (assets.TryGetValue(name, out var result)) return result;
             //default behaviour
             var trimmed = name.AsSpan();
-            foreach (var prefix in weaponNamePrefixes)
+            foreach (var prefix in assetNamePrefixes)
             {
                 if (trimmed.StartsWith(prefix)) trimmed = trimmed.Slice(prefix.Length);
             }

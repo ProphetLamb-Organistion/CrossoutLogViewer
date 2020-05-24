@@ -19,7 +19,7 @@ namespace CrossoutLogView.GUI.Core
 
         public bool CanExecute(object parameter)
         {
-            var canExecute = this.CanExecuteDelegate;
+            var canExecute = CanExecuteDelegate;
             return canExecute == null || canExecute(parameter);
         }
 
@@ -31,7 +31,7 @@ namespace CrossoutLogView.GUI.Core
 
         public void Execute(object parameter)
         {
-            this.ExecuteDelegate?.Invoke(parameter);
+            ExecuteDelegate?.Invoke(parameter);
         }
     }
 }
