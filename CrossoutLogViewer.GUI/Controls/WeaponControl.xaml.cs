@@ -1,7 +1,10 @@
-﻿using CrossoutLogView.GUI.Core;
+﻿using CrossoutLogView.Database.Data;
+using CrossoutLogView.GUI.Core;
 using CrossoutLogView.GUI.Events;
 using CrossoutLogView.GUI.Models;
+
 using JetBrains.Annotations;
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -22,13 +25,13 @@ namespace CrossoutLogView.GUI.Controls
     /// <summary>
     /// Interaction logic for WeaponDataGrid.xaml
     /// </summary>
-    public partial class WeaponDataGrid : UserControl
+    public partial class WeaponControl : UserControl
     {
         public event OpenModelViewerEventHandler OpenViewModelDoubleClick;
         public event SelectionChangedEventHandler SelectionChanged;
         public event WeaponFilterChangedEventHandler FilterChanged;
 
-        public WeaponDataGrid()
+        public WeaponControl()
         {
             InitializeComponent();
             foreach (var column in DataGridWeapons.Columns)
@@ -39,7 +42,7 @@ namespace CrossoutLogView.GUI.Controls
         }
 
         private WeaponFilter _weaponFilter;
-        public WeaponFilter WeaponFilter 
+        public WeaponFilter WeaponFilter
         {
             get => _weaponFilter;
             set
@@ -59,7 +62,7 @@ namespace CrossoutLogView.GUI.Controls
             get => WeaponFilter.UserName;
             set => WeaponFilter = new WeaponFilter(WeaponFilter.WeaponName, value?.TrimStart());
         }
-        public static readonly DependencyProperty UserNameFilterProperty = DependencyProperty.Register(nameof(UserNameFilter), typeof(string), typeof(WeaponDataGrid),
+        public static readonly DependencyProperty UserNameFilterProperty = DependencyProperty.Register(nameof(UserNameFilter), typeof(string), typeof(WeaponControl),
             new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         private void WeaponNameFilterTextChanged(object sender, TextChangedEventArgs e) => WeaponNameFilter = (sender as TextBox).Text;
@@ -68,7 +71,7 @@ namespace CrossoutLogView.GUI.Controls
             get => WeaponFilter.WeaponName;
             set => WeaponFilter = new WeaponFilter(value?.TrimStart(), WeaponFilter.UserName);
         }
-        public static readonly DependencyProperty WeaponNameFilterProperty = DependencyProperty.Register(nameof(WeaponNameFilter), typeof(string), typeof(WeaponDataGrid),
+        public static readonly DependencyProperty WeaponNameFilterProperty = DependencyProperty.Register(nameof(WeaponNameFilter), typeof(string), typeof(WeaponControl),
             new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public IEnumerable<WeaponGlobalModel> ItemsSource
