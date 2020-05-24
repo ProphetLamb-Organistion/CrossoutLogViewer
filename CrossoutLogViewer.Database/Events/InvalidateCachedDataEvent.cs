@@ -11,15 +11,15 @@ namespace CrossoutLogView.Database.Events
     public delegate void InvalidateCachedDataEventHandler(object sender, InvalidateCachedDataEventArgs e);
     public sealed class InvalidateCachedDataEventArgs : EventArgs
     {
-        public InvalidateCachedDataEventArgs(int gamesAdded, IEnumerable<int> usersChanged, IEnumerable<string> weaponsChanged)
+        public InvalidateCachedDataEventArgs(IEnumerable<int> usersChanged, IEnumerable<string> weaponsChanged, IEnumerable<string> mapsPlayed)
         {
-            GamesAdded = gamesAdded;
             UsersChanged = usersChanged;
             WeaponsChanged = weaponsChanged;
+            MapsPlayed = mapsPlayed;
         }
 
-        public int GamesAdded { get; }
         public IEnumerable<int> UsersChanged { get; }
         public IEnumerable<string> WeaponsChanged { get; }
+        public IEnumerable<string> MapsPlayed { get; }
     }
 }
