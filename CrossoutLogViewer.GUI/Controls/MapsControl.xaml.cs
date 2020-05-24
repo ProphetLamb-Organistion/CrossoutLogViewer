@@ -1,4 +1,6 @@
-﻿using CrossoutLogView.GUI.Events;
+﻿using CrossoutLogView.Common;
+using CrossoutLogView.Database.Data;
+using CrossoutLogView.GUI.Events;
 using CrossoutLogView.GUI.Models;
 using CrossoutLogView.Statistics;
 
@@ -23,14 +25,14 @@ using System.Windows.Shapes;
 namespace CrossoutLogView.GUI.Controls
 {
     /// <summary>
-    /// Interaction logic for MapsView.xaml
+    /// Interaction logic for MapsControl.xaml
     /// </summary>
-    public partial class MapsView : UserControl
+    public partial class MapsControl : UserControl
     {
         private GameFilter filter = new GameFilter(GameMode.All);
         private MapModel selectedItem;
 
-        public MapsView()
+        public MapsControl()
         {
             InitializeComponent();
             //hide map column
@@ -44,7 +46,8 @@ namespace CrossoutLogView.GUI.Controls
             get => _maps;
             set
             {
-                value.Sort(new MapModelGamesPlayedDecending());
+                if (value != null)
+                    value.Sort(new MapModelGamesPlayedDecending());
                 ListBoxMaps.ItemsSource = _maps = value;
                 ListBoxMaps.SelectedIndex = 0;
             }
@@ -59,6 +62,15 @@ namespace CrossoutLogView.GUI.Controls
                 PlayerGamesDataGrid.ItemsSource = map.Games;
                 RefreshGameFilter();
                 selectedItem = map;
+                try
+                {
+                    var uri = ImageProvider.GetMapImageUri(map.Object.Map.Name);
+                    MapBackgroundImage.Source = new BitmapImage(uri);
+                }
+                catch (System.IO.FileNotFoundException ex)
+                {
+                    Logging.WriteLine<MapsControl>(ex);
+                }
             }
         }
 
@@ -79,6 +91,11 @@ namespace CrossoutLogView.GUI.Controls
         private void OpenUsersClick(object sender, RoutedEventArgs e)
         {
             PlayerGamesDataGrid.OpenAllGamesUsers();
+        }
+
+        private void OpenMapImageClick(object sender, MouseButtonEventArgs e)
+        {
+            ExplorerOpenFile.OpenFile(ImageProvider.GetMapImageUri(selectedItem.Object.Map.Name));
         }
     }
 }
