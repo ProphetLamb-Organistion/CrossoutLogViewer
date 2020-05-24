@@ -11,10 +11,10 @@ namespace CrossoutLogView.Common
     {
         private static FileStream stream;
         private static StreamWriter writer;
-        private static string filePath = Strings.DataBaseEventLogPath;
         private static Timer closeTimer;
         private static Dictionary<string, DateTime> bookmarks = new Dictionary<string, DateTime>();
         private static bool isOpen;
+        private static string _filePath = Strings.DataBaseEventLogPath;
 
         static Logging()
         {
@@ -29,11 +29,20 @@ namespace CrossoutLogView.Common
 
         public static string FilePath
         {
-            get => filePath;
+            get => _filePath;
             set
             {
                 Close();
-                filePath = value;
+                _filePath = value;
+            }
+        }
+
+        public static void TrimFile(long maxFileSize)
+        {
+            if (File.Exists(Strings.DataBaseEventLogPath) && PathUtility.GetFileSize(Strings.DataBaseEventLogPath) >=  maxFileSize)
+            {
+                Close();
+                File.Delete(_filePath);
             }
         }
 
@@ -106,7 +115,7 @@ namespace CrossoutLogView.Common
             closeTimer.Stop();
             if (isOpen) return;
             //initialize streams
-            stream = new FileStream(filePath, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
+            stream = new FileStream(_filePath, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
             writer = new StreamWriter(stream);
             isOpen = true;
         }
