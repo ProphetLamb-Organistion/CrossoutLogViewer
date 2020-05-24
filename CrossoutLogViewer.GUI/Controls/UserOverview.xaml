@@ -41,7 +41,7 @@
                                    Margin="8,0,0,0"
                                    VerticalAlignment="Center">
                             <Run Text="Unfinished" />
-                            <Run Text="{Binding GamesLost, StringFormat=0.##, Mode=OneWay}" />
+                            <Run Text="{Binding GamesUnfinished, StringFormat=0.##, Mode=OneWay}" />
                         </TextBlock>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal"
