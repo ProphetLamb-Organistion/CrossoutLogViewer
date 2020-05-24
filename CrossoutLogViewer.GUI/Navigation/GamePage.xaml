@@ -53,12 +53,12 @@
                        Visibility="{Binding UnfinishedVisible}"
                        VerticalAlignment="Center" />
         </StackPanel>
-        <!--Listbox Rounds-->
         <TreeView x:Name="TreeViewRounds"
                   Background="Transparent"
                   Style="{DynamicResource MahApps.Styles.TreeView}"
                   Grid.Row="2"
                   Grid.Column="0"
+                  Grid.RowSpan="2"
                   MouseDoubleClick="RoundOpenPlayer">
             <TreeView.ItemContainerStyle>
                 <Style TargetType="{x:Type TreeViewItem}">
@@ -140,11 +140,10 @@
                 </DataTemplate>
             </TreeView.Resources>
         </TreeView>
-        <!--Playerscores-->
-        <StackPanel Orientation="Vertical"
-                    Grid.Row="1"
-                    Grid.Column="2"
-                    Grid.RowSpan="2">
+        <Grid Grid.Row="1"
+              Grid.Column="2"
+              Grid.RowSpan="2"
+              VerticalAlignment="Stretch">
             <GroupBox Header="{Binding Team1String}"
                       Style="{DynamicResource GroupBox}"
                       HorizontalAlignment="Stretch">
@@ -161,7 +160,8 @@
             <GroupBox Header="{Binding Team2String}"
                       Visibility="{Binding MVPVisible}"
                       Style="{DynamicResource GroupBox}"
-                      HorizontalAlignment="Stretch">
+                      HorizontalAlignment="Stretch"
+                      Grid.Row="1">
                 <ListBox x:Name="ListBoxLost"
                          ItemContainerStyle="{DynamicResource ListBoxHideSelection}"
                          MouseDoubleClick="ScoreOpenPlayer"
@@ -174,8 +174,18 @@
                     </ListBox.ItemTemplate>
                 </ListBox>
             </GroupBox>
-        </StackPanel>
-
+            <Image x:Name="MapImage"
+                   Stretch="UniformToFill"
+                   RenderOptions.BitmapScalingMode="NearestNeighbor"
+                   RenderOptions.EdgeMode="Aliased"
+                   MouseUp="OpenMapImageClick"
+                   Grid.Row="2"/>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="{Binding ElementName=ListBoxWon, Path=ActualWidth}" />
+            </Grid.RowDefinitions>
+        </Grid>
         <GridSplitter Style="{DynamicResource MahApps.Styles.GridSplitter}"
                       Margin="0,1,0,1"
                       Width="5"
@@ -194,7 +204,7 @@
             <ColumnDefinition Width="5" />
             <ColumnDefinition Width="200"
                               MinWidth="150"
-                              MaxWidth="500" />
+                              MaxWidth="300" />
         </Grid.ColumnDefinitions>
     </Grid>
 </Page>

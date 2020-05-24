@@ -1,4 +1,5 @@
-﻿using CrossoutLogView.GUI.Core;
+﻿using CrossoutLogView.Database.Data;
+using CrossoutLogView.GUI.Core;
 using CrossoutLogView.Statistics;
 
 using System;
@@ -98,7 +99,7 @@ namespace CrossoutLogView.GUI.Models
 
         public List<Round> Rounds => Object.Rounds;
 
-        public bool Won => _players.FirstOrDefault(x => x.UserID == MainWindowViewModel.MeUser.UserID).Won;
+        public bool Won => _players.FirstOrDefault(x => x.UserID == Settings.Current.MyUserID).Won;
         public bool Unfinished => Object.MVP == -1;
 
         public Brush Background => Won ? App.Current.Resources["TeamWon"] as Brush : !Unfinished ? App.Current.Resources["TeamLost"] as Brush : default;

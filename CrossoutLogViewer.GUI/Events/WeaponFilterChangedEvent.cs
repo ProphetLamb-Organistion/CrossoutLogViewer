@@ -46,7 +46,7 @@ namespace CrossoutLogView.GUI.Events
             {
                 foreach (var part in UserName.TrimEnd().Split(' ', '-', '_'))
                 {
-                    if (!weapon.Users.Any(x => x.UserName.Contains(part, StringComparison.InvariantCultureIgnoreCase))) return false;
+                    if (!weapon.WeaponUsers.Any(x => x.UserName.Contains(part, StringComparison.InvariantCultureIgnoreCase))) return false;
                 }
             }
             return true;

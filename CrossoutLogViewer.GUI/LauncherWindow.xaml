@@ -1,0 +1,129 @@
+﻿<Controls:MetroWindow x:Class="CrossoutLogView.GUI.LauncherWindow"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                      xmlns:UserControls="clr-namespace:CrossoutLogView.GUI.Controls"
+                      xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                      xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                      xmlns:local="clr-namespace:CrossoutLogView.GUI"
+                      mc:Ignorable="d"
+                      Style="{DynamicResource MetroWindowTitlebarColorStyle}"
+                      Title="Crossout Log Viewer: Launcher"
+                      Width="750"
+                      Height="220"
+                      GlowBrush="{DynamicResource MahApps.Brushes.AccentBase}"
+                      BorderThickness="1"
+                      ResizeMode="NoResize"
+                      WindowStartupLocation="CenterScreen"
+                      Loaded="OnLoaded">
+    <Controls:MetroWindow.Resources>
+        <Thickness x:Key="TileMargin"
+                   Left="2"
+                   Top="4"
+                   Right="2"
+                   Bottom="2" />
+        <Style x:Key="LargeTileStyle"
+               TargetType="Controls:Tile">
+            <Setter Property="Height"
+                    Value="125" />
+            <Setter Property="TextOptions.TextFormattingMode"
+                    Value="Display" />
+            <Setter Property="TextOptions.TextRenderingMode"
+                    Value="ClearType" />
+            <Setter Property="TitleFontSize"
+                    Value="14" />
+            <Setter Property="Width"
+                    Value="300" />
+            <Setter Property="Margin"
+                    Value="{StaticResource TileMargin}" />
+        </Style>
+        <Style x:Key="MediumTileStyle"
+               TargetType="Controls:Tile">
+            <Setter Property="Height"
+                    Value="125" />
+            <Setter Property="TextOptions.TextFormattingMode"
+                    Value="Display" />
+            <Setter Property="TextOptions.TextRenderingMode"
+                    Value="ClearType" />
+            <Setter Property="TitleFontSize"
+                    Value="14" />
+            <Setter Property="Width"
+                    Value="125" />
+            <Setter Property="Margin"
+                    Value="{StaticResource TileMargin}" />
+        </Style>
+
+        <Style TargetType="{x:Type Controls:WindowButtonCommands}"
+               BasedOn="{StaticResource {x:Type Controls:WindowButtonCommands}}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ColorWindowTitlebar}"
+                             Value="False">
+                    <Setter Property="LightMinButtonStyle"
+                            Value="{StaticResource CustomLightMetroWindowButtonStyle}" />
+                    <Setter Property="LightMaxButtonStyle"
+                            Value="{StaticResource CustomLightMetroWindowButtonStyle}" />
+                    <Setter Property="LightCloseButtonStyle"
+                            Value="{StaticResource CustomLightMetroWindowButtonStyle}" />
+                    <Setter Property="DarkMinButtonStyle"
+                            Value="{StaticResource CustomDarkMetroWindowButtonStyle}" />
+                    <Setter Property="DarkMaxButtonStyle"
+                            Value="{StaticResource CustomDarkMetroWindowButtonStyle}" />
+                    <Setter Property="DarkCloseButtonStyle"
+                            Value="{StaticResource CustomDarkMetroWindowButtonStyle}" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </Controls:MetroWindow.Resources>
+    <Grid>
+        <WrapPanel Orientation="Horizontal"
+                   HorizontalAlignment="Center">
+            <Controls:Tile Title="Collected Statistitics"
+                           Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource MahApps.Brushes.ThemeForeground}"
+                           Background="#D2691E"
+                           Style="{StaticResource LargeTileStyle}"
+                           Click="CollectedStatisticsClick"
+                           VerticalTitleAlignment="Top">
+                <IconPacks:PackIconModern Kind="GraphHistogram"
+                                          Width="48"
+                                          Height="48" />
+            </Controls:Tile>
+            <Controls:Tile Title="Live Tracking"
+                           Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource MahApps.Brushes.ThemeForeground}"
+                           Background="Green"
+                           Style="{StaticResource LargeTileStyle}"
+                           Click="LiveTrackingClick"
+                           VerticalTitleAlignment="Top">
+                <IconPacks:PackIconModern Kind="ControlPlayLive"
+                                          Width="48"
+                                          Height="48" />
+            </Controls:Tile>
+            <Controls:Tile Title="Settings"
+                           Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource MahApps.Brushes.ThemeForeground}"
+                           Background="SlateGray"
+                           Style="{StaticResource MediumTileStyle}"
+                           Click="SettingsClick"
+                           VerticalTitleAlignment="Top">
+                <IconPacks:PackIconModern Kind="Settings"
+                                          Width="48"
+                                          Height="48" />
+            </Controls:Tile>
+        </WrapPanel>
+        <TextBlock FontSize="18"
+                   FontWeight="Light"
+                   Style="{DynamicResource MahApps.Styles.TextBlock.Watermark}"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center"
+                   Grid.Row="1">
+            <Run Text="Copyright © 2020 " 
+                 FontSize="16"/>
+            <Run Text="ProphetLamb" />
+            <Run Text=" under the MIT licence." 
+                 FontSize="16"/>
+        </TextBlock>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="48" />
+        </Grid.RowDefinitions>
+    </Grid>
+</Controls:MetroWindow>
