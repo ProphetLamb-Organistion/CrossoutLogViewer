@@ -20,13 +20,17 @@
             <Grid>
                 <local:GameListFilter x:Name="GameListFilter"
                                       FilterChanged="RefreshGamesFilter"
-                                      Grid.Row="1" />
+                                      HorizontalAlignment="Stretch"/>
                 <Button Content="Open Users"
-                        Style="{DynamicResource MahApps.Styles.Button}"
+                        Style="{DynamicResource MahApps.Styles.Button.Flat}"
                         Click="OpenUsersClick"
                         VerticalAlignment="Center"
-                        HorizontalAlignment="Right"
-                        Margin="0,0,5,0"/>
+                        HorizontalAlignment="Center"
+                        Grid.Column="1"/>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="95" />
+                </Grid.ColumnDefinitions>
             </Grid>
         </GroupBox>
         <local:PlayerGamesDataGrid x:Name="DataGridGames"
