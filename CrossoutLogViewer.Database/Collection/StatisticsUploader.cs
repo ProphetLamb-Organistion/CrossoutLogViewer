@@ -76,8 +76,8 @@ namespace CrossoutLogView.Database.Collection
             }
             if (games.Count != 0) //games were finished in the added logs
             {
-                var userIDs = new List<int>();
-                var weapons = new List<string>();
+                var users = User.ParseUsers(games);
+                var weapons = WeaponGlobal.ParseWeapons(games);
                 using (var statCon = new StatisticsConnection())
                 {
                     using (var trans = statCon.BeginTransaction())
@@ -87,19 +87,17 @@ namespace CrossoutLogView.Database.Collection
                     }
                     using (var trans = statCon.BeginTransaction())
                     {
-                        foreach (var u in User.ParseUsers(games))
+                        foreach (var u in users)
                         {
                             statCon.UpdateUser(u);
-                            userIDs.Add(u.UserID);
                         }
                         trans.Commit();
                     }
                     using (var trans = statCon.BeginTransaction())
                     {
-                        foreach (var w in WeaponGlobal.ParseWeapons(games))
+                        foreach (var w in weapons)
                         {
                             statCon.UpdateWeaponGlobal(w);
-                            weapons.Add(w.Name);
                         }
                         trans.Commit();
                     }
@@ -107,9 +105,12 @@ namespace CrossoutLogView.Database.Collection
                 }
                 if (OperatingMode == UploaderOperatingMode.Incremental)
                 {
+                    var userIDs = users.Select(x => x.UserID);
+                    var weaponNames = weapons.Select(x => x.Name);
+                    var maps = games.Select(x => x.Map.Name).Distinct();
                     //send event invalidating changed data
-                    Logging.WriteLine<StatisticsUploader>(String.Concat("Invalidate existing data. ", games.Count, " games added. ", userIDs.Count, " user changed. ", weapons.Count, " weapons changed."));
-                    InvalidateCachedData?.Invoke(this, new InvalidateCachedDataEventArgs(games.Count, userIDs, weapons));
+                    Logging.WriteLine<StatisticsUploader>(String.Concat("Invalidate existing data. ", maps.Count(), " different maps played. ", userIDs.Count(), " user changed. ", weapons.Count(), " weapons changed."));
+                    InvalidateCachedData?.Invoke(this, new InvalidateCachedDataEventArgs(userIDs, weaponNames, maps));
                 }
                 games.Clear();
             }
