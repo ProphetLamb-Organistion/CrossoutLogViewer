@@ -165,7 +165,7 @@ namespace CrossoutLogView.Database.Connection
         public List<long> RequestMapGameRowIds(long rowId, TableRepresentation includeTableRepresentation = TableRepresentation.All)
         {
             var rowIds = new List<long>();
-            var request = String.Format(FormatRequest + " WHERE {2} == {3}", RowIdName, nameof(Game), nameof(Game.Map), rowId);
+            var request = String.Format(FormatRequestWhere, RowIdName, nameof(Game), nameof(Game.Map) + " == " + rowId);
             using var cmd = new SQLiteCommand(request, connection);
             using var reader = cmd.ExecuteReader();
             while (reader.Read())
@@ -186,6 +186,15 @@ namespace CrossoutLogView.Database.Connection
                 rowIds.Add(ReadField<long>(RowIdName, reader));
             }
             return rowIds;
+        }
+
+        public long RequestMapRowId(string mapName)
+        {
+            var request = String.Format(FormatRequestWhere, RowIdName, nameof(Map), nameof(Map.Name) + " == " + SQLiteVariable(mapName));
+            using var cmd = new SQLiteCommand(request, connection);
+            using var reader = cmd.ExecuteReader();
+            if (!reader.Read()) return -1;
+            return ReadField<long>(RowIdName, reader);
         }
 
         public User RequestUser(string name, TableRepresentation includeTableRepresentation = TableRepresentation.All)
@@ -273,7 +282,7 @@ namespace CrossoutLogView.Database.Connection
 
         public long[] RequestWeaponGamesRowIDs(string weaponName)
         {
-            return RequestReferences(nameof(WeaponGlobal.Name) + " == " + SQLiteVariable(weaponName), typeof(WeaponGlobal), nameof(WeaponGlobal.Games));
+            return RequestReferences(nameof(WeaponGlobal.Name).ToLowerInvariant() + " == " + SQLiteVariable(weaponName), typeof(WeaponGlobal), nameof(WeaponGlobal.Games).ToLowerInvariant());
         }
 
         public List<string> RequestWeaponNames()
@@ -456,14 +465,12 @@ namespace CrossoutLogView.Database.Connection
                 {
                     condtions[i] = conditionTemplate + RequestUserRowId(weapon.Users[i].UserID);
                 }
-                var rowIdRequest = String.Concat(String.Format(FormatRequest, RowIdName, nameof(User)), " WHERE ", String.Join(" OR ", condtions));
-                using (var cmd = new SQLiteCommand(rowIdRequest, connection))
+                var rowIdRequest = String.Format(FormatRequestWhere, RowIdName, nameof(User), String.Join(" OR ", condtions));
+                using var cmd = new SQLiteCommand(rowIdRequest, connection);
+                using var reader = cmd.ExecuteReader();
+                while (reader.Read())
                 {
-                    using var reader = cmd.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        newRefs.Add(ReadField<long>(RowIdName, reader));
-                    }
+                    newRefs.Add(ReadField<long>(RowIdName, reader));
                 }
             }
             //update existing weapon
