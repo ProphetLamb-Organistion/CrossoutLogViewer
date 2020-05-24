@@ -79,9 +79,14 @@ namespace CrossoutLogView.GUI.Controls
             get => DataGridWeapons.ItemsSource as IEnumerable<WeaponGlobalModel>;
             set
             {
-                var view = (CollectionView)CollectionViewSource.GetDefaultView(DataGridWeapons.ItemsSource = value);
-                view.Filter = WeaponFilter.Filter;
-                view.Refresh();
+                if (value == null) 
+                    DataGridWeapons.ItemsSource = value;
+                else
+                {
+                    var view = (CollectionView)CollectionViewSource.GetDefaultView(DataGridWeapons.ItemsSource = value);
+                    view.Filter = WeaponFilter.Filter;
+                    view.Refresh();
+                }
             }
         }
 
@@ -90,16 +95,22 @@ namespace CrossoutLogView.GUI.Controls
             get => DataGridWeapons.SelectedItem as WeaponGlobalModel;
             set
             {
+                if (DataProvider.CompleteWeapon(value.Object))
+                    value.UpdateCollections();
                 GroupBoxOverview.DataContext = GroupBoxUsers.DataContext = DataGridWeapons.SelectedItem = value;
             }
         }
 
         private void WeaponOpenUserClick(object sender, RoutedEventArgs e)
         {
-            if (sender is ListBox lb && lb.SelectedItem is WeaponUserListModel weaponUser)
-            {
-                OpenViewModelDoubleClick?.Invoke(this, new OpenModelViewerEventArgs(weaponUser, e));
-            }
+            object dataContext= null;
+            var source = e.OriginalSource;
+            if (source is Run r) source = r.Parent;
+            if (DataGridHelper.GetSourceElement<ListBoxItem>(source) is ListBoxItem lbi) dataContext = lbi.DataContext;
+            else if (sender is MenuItem mi && mi.CommandParameter is ContextMenu cm) dataContext = cm.DataContext;
+
+            if (dataContext is WeaponUserListModel wul)
+                OpenViewModelDoubleClick?.Invoke(this, new OpenModelViewerEventArgs(new UserModel(wul.User), e));
         }
 
         private void WeaponsSelectWeapon(object sender, SelectionChangedEventArgs e)

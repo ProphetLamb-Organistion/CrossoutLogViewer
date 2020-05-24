@@ -49,14 +49,15 @@
                   Grid.Row="1"
                   Grid.Column="2">
             <ListBox Background="Transparent"
-                     ItemsSource="{Binding Users}"
+                     ItemsSource="{Binding WeaponUsers}"
                      ItemContainerStyle="{DynamicResource ListBoxHideSelection}"
                      MouseDoubleClick="WeaponOpenUserClick">
                 <ListBox.Resources>
                     <ContextMenu x:Key="ListBoxWeaponUsersContextMenu"
                                  Style="{DynamicResource MahApps.Styles.ContextMenu}">
                         <MenuItem Header="Open user"
-                                  Click="WeaponOpenUserClick" />
+                                  Click="WeaponOpenUserClick"
+                                  CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}" />
                     </ContextMenu>
                 </ListBox.Resources>
                 <ListBox.ItemTemplate>
@@ -113,7 +114,6 @@
                           SelectedIndex="0"
                           CanUserAddRows="False"
                           SelectionChanged="WeaponsSelectWeapon"
-                          MouseDoubleClick="WeaponOpenUserClick"
                           Grid.Row="1">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Name"
