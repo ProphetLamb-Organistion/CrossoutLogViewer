@@ -63,8 +63,15 @@ namespace CrossoutLogView.Database.Connection
         /// <param name="con"></param>
         protected static void InvokeNonQuery(string command, SQLiteConnection con)
         {
-            using var cmd = new SQLiteCommand(command, con);
-            cmd.ExecuteNonQuery();
+            try
+            {
+                using var cmd = new SQLiteCommand(command, con);
+                cmd.ExecuteNonQuery();
+            }
+            catch (SQLiteException ex)
+            {
+                Logging.WriteLine(ex);
+            }
         }
 
         /// <summary>
@@ -131,6 +138,7 @@ namespace CrossoutLogView.Database.Connection
             }
             return result;
         }
+
         /// <summary>
         /// Returns data from the <see cref="SQLiteConnection"/> using the provided command.
         /// </summary>
@@ -150,6 +158,7 @@ namespace CrossoutLogView.Database.Connection
             }
             return result;
         }
+
         /// <summary>
         /// Returns the first dataset from the <see cref="SQLiteConnection"/> using the provided command.
         /// </summary>
@@ -166,6 +175,7 @@ namespace CrossoutLogView.Database.Connection
             return !reader.Read() ? default
                 : (T)ReadCurrentObject(() => new T(), varInfos, reader, filterTableRepresentation);
         }
+
         /// <summary>
         /// Returns the first dataset from the <see cref="SQLiteConnection"/> using the provided command.
         /// </summary>
@@ -182,20 +192,21 @@ namespace CrossoutLogView.Database.Connection
             return !reader.Read() ? null
                 : ReadCurrentObject(() => Activator.CreateInstance(type), varInfos, reader, filterTableRepresentation);
         }
+
         /// <summary>
         /// Returns the double array of rowid references by the field name. 
         /// Field must have <see cref="TableRepresentation.Reference"/> or <see cref="TableRepresentation.ReferenceArray"/>.
         /// </summary>
         /// <param name="type">The type indicating the table.</param>
-        /// <param name="fieldName">The name of the field.</param>
+        /// <param name="variableName">The name of the field.</param>
         /// <returns>The double array of rowid references by the field name. Null if the field is not found or the table representation is invalid.</returns>
-        protected long[] RequestReferences(string condition, Type type, string fieldName)
+        protected long[] RequestReferences(string condition, Type type, string variableName)
         {
-            var request = String.Concat(String.Format(FormatRequest, fieldName.ToLowerInvariant(), type.Name), " WHERE ", condition);
+            var request = String.Format(FormatRequestWhere, variableName.ToLowerInvariant(), type.Name, condition);
             using var cmd = new SQLiteCommand(request, connection);
             using var reader = cmd.ExecuteReader();
             if (!reader.Read()) return Array.Empty<long>();
-            var vi = VariableInfo.FromType(type).FirstOrDefault(x => x.Name.Equals(fieldName, StringComparison.InvariantCultureIgnoreCase));
+            var vi = VariableInfo.FromType(type).FirstOrDefault(x => x.Name.Equals(variableName, StringComparison.InvariantCultureIgnoreCase));
             if (vi == null) return Array.Empty<long>();
             return (GetTableRepresentation(vi.VariableType, DatabaseTableTypes)) switch
             {
@@ -203,6 +214,15 @@ namespace CrossoutLogView.Database.Connection
                 TableRepresentation.ReferenceArray => ParseSerializedArray(reader.GetString(0), Base85.DecodeInt64),
                 _ => Array.Empty<long>()
             };
+        }
+
+        protected T[] RequestStoredArray<T>(string condition, Type type, string variableName)
+        {
+            var request = String.Format(FormatRequestWhere, variableName.ToLowerInvariant(), type.Name, condition);
+            using var cmd = new SQLiteCommand(request, connection);
+            using var reader = cmd.ExecuteReader();
+            if (!reader.Read()) return Array.Empty<T>();
+            return ParseSerializedArray(reader.GetString(0), GetDeserializer<T>());
         }
 
         protected static object ReadField(VariableInfo variableInfo, SQLiteDataReader reader)
@@ -218,6 +238,7 @@ namespace CrossoutLogView.Database.Connection
                 : type.IsEnum ? Enum.Parse(type, reader.GetInt32(col).ToString())
                 : Convert.ChangeType(reader.GetValue(col), type);
         }
+
         protected static T ReadField<T>(string name, SQLiteDataReader reader)
         {
             var type = typeof(T);
@@ -270,7 +291,7 @@ namespace CrossoutLogView.Database.Connection
                     case TableRepresentation.ReferenceArray:
                         //obtain rowid references from database
                         baseType = Types.GetEnumerableBaseType(varType);
-                        long[] refs = ParseSerializedArray(ReadField<string>(vi.Name, reader) as string, Base85.DecodeInt64);
+                        long[] refs = ParseSerializedArray(ReadField<string>(vi.Name, reader), Base85.DecodeInt64);
                         //request & store each item referenced
                         var items = new object[refs.Length];
                         for (int i = 0; i < refs.Length; i++)
