@@ -1,15 +1,14 @@
 ﻿using ControlzEx.Theming;
+
 using CrossoutLogView.Common;
 using CrossoutLogView.Database;
-using CrossoutLogView.Database.Collection;
 using CrossoutLogView.Database.Data;
-using CrossoutLogView.GUI.Models;
+
+using MahApps.Metro.Controls.Dialogs;
+
 using System;
-using System.ComponentModel;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Windows;
-using System.Windows.Media;
 
 namespace CrossoutLogView.GUI
 {
@@ -42,21 +41,18 @@ namespace CrossoutLogView.GUI
         internal static ControlService SessionControlService;
 
         private static bool _initialized = false;
-        internal static void InitializeEnvironment(bool forceReinitialize = false)
+        internal static void InitializeEnvironment()
         {
-            if (!_initialized || forceReinitialize)
+            if (!_initialized)
             {
+                Logging.WriteLine<App>("Initialize environment.", true);
                 if (File.Exists(Strings.DataBaseEventLogPath) && PathUtility.GetFileSize(Strings.DataBaseEventLogPath) >= 1048576 /**1mb in bytes**/)
                     File.WriteAllText(Strings.DataBaseEventLogPath, String.Empty); //clear log
-                Logging.WriteLine<App>("Initialize environment.", true);
+                MainWindowViewModel.ApplyColors();
                 SessionControlService = new ControlService();
                 SessionControlService.Start();
                 MainWindowViewModel.UpdateStaticCollections();
                 MainWindowViewModel.SubscribeToStatisticsUploader();
-                Settings.Update();
-                if (!String.IsNullOrEmpty(Settings.Current.BaseColorScheme) && !String.IsNullOrEmpty(Settings.Current.ColorScheme))
-                    Theme = ThemeManager.Current.ChangeTheme(Current, Settings.Current.BaseColorScheme, Settings.Current.ColorScheme);
-                MainWindowViewModel.ApplyColors();
                 Logging.WriteLine<App>("Initialized in {TP}.");
             }
             _initialized = true;
