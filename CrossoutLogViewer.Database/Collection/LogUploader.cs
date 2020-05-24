@@ -71,7 +71,6 @@ namespace CrossoutLogView.Database.Collection
         public void Upload()
         {
             using var logCon = new LogConnection();
-            logCon.Open();
             var oldTimeStamp = OperatingMode == UploaderOperatingMode.Incremental ? logCon.RequestNewestLogEntryTimeStamp() : 0;
             //upload collected logs
             Task.WaitAll(Task.Run(async delegate
