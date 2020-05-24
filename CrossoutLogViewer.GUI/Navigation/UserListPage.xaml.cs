@@ -46,7 +46,7 @@ namespace CrossoutLogView.GUI.Navigation
         {
             switch (e.PropertyName)
             {
-                case nameof(CollectedStatisticsWindowViewModel.UserNameFilter):
+                case nameof(MainWindowViewModel.UserNameFilter):
                     CollectionViewSource.GetDefaultView(UserListViewUsers.ItemsSource).Refresh();
                     break;
             }
@@ -66,7 +66,7 @@ namespace CrossoutLogView.GUI.Navigation
         {
             if (e.ViewModel is UserModel user)
             {
-                Logging.WriteLine<CollectedStatisticsWindow>("Open user view.");
+                Logging.WriteLine<MainWindow>("Open user view.");
                 frame.Navigate(new UserPage(frame, user));
             }
         }

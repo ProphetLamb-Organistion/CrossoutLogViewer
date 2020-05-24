@@ -16,8 +16,7 @@
                       GlowBrush="{DynamicResource AccentBaseColorBrush}"
                       BorderThickness="1"
                       ResizeMode="CanResizeWithGrip"
-                      WindowStartupLocation="CenterOwner"
-                      Loaded="OnLoaded">
+                      WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <ResourceDictionary>
             <Style TargetType="{x:Type Controls:WindowButtonCommands}"
@@ -37,6 +36,26 @@
                                 Value="{StaticResource CustomDarkMetroWindowButtonStyle}" />
                         <Setter Property="DarkCloseButtonStyle"
                                 Value="{StaticResource CustomDarkMetroWindowButtonStyle}" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+            <Style x:Key="MetroWindowTitlebarColorStyle"
+                   TargetType="{x:Type Controls:MetroWindow}"
+                   BasedOn="{StaticResource {x:Type Controls:MetroWindow}}">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding ColorWindowTitlebar}"
+                                 Value="False">
+                        <Setter Property="WindowTitleBrush"
+                                Value="{DynamicResource MahApps.Brushes.ThemeBackground}" />
+                        <Setter Property="TitleForeground"
+                                Value="{DynamicResource MahApps.Brushes.ThemeForeground}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding ColorWindowTitlebar}"
+                                 Value="True">
+                        <Setter Property="WindowTitleBrush"
+                                Value="{DynamicResource MahApps.Brushes.Accent}" />
+                        <Setter Property="TitleForeground"
+                                Value="{DynamicResource MahApps.Brushes.ThemeBackground}" />
                     </DataTrigger>
                 </Style.Triggers>
             </Style>

@@ -1,5 +1,5 @@
 ﻿using ControlzEx.Theming;
-using CrossoutLogView.Common;
+
 using CrossoutLogView.Database.Data;
 using CrossoutLogView.GUI.Core;
 using CrossoutLogView.GUI.Models;
@@ -33,11 +33,13 @@ namespace CrossoutLogView.GUI
         private readonly ViewModelBase viewModel;
         public NavigationWindow(ViewModelBase viewModel)
         {
-            Logging.WriteLine<NavigationWindow>("Loading NavigationWindow", true);
             InitializeComponent();
-            DataContext = new WindowViewModel();
+
+            DataContext = new NavigationWindowViewModel();
+
             this.viewModel = viewModel;
-            Logging.WriteLine<NavigationWindow>("NavigationWindow loaded in {TP}");
+
+            Loaded += OnLoaded;
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)

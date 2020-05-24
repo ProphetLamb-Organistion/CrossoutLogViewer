@@ -3,7 +3,7 @@
 using CrossoutLogView.Common;
 using CrossoutLogView.Database;
 using CrossoutLogView.Database.Data;
-using MahApps.Metro.Controls;
+
 using MahApps.Metro.Controls.Dialogs;
 
 using System;
@@ -17,10 +17,8 @@ namespace CrossoutLogView.GUI
     /// </summary>
     public partial class App : Application
     {
+
         private static Theme _theme = ThemeManager.Current.DetectTheme();
-
-        private static bool isInitialized = false;
-
         internal static Theme Theme
         {
             get => _theme;
@@ -42,45 +40,22 @@ namespace CrossoutLogView.GUI
 
         internal static ControlService SessionControlService;
 
-        internal static void InitializeSession()
+        private static bool _initialized = false;
+        internal static void InitializeEnvironment()
         {
-            if (!isInitialized)
+            if (!_initialized)
             {
-                Logging.TrimFile(1048576);
                 Logging.WriteLine<App>("Initialize environment.", true);
+                if (File.Exists(Strings.DataBaseEventLogPath) && PathUtility.GetFileSize(Strings.DataBaseEventLogPath) >= 1048576 /**1mb in bytes**/)
+                    File.WriteAllText(Strings.DataBaseEventLogPath, String.Empty); //clear log
+                MainWindowViewModel.ApplyColors();
                 SessionControlService = new ControlService();
                 SessionControlService.Start();
+                MainWindowViewModel.UpdateStaticCollections();
+                MainWindowViewModel.SubscribeToStatisticsUploader();
                 Logging.WriteLine<App>("Initialized in {TP}.");
             }
-            isInitialized = true;
-        }
-
-        private void App_Start(object sender, StartupEventArgs e)
-        {
-            MetroWindow launchWindow = null;
-            bool startMinimized = false;
-            for (int i = 0; i < e.Args.Length; i++)
-            {
-                var arg = e.Args[i].TrimStart('/', '\\', '-');
-                if (arg.Length == e.Args[i].Length) continue; //no prefix -> invalid command line arg
-                switch (arg)
-                {
-                    case "LaunchCollectedStatistics":
-                        launchWindow = new CollectedStatisticsWindow();
-                        break;
-                    case "LaunchLiveTracking":
-                        launchWindow = new LiveTrackingWindow();
-                        break;
-                    case "StartMinimized":
-                        startMinimized = true;
-                        break;
-                }
-            }
-
-            if (launchWindow == null) launchWindow = new LauncherWindow();
-            if (startMinimized) launchWindow.WindowState = WindowState.Minimized;
-
-            launchWindow.Show();
+            _initialized = true;
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿<Controls:MetroWindow x:Class="CrossoutLogView.GUI.CollectedStatisticsWindow"
+﻿<Controls:MetroWindow x:Class="CrossoutLogView.GUI.MainWindow"
                       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -9,17 +9,15 @@
                       xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                       xmlns:local="clr-namespace:CrossoutLogView.GUI"
                       Style="{DynamicResource MetroWindowTitlebarColorStyle}"
-                      Title="Crossout Log Viewer: Collected Statistics"
+                      Title="Crossout Log Viewer"
                       Height="600"
                       Width="850"
                       MinHeight="500"
                       MinWidth="600"
-                      ShowDialogsOverTitleBar="False"
-                      GlowBrush="{DynamicResource MahApps.Brushes.AccentBase}"
+                      GlowBrush="{DynamicResource AccentBaseColorBrush}"
                       BorderThickness="1"
                       ResizeMode="CanResizeWithGrip"
-                      WindowStartupLocation="CenterScreen"
-                      Loaded="OnLoaded">
+                      WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -103,6 +101,21 @@
                         Value="{DynamicResource MahApps.Brushes.AccentBase}" />
             </Style>
 
+            <Style x:Key="HamburgerMenuCreatorsStyle"
+                   BasedOn="{StaticResource {x:Type Controls:HamburgerMenu}}"
+                   TargetType="{x:Type Controls:HamburgerMenu}">
+                <Setter Property="ItemContainerStyle"
+                        Value="{StaticResource HamburgerMenuCreatorsItemStyle}" />
+                <Setter Property="OptionsItemContainerStyle"
+                        Value="{StaticResource HamburgerMenuCreatorsItemStyle}" />
+                <Setter Property="PaneBackground"
+                        Value="{DynamicResource MahApps.Brushes.ThemeBackground}" />
+                <Setter Property="PaneForeground"
+                        Value="{DynamicResource MahApps.Brushes.Text}" />
+                <Setter Property="ShowSelectionIndicator"
+                        Value="True" />
+            </Style>
+
             <Style TargetType="{x:Type Controls:WindowButtonCommands}"
                    BasedOn="{StaticResource {x:Type Controls:WindowButtonCommands}}">
                 <Style.Triggers>
@@ -124,19 +137,25 @@
                 </Style.Triggers>
             </Style>
 
-            <Style x:Key="HamburgerMenuCreatorsStyle"
-                   BasedOn="{StaticResource {x:Type Controls:HamburgerMenu}}"
-                   TargetType="{x:Type Controls:HamburgerMenu}">
-                <Setter Property="ItemContainerStyle"
-                        Value="{StaticResource HamburgerMenuCreatorsItemStyle}" />
-                <Setter Property="OptionsItemContainerStyle"
-                        Value="{StaticResource HamburgerMenuCreatorsItemStyle}" />
-                <Setter Property="PaneBackground"
-                        Value="{DynamicResource MahApps.Brushes.ThemeBackground}" />
-                <Setter Property="PaneForeground"
-                        Value="{DynamicResource MahApps.Brushes.Text}" />
-                <Setter Property="ShowSelectionIndicator"
-                        Value="True" />
+            <Style x:Key="MetroWindowTitlebarColorStyle"
+                   TargetType="{x:Type Controls:MetroWindow}"
+                   BasedOn="{StaticResource {x:Type Controls:MetroWindow}}">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding ColorWindowTitlebar}"
+                                 Value="False">
+                        <Setter Property="WindowTitleBrush"
+                                Value="{DynamicResource MahApps.Brushes.ThemeBackground}" />
+                        <Setter Property="TitleForeground"
+                                Value="{DynamicResource MahApps.Brushes.ThemeForeground}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding ColorWindowTitleBar}"
+                                 Value="True">
+                        <Setter Property="WindowTitleBrush"
+                                Value="{DynamicResource MahApps.Brushes.Accent}" />
+                        <Setter Property="TitleForeground"
+                                Value="{DynamicResource MahApps.Brushes.ThemeBackground}" />
+                    </DataTrigger>
+                </Style.Triggers>
             </Style>
         </ResourceDictionary>
     </Window.Resources>
@@ -228,11 +247,102 @@
                 <!--=================================================== Weapons ==================================================-->
                 <Controls:MetroTabItem Header="Weapons">
                     <UserControls:WeaponControl x:Name="WeaponListViewWeapons"
-                                                OpenViewModelDoubleClick="WeaponOpenUserDoubleClick" />
+                                                 OpenViewModelDoubleClick="WeaponOpenUserDoubleClick" />
                 </Controls:MetroTabItem>
                 <!--=================================================== Maps =====================================================-->
                 <Controls:MetroTabItem Header="Maps">
-                    <UserControls:MapsControl x:Name="MapsView" />
+                    <UserControls:MapsView x:Name="MapsView" />
+                </Controls:MetroTabItem>
+                <!--=================================================== Settings =================================================-->
+                <Controls:MetroTabItem x:Name="TabItemSettings"
+                                       Header="Settings">
+                    <ScrollViewer>
+
+                        <WrapPanel Orientation="Horizontal">
+                            <GroupBox Header="Style"
+                                      Margin="2"
+                                      VerticalAlignment="Top">
+                                <ItemsControl Width="200"
+                                              Margin="4">
+                                    <UserControls:ColorSelector Text="Theme"
+                                                                ItemsSource="{Binding AppThemes}"
+                                                                SelectedItem="{Binding AppTheme, Mode=TwoWay}"
+                                                                ComboBoxWidth="100"
+                                                                HorizontalAlignment="Stretch" />
+                                    <UserControls:ColorSelector Text="Accent"
+                                                                ItemsSource="{Binding AccentColors}"
+                                                                SelectedItem="{Binding AccentColor, Mode=TwoWay}"
+                                                                ComboBoxWidth="100"
+                                                                HorizontalAlignment="Stretch" />
+                                    <Controls:ToggleSwitch Content="Color window titlebar"
+                                                           IsOn="{Binding ColorWindowTitlebar, Mode=TwoWay}"
+                                                           Margin="4"
+                                                           HorizontalAlignment="Stretch" />
+                                    <Button Content="Apply"
+                                            Click="ChangeThemeClick"
+                                            Margin="4"
+                                            HorizontalAlignment="Left" />
+                                </ItemsControl>
+                            </GroupBox>
+                            <GroupBox Header="Colors"
+                                      Margin="2"
+                                      VerticalAlignment="Top">
+                                <ItemsControl Width="200"
+                                              Margin="4">
+                                    <UserControls:ColorSelector Text="Total"
+                                                                ItemsSource="{Binding Colors}"
+                                                                SelectedItem="{Binding TotalDamage, Mode=TwoWay}"
+                                                                ComboBoxWidth="100" />
+                                    <UserControls:ColorSelector Text="Critical"
+                                                                ItemsSource="{Binding Colors}"
+                                                                SelectedItem="{Binding CriticalDamage, Mode=TwoWay}"
+                                                                ComboBoxWidth="100" />
+                                    <UserControls:ColorSelector Text="Armor"
+                                                                ItemsSource="{Binding Colors}"
+                                                                SelectedItem="{Binding ArmorDamage, Mode=TwoWay}"
+                                                                ComboBoxWidth="100" />
+                                    <UserControls:ColorSelector Text="Sucicide"
+                                                                ItemsSource="{Binding Colors}"
+                                                                SelectedItem="{Binding Suicide, Mode=TwoWay}"
+                                                                ComboBoxWidth="100" />
+                                    <UserControls:ColorSelector Text="Despawn"
+                                                                ItemsSource="{Binding Colors}"
+                                                                SelectedItem="{Binding Despawn, Mode=TwoWay}"
+                                                                ComboBoxWidth="100" />
+                                    <UserControls:ColorSelector Text="Won"
+                                                                ItemsSource="{Binding Colors}"
+                                                                SelectedItem="{Binding TeamWon, Mode=TwoWay}"
+                                                                ComboBoxWidth="100" />
+                                    <UserControls:ColorSelector Text="Lost"
+                                                                ItemsSource="{Binding Colors}"
+                                                                SelectedItem="{Binding TeamLost, Mode=TwoWay}"
+                                                                ComboBoxWidth="100" />
+                                    <Button Content="Reset"
+                                            Click="ResetColorsClick"
+                                            Margin="4"
+                                            HorizontalAlignment="Left" />
+                                </ItemsControl>
+                            </GroupBox>
+                            <GroupBox Header="Miscellaneous"
+                                      Margin="2"
+                                      VerticalAlignment="Top">
+                                <ItemsControl Margin="4">
+                                    <Button Content="Open event log"
+                                            Click="OpenEventLogClick"
+                                            Margin="4"
+                                            HorizontalAlignment="Left" />
+                                    <Button Content="Open settings file"
+                                            Click="OpenSettingsFileClick"
+                                            Margin="4"
+                                            HorizontalAlignment="Left" />
+                                    <Button Content="Delete Database"
+                                            Click="DeleteDatabaseClick"
+                                            Margin="4"
+                                            HorizontalAlignment="Left" />
+                                </ItemsControl>
+                            </GroupBox>
+                        </WrapPanel>
+                    </ScrollViewer>
                 </Controls:MetroTabItem>
             </Controls:MetroTabControl>
         </Controls:HamburgerMenu.Content>

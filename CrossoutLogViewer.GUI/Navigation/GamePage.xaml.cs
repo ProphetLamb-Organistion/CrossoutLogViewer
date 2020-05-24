@@ -1,5 +1,4 @@
 ﻿using CrossoutLogView.Common;
-using CrossoutLogView.Database.Data;
 using CrossoutLogView.GUI.Core;
 using CrossoutLogView.GUI.Models;
 
@@ -7,7 +6,6 @@ using System;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
 
 namespace CrossoutLogView.GUI.Navigation
 {
@@ -30,15 +28,6 @@ namespace CrossoutLogView.GUI.Navigation
             gameViewModel.Players.Sort(new PlayerModelScoreDescending());
             ListBoxWon.ItemsSource = gameViewModel.Players.Where(x => gameViewModel.WinningTeam == x.Object.Team);
             ListBoxLost.ItemsSource = gameViewModel.Players.Where(x => gameViewModel.WinningTeam != x.Object.Team);
-            try
-            {
-                var uri = ImageProvider.GetMapImageUri(gameModel.Map.Name);
-                MapImage.Source = new BitmapImage(uri);
-            }
-            catch (System.IO.FileNotFoundException ex)
-            {
-                Logging.WriteLine<GamePage>(ex);
-            }
         }
 
         private void RoundKillEnter(object sender, MouseEventArgs e) => isRoundKillerOver = true;
@@ -88,7 +77,6 @@ namespace CrossoutLogView.GUI.Navigation
                 e.Handled = true;
             }
         }
-
         private void OpenRedMVP(object sender, MouseButtonEventArgs e)
         {
             if (gameModel.RedMVP != null)
@@ -97,11 +85,6 @@ namespace CrossoutLogView.GUI.Navigation
                 frame.Navigate(new PlayerPage(frame, gameModel.RedMVP));
                 e.Handled = true;
             }
-        }
-
-        private void OpenMapImageClick(object sender, MouseButtonEventArgs e)
-        {
-            ExplorerOpenFile.OpenFile(ImageProvider.GetMapImageUri(gameModel.Map.Name));
         }
 
         private PlayerModel PlayerByName(string name)

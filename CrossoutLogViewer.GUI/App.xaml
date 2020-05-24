@@ -1,11 +1,12 @@
-﻿<Application x:Class="CrossoutLogView.GUI.App"
+﻿<Application x:Class="GUI.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:local="clr-namespace:GUI"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:behaviors="http://metro.mahapps.com/winfx/xaml/shared"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             Startup="App_Start">
+             StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -73,26 +74,6 @@
                         Value="1" />
             </Style>
 
-            <Style x:Key="MetroWindowTitlebarColorStyle"
-                   TargetType="{x:Type Controls:MetroWindow}"
-                   BasedOn="{StaticResource {x:Type Controls:MetroWindow}}">
-                <Style.Triggers>
-                    <DataTrigger Binding="{Binding ColorWindowTitlebar}"
-                                 Value="False">
-                        <Setter Property="WindowTitleBrush"
-                                Value="{DynamicResource MahApps.Brushes.ThemeBackground}" />
-                        <Setter Property="TitleForeground"
-                                Value="{DynamicResource MahApps.Brushes.ThemeForeground}" />
-                    </DataTrigger>
-                    <DataTrigger Binding="{Binding ColorWindowTitleBar}"
-                                 Value="True">
-                        <Setter Property="WindowTitleBrush"
-                                Value="{DynamicResource MahApps.Brushes.Accent}" />
-                        <Setter Property="TitleForeground"
-                                Value="{DynamicResource MahApps.Brushes.ThemeBackground}" />
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
 
             <Style x:Key="ListBoxHideSelection"
                    BasedOn="{StaticResource MahApps.Styles.ListBoxItem}"
