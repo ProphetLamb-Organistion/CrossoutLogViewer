@@ -6,7 +6,7 @@
     <UseWPF>true</UseWPF>
     <RootNamespace>CrossoutLogView.GUI</RootNamespace>
     <ApplicationIcon />
-    <StartupObject />
+    <StartupObject></StartupObject>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -31,4 +31,7 @@
     <ProjectReference Include="..\CrossoutLogViewer.Statistics\CrossoutLogViewer.Statistics.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="$(SolutionDir)\resources\**" CopyToOutputDirectory="PreserveNewest"/>
+  </ItemGroup>
 </Project>
