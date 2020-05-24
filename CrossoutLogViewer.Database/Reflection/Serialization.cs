@@ -73,6 +73,12 @@ namespace CrossoutLogView.Database.Reflection
             return func;
         }
 
+        public static Func<string, T> GetDeserializer<T>()
+        {
+            var deserializer = GetDeserializer(typeof(T));
+            return x => (T)deserializer(x);
+        }
+
         public static string SerializeArray(IEnumerable values, Func<object, string> serializer)
         {
             var result = new List<string>();
