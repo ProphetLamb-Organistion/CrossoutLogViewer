@@ -30,6 +30,7 @@ namespace CrossoutLogView.Database.Data
             { "CarPart_Quadrocopter_Syfy", "Annihilator" },
             { "CarPart_Gun_Syfy_Tesla", "Spark" },
             { "CarPart_Hover_rare", "Icarus VII" },
+            { "CarPart_Hover_rare_bundle", "Icarus IV" },
             { "CarPart_Gun_GrenadeLauncher_Shotgun", "Retcher" },
             { "CarPart_Gun_Syfy_Plazma_Legend", "Helios" },
             { "CarPart_EngineMini_epic", "Hotred" },
@@ -61,6 +62,7 @@ namespace CrossoutLogView.Database.Data
             { "CarPart_Quadrocopter_epic", "MD-3 Owl" },
             { "Cabin_Famine", "Howl" },
             { "CarPart_PowerGiver_legend", "Appollo" },
+            { "AutoGuidedCourseGun_Epic2", "Locust" },
         };
 
         private static readonly Dictionary<string, string> defaultStripes = new Dictionary<string, string>()
@@ -80,7 +82,8 @@ namespace CrossoutLogView.Database.Data
             { "tower", "Nameless tower" },
             { "abandoned_ship", "Sand gulf" },
             { "riverport", "Ship graveyard" },
-            { "iron_way_center", "\"Control 17\" station" },
+            { "iron_way_center", "\"Control-17\" station" },
+            { "geopp", "Naukograd" },
             { "chemical_plant", "Chemical plant" },
             { "castle", "Fortress" },
             { "conflagration", "Ashen ring" },
