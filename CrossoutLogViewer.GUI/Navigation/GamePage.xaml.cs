@@ -14,7 +14,7 @@ namespace CrossoutLogView.GUI.Navigation
     /// <summary>
     /// Interaction logic for GamePage.xaml
     /// </summary>
-    public partial class GamePage : Page
+    public partial class GamePage
     {
         private bool isRoundKillerOver = false, isRoundVictimOver = false, isRoundAssistantOver = false;
         private readonly Frame frame;

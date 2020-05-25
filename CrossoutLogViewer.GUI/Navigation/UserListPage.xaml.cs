@@ -23,7 +23,7 @@ namespace CrossoutLogView.GUI.Navigation
     /// <summary>
     /// Interaction logic for UserListPage.xaml
     /// </summary>
-    public partial class UserListPage : Page
+    public partial class UserListPage
     {
         private readonly Frame frame;
 
@@ -37,7 +37,8 @@ namespace CrossoutLogView.GUI.Navigation
             userList.PropertyChanged += OnPropertyChanged;
             userList.Users.Sort(new UserModelParticipationCountDescending());
 
-            var view = (CollectionView)CollectionViewSource.GetDefaultView(UserListViewUsers.ItemsSource = userList.Users);
+            UserListViewUsers.ItemsSource = userList.Users;
+            var view = (CollectionView)CollectionViewSource.GetDefaultView(UserListViewUsers.ItemsSource);
             view.Filter = UserListFilter;
             view.Refresh();
         }
@@ -49,6 +50,8 @@ namespace CrossoutLogView.GUI.Navigation
                 case nameof(CollectedStatisticsWindowViewModel.UserNameFilter):
                     CollectionViewSource.GetDefaultView(UserListViewUsers.ItemsSource).Refresh();
                     break;
+                default:
+                    return;
             }
         }
 

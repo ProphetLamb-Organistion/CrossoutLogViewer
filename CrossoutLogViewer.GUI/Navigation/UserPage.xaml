@@ -20,7 +20,7 @@
                    VerticalAlignment="Center" />
 
         </WrapPanel>
-        <UserControls:UserGamesView x:Name="UserGamesViewGames"
+        <UserControls:UserGamesControl x:Name="UserGamesViewGames"
                                     Grid.Row="2" />
         <Grid Grid.Row="1"
               Grid.Column="2">

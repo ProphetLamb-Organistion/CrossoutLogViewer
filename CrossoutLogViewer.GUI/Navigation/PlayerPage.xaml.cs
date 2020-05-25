@@ -12,7 +12,7 @@ namespace CrossoutLogView.GUI.Navigation
     /// <summary>
     /// Interaction logic for PlayerPage.xaml
     /// </summary>
-    public partial class PlayerPage : Page
+    public partial class PlayerPage
     {
         private readonly Frame frame;
         private readonly PlayerModel playerModel;

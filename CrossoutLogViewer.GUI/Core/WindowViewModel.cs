@@ -34,6 +34,6 @@ namespace CrossoutLogView.GUI.Core
             }
         }
 
-        public override void UpdateCollections() { }
+        public override void UpdateCollections() { } //override on demand, not required
     }
 }
