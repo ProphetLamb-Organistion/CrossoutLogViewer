@@ -15,18 +15,25 @@ namespace CrossoutLogView.GUI
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application
+    public partial class App
     {
         private static Theme _theme = ThemeManager.Current.DetectTheme();
 
         private static bool isInitialized = false;
+
+        internal const byte DarkThemeColorAlpha = 0x38;
+
+        internal const byte LightThemeColorAlpha = 0x7A;
+
+        internal static ControlService SessionControlService;
 
         internal static Theme Theme
         {
             get => _theme;
             set
             {
-                ThemeManager.Current.ChangeTheme(Application.Current, _theme = value);
+                _theme = value;
+                ThemeManager.Current.ChangeTheme(Application.Current, _theme);
                 Settings.Current.ColorScheme = _theme.ColorScheme;
                 Settings.Current.BaseColorScheme = Theme.BaseColorScheme;
             }
@@ -35,13 +42,6 @@ namespace CrossoutLogView.GUI
         internal static string BaseColorScheme => Theme.BaseColorScheme;
 
         internal static string AccentColorScheme => Theme.ColorScheme;
-
-        internal static byte DarkThemeColorAlpha = 0x38;
-
-        internal static byte LightThemeColorAlpha = 0x7A;
-
-        internal static ControlService SessionControlService;
-
         internal static void InitializeSession()
         {
             if (!isInitialized)
@@ -63,17 +63,26 @@ namespace CrossoutLogView.GUI
             {
                 var arg = e.Args[i].TrimStart('/', '\\', '-');
                 if (arg.Length == e.Args[i].Length) continue; //no prefix -> invalid command line arg
-                switch (arg)
+                try
                 {
-                    case "LaunchCollectedStatistics":
-                        launchWindow = new CollectedStatisticsWindow();
-                        break;
-                    case "LaunchLiveTracking":
-                        launchWindow = new LiveTrackingWindow();
-                        break;
-                    case "StartMinimized":
-                        startMinimized = true;
-                        break;
+                    switch (arg)
+                    {
+                        case "LaunchCollectedStatistics":
+                            launchWindow = new CollectedStatisticsWindow();
+                            break;
+                        case "LaunchLiveTracking":
+                            launchWindow = new LiveTrackingWindow();
+                            break;
+                        case "StartMinimized":
+                            startMinimized = true;
+                            break;
+                        default:
+                            throw new ArgumentException("Invalid statup argument: '" + arg + "'", nameof(e.Args));
+                    }
+                }
+                catch (ArgumentException ex)
+                {
+                    Logging.WriteLine<App>(ex);
                 }
             }
 
