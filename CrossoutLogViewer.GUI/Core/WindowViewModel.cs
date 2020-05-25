@@ -1,5 +1,6 @@
 ﻿using CrossoutLogView.Database.Data;
 using CrossoutLogView.GUI.Events;
+
 using System;
 using System.Collections.Generic;
 using System.Text;

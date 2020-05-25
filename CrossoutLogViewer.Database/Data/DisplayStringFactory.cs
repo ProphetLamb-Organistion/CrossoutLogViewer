@@ -5,7 +5,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace CrossoutLogView.Database.Data
 {
@@ -99,7 +98,7 @@ namespace CrossoutLogView.Database.Data
             { "red_rocks_territory", "Blood Rocks" }
         };
 
-        private static readonly string[] assetNamePrefixes = new string[]
+        private static readonly string[] assetNamePrefixes =
         {
             "CarPart_",
             "Wheel_",
@@ -120,7 +119,7 @@ namespace CrossoutLogView.Database.Data
             var trimmed = name.AsSpan();
             foreach (var prefix in assetNamePrefixes)
             {
-                if (trimmed.StartsWith(prefix)) 
+                if (trimmed.StartsWith(prefix))
                     trimmed = trimmed.Slice(prefix.Length);
             }
             return trimmed.ToString();
@@ -144,7 +143,7 @@ namespace CrossoutLogView.Database.Data
             if (maps.Count == 0 && !ReadDictionary(ref maps, nameof(maps)))
             {
                 maps = defaultMaps;
-                WriteDictionary(maps, nameof(maps)); 
+                WriteDictionary(maps, nameof(maps));
             }
             if (maps.TryGetValue(name, out var result)) return result;
             return name;

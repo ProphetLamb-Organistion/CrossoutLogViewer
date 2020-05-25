@@ -79,7 +79,7 @@ namespace CrossoutLogView.GUI.Controls
             get => DataGridWeapons.ItemsSource as IEnumerable<WeaponGlobalModel>;
             set
             {
-                if (value == null) 
+                if (value == null)
                     DataGridWeapons.ItemsSource = value;
                 else
                 {
@@ -104,7 +104,7 @@ namespace CrossoutLogView.GUI.Controls
 
         private void WeaponOpenUserClick(object sender, RoutedEventArgs e)
         {
-            object dataContext= null;
+            object dataContext = null;
             var source = e.OriginalSource;
             if (source is Run r) source = r.Parent;
             if (DataGridHelper.GetSourceElement<ListBoxItem>(source) is ListBoxItem lbi) dataContext = lbi.DataContext;

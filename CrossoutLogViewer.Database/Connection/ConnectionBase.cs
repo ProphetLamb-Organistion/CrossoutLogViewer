@@ -19,7 +19,7 @@ namespace CrossoutLogView.Database.Connection
     {
         protected SQLiteConnection connection;
         protected Type[] DatabaseTableTypes;
-        
+
         /// <summary>
         /// Returns the state of the SQLite connection.
         /// </summary>

@@ -1,7 +1,9 @@
 ﻿using ControlzEx.Theming;
+
 using CrossoutLogView.Common;
 using CrossoutLogView.Database.Data;
 using CrossoutLogView.GUI.Core;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -143,7 +145,7 @@ namespace CrossoutLogView.GUI
 
         public static AccentColorMenuData GetCurrentAccent()
         {
-            return new AccentColorMenuData() { Name = App.Theme.ColorScheme, ColorBrush = App.Theme.ShowcaseBrush };
+            return new AccentColorMenuData { Name = App.Theme.ColorScheme, ColorBrush = App.Theme.ShowcaseBrush };
         }
     }
 
@@ -158,7 +160,7 @@ namespace CrossoutLogView.GUI
 
         public static AppThemeMenuData GetCurrentTheme()
         {
-            return new AppThemeMenuData() { Name = App.Theme.BaseColorScheme, BorderColorBrush = App.Theme.Resources["MahApps.Brushes.ThemeForeground"] as Brush, ColorBrush = App.Theme.Resources["MahApps.Brushes.ThemeBackground"] as Brush };
+            return new AppThemeMenuData { Name = App.Theme.BaseColorScheme, BorderColorBrush = App.Theme.Resources["MahApps.Brushes.ThemeForeground"] as Brush, ColorBrush = App.Theme.Resources["MahApps.Brushes.ThemeBackground"] as Brush };
         }
     }
 }

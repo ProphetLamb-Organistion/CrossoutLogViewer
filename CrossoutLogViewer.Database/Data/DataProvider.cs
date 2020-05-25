@@ -1,5 +1,4 @@
-﻿using CrossoutLogView.Common;
-using CrossoutLogView.Database.Collection;
+﻿using CrossoutLogView.Database.Collection;
 using CrossoutLogView.Database.Connection;
 using CrossoutLogView.Database.Events;
 using CrossoutLogView.Database.Reflection;
@@ -7,9 +6,7 @@ using CrossoutLogView.Statistics;
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CrossoutLogView.Database.Data
@@ -258,7 +255,7 @@ namespace CrossoutLogView.Database.Data
                 }),
                 Task.Run(delegate
                 {
-                     games = GetGames(statCon.RequestMapGameRowIds(mapRowId)).OrderByDescending(x => x.Start);
+                    games = GetGames(statCon.RequestMapGameRowIds(mapRowId)).OrderByDescending(x => x.Start);
                 }));
                 AddMap(mapRowId, gameMap = new GameMap(map, games));
             }

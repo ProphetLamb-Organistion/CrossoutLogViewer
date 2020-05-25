@@ -54,7 +54,7 @@ namespace CrossoutLogView.GUI.Models
             }),
             Task.Run(delegate
             {
-                foreach(var user in Object.Users)
+                foreach (var user in Object.Users)
                 {
                     weaponUsers.Add(new WeaponUserListModel(user, Object));
                 }

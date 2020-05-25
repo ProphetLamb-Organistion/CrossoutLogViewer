@@ -39,7 +39,7 @@ namespace CrossoutLogView.Common
 
         public static void TrimFile(long maxFileSize)
         {
-            if (File.Exists(Strings.DataBaseEventLogPath) && PathUtility.GetFileSize(Strings.DataBaseEventLogPath) >=  maxFileSize)
+            if (File.Exists(Strings.DataBaseEventLogPath) && PathUtility.GetFileSize(Strings.DataBaseEventLogPath) >= maxFileSize)
             {
                 Close();
                 File.Delete(_filePath);

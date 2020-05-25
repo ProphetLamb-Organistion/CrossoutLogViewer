@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Text;
 
 namespace CrossoutLogView.Common
 {
@@ -12,7 +10,7 @@ namespace CrossoutLogView.Common
         {
             return OpenFile(fileUri.AbsolutePath);
         }
-        
+
         public static bool OpenFile(string filePath)
         {
             if (!File.Exists(filePath)) return false;

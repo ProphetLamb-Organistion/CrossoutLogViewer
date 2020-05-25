@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace CrossoutLogView.Database.Reflection
 {
@@ -15,11 +13,11 @@ namespace CrossoutLogView.Database.Reflection
             var ienumerable = GetEnumerableCast(itemType).Invoke(null, new object[] { items }); //items.Cast<itemType>
             if (typeof(IList).IsAssignableFrom(type))
             {
-                return GetGenericToList(itemType).Invoke(null, new object[] { ienumerable }); //ienumerable.ToList<itemType>
+                return GetGenericToList(itemType).Invoke(null, new[] { ienumerable }); //ienumerable.ToList<itemType>
             }
             if (typeof(Array).IsAssignableFrom(type))
             {
-                return GetGenericToArray(itemType).Invoke(null, new object[] { ienumerable });//ienumerable.ToArray<itemType>
+                return GetGenericToArray(itemType).Invoke(null, new[] { ienumerable });//ienumerable.ToArray<itemType>
             }
             return ienumerable;
         }

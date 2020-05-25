@@ -1,6 +1,5 @@
 ﻿using CrossoutLogView.Common;
 using CrossoutLogView.Database.Connection;
-using CrossoutLogView.Database.Data;
 using CrossoutLogView.Database.Events;
 using CrossoutLogView.Log;
 using CrossoutLogView.Statistics;
@@ -8,8 +7,6 @@ using CrossoutLogView.Statistics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CrossoutLogView.Database.Collection
 {

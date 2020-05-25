@@ -2,23 +2,21 @@
 using CrossoutLogView.Database.Connection;
 using CrossoutLogView.Database.Events;
 using CrossoutLogView.Log;
-using CrossoutLogView.Statistics;
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace CrossoutLogView.Database.Collection
 {
     public class LogUploader : IDisposable
     {
-        private LogCollector collector;
+        private readonly LogCollector collector;
         private FileStream fileStream;
         private StreamReader streamReader;
         private long linePosition = 0;
+        private readonly List<ILogEntry> _combined = new List<ILogEntry>();
 
         public static LogUploadEventEventHandler LogUploadEvent;
 
@@ -35,7 +33,6 @@ namespace CrossoutLogView.Database.Collection
 
         public UploaderOperatingMode OperatingMode { get; }
 
-        private List<ILogEntry> _combined = new List<ILogEntry>();
         public IEnumerable<ILogEntry> Combined { get => OperatingMode == UploaderOperatingMode.Unchecked ? _combined : throw new InvalidOperationException(); }
 
         public void Reposition(long linePos)

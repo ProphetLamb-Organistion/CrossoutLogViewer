@@ -2,16 +2,12 @@
 
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Reflection;
 
 namespace CrossoutLogView.Database.Reflection
 {
     public class MemberDefinitionData
     {
-        public readonly VariableInfo[] VariableInfos;
-        public readonly string Header;
-
         public MemberDefinitionData(VariableInfo[] variableInfos, string header)
         {
             VariableInfos = variableInfos;
@@ -33,6 +29,10 @@ namespace CrossoutLogView.Database.Reflection
             }
             Header = header;
         }
+
+        public VariableInfo[] VariableInfos { get; }
+        public string Header { get; }
+
 
         private static ConcurrentDictionary<Guid, MemberDefinitionData> memberDefintionData = new ConcurrentDictionary<Guid, MemberDefinitionData>();
         public static MemberDefinitionData FromType(Type type)

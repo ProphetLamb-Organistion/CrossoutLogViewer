@@ -32,13 +32,13 @@ namespace CrossoutLogView.Log
             if (logLine.Length < 30) return false;
             var parser = new Tokenizer();
             if (!parser.First(logLine, "assist by ")) return false;
-            if (!parser.MoveNext(logLine, "weapon: '")) return false; ;
+            if (!parser.MoveNext(logLine, "weapon: '")) return false;
             var assistant = parser.CurrentString;
-            if (!parser.MoveNext(logLine, "', ")) return false; ;
+            if (!parser.MoveNext(logLine, "', ")) return false;
             var weapon = parser.CurrentString;
-            if (!parser.MoveNext(logLine, " sec ago, damage: ")) return false; ;
+            if (!parser.MoveNext(logLine, " sec ago, damage: ")) return false;
             var elapsed = parser.CurrentSingle;
-            if (!parser.MoveNext(logLine, " ")) return false; ;
+            if (!parser.MoveNext(logLine, " ")) return false;
             var damage = parser.CurrentSingle;
             parser.End(logLine);
             var damageFlags = DamageFlagsUtility.FromString(parser.CurrentString);

@@ -1,4 +1,5 @@
 ﻿using ControlzEx.Theming;
+
 using CrossoutLogView.Common;
 using CrossoutLogView.Database.Data;
 using CrossoutLogView.GUI.Core;

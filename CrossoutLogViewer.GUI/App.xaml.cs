@@ -3,6 +3,7 @@
 using CrossoutLogView.Common;
 using CrossoutLogView.Database;
 using CrossoutLogView.Database.Data;
+
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 

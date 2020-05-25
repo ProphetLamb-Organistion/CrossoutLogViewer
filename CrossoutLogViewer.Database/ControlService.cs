@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.ServiceProcess;
-using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 
@@ -16,10 +15,10 @@ namespace CrossoutLogView.Database
 {
     public class ControlService : ServiceBase
     {
-        private FileSystemWatcher fsWatcher;
-        private Timer logChangeTrackTimer;
+        private readonly FileSystemWatcher fsWatcher;
+        private readonly Timer logChangeTrackTimer;
+        private readonly StatisticsUploader uploader;
         private LogConfig current = new LogConfig();
-        private StatisticsUploader uploader;
 
         public ControlService()
         {
@@ -166,7 +165,7 @@ namespace CrossoutLogView.Database
             if (unprocessedLogs.Count != 0)
             {
                 Logging.WriteLine<ControlService>("Upload logs");
-                Parallel.ForEach(unprocessedLogs, new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount * 2 },
+                Parallel.ForEach(unprocessedLogs, new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount * 2 },
                     delegate (string dir)
                 {
                     using var logUploader = new LogUploader(dir, UploaderOperatingMode.Unchecked);

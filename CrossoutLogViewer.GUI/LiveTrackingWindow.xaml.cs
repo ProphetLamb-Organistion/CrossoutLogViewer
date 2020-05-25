@@ -1,8 +1,10 @@
 ﻿using CrossoutLogView.Common;
 using CrossoutLogView.Database.Collection;
 using CrossoutLogView.Database.Events;
+
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -24,7 +26,7 @@ namespace CrossoutLogView.GUI
     /// </summary>
     public partial class LiveTrackingWindow
     {
-        private LiveTrackingWindowViewModel viewModel;
+        private readonly LiveTrackingWindowViewModel viewModel;
 
         private bool forceClose = false;
 

@@ -1,9 +1,12 @@
 ﻿using ControlzEx.Theming;
+
 using CrossoutLogView.Common;
 using CrossoutLogView.Database.Data;
 using CrossoutLogView.GUI.Core;
+
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
+
 using System;
 using System.Collections.Generic;
 using System.Text;

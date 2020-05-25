@@ -79,7 +79,7 @@ namespace CrossoutLogView.GUI.Controls
             {
                 gl.Filter = new GameFilter(
                     gl.Filter.GameModes,
-                    (e.NewValue as DateTime?)??DateTime.MinValue,
+                    (e.NewValue as DateTime?) ?? DateTime.MinValue,
                     gl.Filter.EndLimit);
             }
         }
