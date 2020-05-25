@@ -54,11 +54,11 @@ namespace CrossoutLogView.Database.Reflection
         public static MethodInfo GetGenericToArray(Type itemType)
         {
             //try to get cached or make generic cast method for the type
-            if (!generatedGernericToList.TryGetValue(itemType.GUID, out MethodInfo method))
+            if (!generatedGernericToArray.TryGetValue(itemType.GUID, out MethodInfo method))
             {
                 method = typeof(Enumerable).GetMethod(nameof(Enumerable.ToArray)).MakeGenericMethod(itemType);
                 //cache methodinfo
-                generatedGernericToList.AddOrUpdate(itemType.GUID, method, (guid, mi) => method);
+                generatedGernericToArray.AddOrUpdate(itemType.GUID, method, (guid, mi) => method);
             }
             return method;
         }
