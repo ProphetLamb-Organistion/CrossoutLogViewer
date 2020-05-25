@@ -110,20 +110,29 @@ namespace CrossoutLogView.Database.Data
 
         public static string AssetName(string name)
         {
-            if (assets.Count == 0 && !ReadDictionary(ref assets, nameof(assets))) WriteDictionary(assets = defaultAssets, nameof(assets));
+            if (assets.Count == 0 && !ReadDictionary(ref assets, nameof(assets)))
+            {
+                assets = defaultAssets;
+                WriteDictionary(assets, nameof(assets));
+            }
             if (assets.TryGetValue(name, out var result)) return result;
             //default behaviour
             var trimmed = name.AsSpan();
             foreach (var prefix in assetNamePrefixes)
             {
-                if (trimmed.StartsWith(prefix)) trimmed = trimmed.Slice(prefix.Length);
+                if (trimmed.StartsWith(prefix)) 
+                    trimmed = trimmed.Slice(prefix.Length);
             }
             return trimmed.ToString();
         }
 
         public static string StripeName(string name)
         {
-            if (stripes.Count == 0 && !ReadDictionary(ref stripes, nameof(stripes))) WriteDictionary(stripes = defaultStripes, nameof(stripes));
+            if (stripes.Count == 0 && !ReadDictionary(ref stripes, nameof(stripes)))
+            {
+                stripes = defaultStripes;
+                WriteDictionary(stripes, nameof(stripes));
+            }
             if (stripes.TryGetValue(name, out var result)) return result;
             //default behaviour
             if (name.StartsWith("Pvp") || name.StartsWith("Pve")) return name[3..^0];
@@ -132,7 +141,11 @@ namespace CrossoutLogView.Database.Data
 
         public static string MapName(string name)
         {
-            if (maps.Count == 0 && !ReadDictionary(ref maps, nameof(maps))) WriteDictionary(maps = defaultMaps, nameof(maps));
+            if (maps.Count == 0 && !ReadDictionary(ref maps, nameof(maps)))
+            {
+                maps = defaultMaps;
+                WriteDictionary(maps, nameof(maps)); 
+            }
             if (maps.TryGetValue(name, out var result)) return result;
             return name;
         }

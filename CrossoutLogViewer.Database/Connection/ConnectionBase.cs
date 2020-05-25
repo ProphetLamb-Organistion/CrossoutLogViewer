@@ -19,15 +19,7 @@ namespace CrossoutLogView.Database.Connection
     {
         protected SQLiteConnection connection;
         protected Type[] DatabaseTableTypes;
-
-        /// <summary>
-        /// Calls <see cref="InitializeDataStructure"/>.
-        /// </summary>
-        protected ConnectionBase()
-        {
-            InitializeDataStructure();
-        }
-
+        
         /// <summary>
         /// Returns the state of the SQLite connection.
         /// </summary>
@@ -300,6 +292,8 @@ namespace CrossoutLogView.Database.Connection
                         }
                         vi.SetValue(obj, Generics.CastEnumerable(varType, baseType, items));
                         break;
+                    default:
+                        throw new InvalidOperationException("Value of TableRepresentation is invalid.");
                 }
             }
             return obj;
@@ -317,9 +311,10 @@ namespace CrossoutLogView.Database.Connection
         {
             if (!requestVariableInfos.TryGetValue((type.GUID, includedTableRepresentation), out var varInfoString))
             {
-                requestVariableInfos.AddOrUpdate((type.GUID, includedTableRepresentation), varInfoString = String.Join(", ", includedTableRepresentation == TableRepresentation.All
+                varInfoString = String.Join(", ", includedTableRepresentation == TableRepresentation.All
                     ? VariableInfo.FromType(type).Select(x => x.Name.ToLowerInvariant())
-                    : VariableInfo.FromType(type).Where(x => MaskFilter(GetTableRepresentation(x.VariableType, DatabaseTableTypes), includedTableRepresentation)).Select(x => x.Name.ToLowerInvariant())),
+                    : VariableInfo.FromType(type).Where(x => MaskFilter(GetTableRepresentation(x.VariableType, DatabaseTableTypes), includedTableRepresentation)).Select(x => x.Name.ToLowerInvariant()));
+                requestVariableInfos.AddOrUpdate((type.GUID, includedTableRepresentation), varInfoString,
                     ((Guid, TableRepresentation) key, string value) => value);
             }
             return String.Format(FormatRequest, (includeRowId ? RowIdName + ", " : String.Empty) + varInfoString, type.Name);
@@ -491,10 +486,10 @@ namespace CrossoutLogView.Database.Connection
                             current = connection.LastInsertRowId;
                             break;
                         case TableRepresentation.StoreArray:
-                            current = SerializeArray((IEnumerable)vi.GetValue(obj), GetSerializer(Types.GetEnumerableBaseType(vi.VariableType)));
+                            current = SerializeArray(vi.GetValue(obj) as IEnumerable, GetSerializer(Types.GetEnumerableBaseType(vi.VariableType)));
                             break;
                         case TableRepresentation.ReferenceArray:
-                            current = ReferenceFromInsertEnumerable((IEnumerable)vi.GetValue(obj), type);
+                            current = ReferenceFromInsertEnumerable(vi.GetValue(obj) as IEnumerable, type);
                             break;
                         default:
                             throw new InvalidOperationException();

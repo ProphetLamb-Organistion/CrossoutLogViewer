@@ -35,13 +35,14 @@ namespace CrossoutLogView.Database.Reflection
                 var temp = new List<VariableInfo>();
                 foreach (var fi in type.GetFields(BindingFlags.Public | BindingFlags.Instance))
                 {
-                    temp.Add(VariableInfo.FromFieldInfo(fi));
+                    temp.Add(FromFieldInfo(fi));
                 }
                 foreach (var pi in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
                 {
                     if (pi.CanWrite) temp.Add(FromPropertyInfo(pi));
                 }
-                generatedVarInfos.Add(type.GUID, vars = temp.ToArray());
+                vars = temp.ToArray();
+                generatedVarInfos.Add(type.GUID, vars);
             }
             return vars;
         }

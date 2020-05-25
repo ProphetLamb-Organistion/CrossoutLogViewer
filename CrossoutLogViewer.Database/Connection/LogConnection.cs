@@ -21,8 +21,9 @@ namespace CrossoutLogView.Database.Connection
     {
         private static string TimeStampFieldName => nameof(ILogEntry.TimeStamp).ToLowerInvariant();
 
-        public LogConnection() : base()
+        public LogConnection()
         {
+            InitializeDataStructure();
             DatabaseTableTypes = ILogEntry.Implementations;
         }
         protected override object InsertVariableHandler(in object obj, in VariableInfo variableInfo) => null;

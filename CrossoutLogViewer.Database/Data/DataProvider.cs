@@ -191,7 +191,8 @@ namespace CrossoutLogView.Database.Data
             var hash = name.GetHashCode();
             if (weapons.TryGetValue(hash, out var weapon)) return weapon;
             using var statCon = new StatisticsConnection();
-            weapons.Add(hash, weapon = statCon.RequestWeapon(name, TableRepresentation.All & ~TableRepresentation.ReferenceArray));
+            weapon = statCon.RequestWeapon(name, TableRepresentation.All & ~TableRepresentation.ReferenceArray);
+            weapons.Add(hash, weapon);
             return weapon;
         }
 
@@ -229,7 +230,8 @@ namespace CrossoutLogView.Database.Data
                 {
                     var map = statCon.RequestMap(mapRowId);
                     var games = GetGames(statCon.RequestMapGameRowIds(mapRowId)).OrderByDescending(x => x.Start);
-                    AddMap(mapRowId, gameMap = new GameMap(map, games));
+                    gameMap = new GameMap(map, games);
+                    AddMap(mapRowId, gameMap);
                 }
                 maps.Add(gameMap);
             }

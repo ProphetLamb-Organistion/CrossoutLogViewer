@@ -19,8 +19,9 @@ namespace CrossoutLogView.Database.Connection
 {
     public class StatisticsConnection : ConnectionBase
     {
-        public StatisticsConnection() : base()
+        public StatisticsConnection()
         {
+            InitializeDataStructure();
             DatabaseTableTypes = IStatisticData.Implementations;
         }
 
