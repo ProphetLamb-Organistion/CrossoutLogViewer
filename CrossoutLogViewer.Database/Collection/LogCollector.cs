@@ -7,20 +7,6 @@ namespace CrossoutLogView.Database.Collection
 {
     public class LogCollector : IDisposable
     {
-        public List<LevelLoad> LoadLevelList = new List<LevelLoad>();
-        public List<TestDriveStart> StartTestDriveList = new List<TestDriveStart>();
-        public List<TestDriveFinish> FinishTestDriveList = new List<TestDriveFinish>();
-        public List<GameStart> StartGameList = new List<GameStart>();
-        public List<GameFinish> FinishGameList = new List<GameFinish>();
-        public List<GameRound> RoundGameList = new List<GameRound>();
-        public List<ActiveBattleStart> StartActiveBattleList = new List<ActiveBattleStart>();
-        public List<PlayerLoad> PlayerLoadList = new List<PlayerLoad>();
-        public List<Damage> DamageList = new List<Damage>();
-        public List<Killing> KillList = new List<Killing>();
-        public List<KillAssist> KillAssistList = new List<KillAssist>();
-        public List<Score> ScoreList = new List<Score>();
-        public List<Decal> DecalList = new List<Decal>();
-
         public LogCollector(DateTime logDate)
         {
             LogDate = logDate;
@@ -30,6 +16,19 @@ namespace CrossoutLogView.Database.Collection
         public DateTime First { get; private set; } = DateTime.MaxValue;
         public DateTime Last { get; private set; } = DateTime.MinValue;
         public ILogEntry Current { get; private set; }
+        public List<LevelLoad> LoadLevelList { get; set; } = new List<LevelLoad>();
+        public List<TestDriveStart> StartTestDriveList { get; set; } = new List<TestDriveStart>();
+        public List<TestDriveFinish> FinishTestDriveList { get; set; } = new List<TestDriveFinish>();
+        public List<GameStart> StartGameList { get; set; } = new List<GameStart>();
+        public List<GameFinish> FinishGameList { get; set; } = new List<GameFinish>();
+        public List<GameRound> RoundGameList { get; set; } = new List<GameRound>();
+        public List<ActiveBattleStart> StartActiveBattleList { get; set; } = new List<ActiveBattleStart>();
+        public List<PlayerLoad> PlayerLoadList { get; set; } = new List<PlayerLoad>();
+        public List<Damage> DamageList { get; set; } = new List<Damage>();
+        public List<Killing> KillList { get; set; } = new List<Killing>();
+        public List<KillAssist> KillAssistList { get; set; } = new List<KillAssist>();
+        public List<Score> ScoreList { get; set; } = new List<Score>();
+        public List<Decal> DecalList { get; set; } = new List<Decal>();
 
         public void ClearAll()
         {
