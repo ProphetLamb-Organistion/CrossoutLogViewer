@@ -22,7 +22,7 @@ namespace CrossoutLogView.GUI.Controls
     /// <summary>
     /// Interaction logic for GameListFilter.xaml
     /// </summary>
-    public partial class GameListFilter : UserControl
+    public partial class GameListFilter
     {
         public event GameFilterChangedEventHandler FilterChanged;
 
@@ -30,121 +30,88 @@ namespace CrossoutLogView.GUI.Controls
         {
             InitializeComponent();
             ComboBoxGameMode.ItemsSource = Enum.GetValues(typeof(GameMode)).Cast<GameMode>();
-            ComboBoxGameMode.SelectedItem = GameMode.All;
+            GameMode = GameMode.All;
         }
 
-        private bool freezeFilter = false; //protect from redundant calls
-        private GameFilter _filter = new GameFilter(GameMode.All);
         public GameFilter Filter
         {
-            get => _filter;
-            set
-            {
-                if (_filter == value) return;
-                if (!freezeFilter)
-                {
-                    freezeFilter = true;
-                    if (value == default)
-                    {
-                        DateTimePickerStart.SelectedDateTime = null;
-                        DateTimePickerEnd.SelectedDateTime = null;
-                        ComboBoxGameMode.SelectedItem = GameMode.All;
-                    }
-                    else
-                    {
-                        if (value.StartLimit == default) DateTimePickerStart.SelectedDateTime = null;
-                        else DateTimePickerStart.SelectedDateTime = value.StartLimit;
-                        if (value.EndLimit == default) DateTimePickerEnd.SelectedDateTime = null;
-                        else DateTimePickerEnd.SelectedDateTime = value.EndLimit;
-                        ComboBoxGameMode.SelectedItem = value.GameModes;
-                    }
-                    freezeFilter = false;
-                }
-                FilterChanged?.Invoke(this, new GameFilterChangedEventArgs(_filter, _filter = value));
-            }
+            get => ObjToGameFilter(GetValue(FilterProperty));
+            set => SetValue(FilterProperty, value);
         }
-        public static readonly DependencyProperty FilterProperty = DependencyProperty.Register(nameof(Filter), typeof(GameFilter), typeof(GameListFilter));
+        public static readonly DependencyProperty FilterProperty = DependencyProperty.Register(nameof(Filter), typeof(GameFilter), typeof(GameListFilter), new PropertyMetadata(OnFilterPropertyChanged));
 
         public DateTime? StartLimit
         {
-            get => DateTimePickerStart.SelectedDateTime;
-            set
-            {
-                if (freezeFilter) return;
-                if (_filter.StartLimit == value) return;
-                freezeFilter = true;
-                DateTimePickerStart.SelectedDateTime = value;
-                Filter = new GameFilter(
-                    _filter.GameModes,
-                    value ?? default,
-                    _filter.EndLimit);
-                freezeFilter = false;
-            }
+            get => GetValue(StartLimitProperty) as DateTime?;
+            set => SetValue(StartLimitProperty, value);
         }
-        public static readonly DependencyProperty StartLimitProperty = DependencyProperty.Register(nameof(StartLimit), typeof(DateTime?), typeof(GameListFilter));
+        public static readonly DependencyProperty StartLimitProperty = DependencyProperty.Register(nameof(StartLimit), typeof(DateTime?), typeof(GameListFilter), new PropertyMetadata(OnStartLimitPropertyChanged));
 
         public DateTime? EndLimit
         {
-            get => DateTimePickerEnd.SelectedDateTime;
-            set
+            get => GetValue(EndLimitProperty) as DateTime?;
+            set => SetValue(EndLimitProperty, value);
+        }
+        public static readonly DependencyProperty EndLimitProperty = DependencyProperty.Register(nameof(EndLimit), typeof(DateTime?), typeof(GameListFilter), new PropertyMetadata(OnEndLimitPropertyChanged));
+
+        public GameMode GameMode
+        {
+            get => ObjToGameMode(GetValue(GameModeProperty));
+            set => SetValue(GameModeProperty, value);
+        }
+        public static readonly DependencyProperty GameModeProperty = DependencyProperty.Register(nameof(GameMode), typeof(GameMode), typeof(GameListFilter), new PropertyMetadata(OnGameModePropertyChanged));
+
+        private static void OnFilterPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (sender is GameListFilter gl)
             {
-                if (freezeFilter) return;
-                if (_filter.EndLimit == value) return;
-                freezeFilter = true;
-                DateTimePickerEnd.SelectedDateTime = value;
-                Filter = new GameFilter(
-                    _filter.GameModes,
-                   _filter.StartLimit,
-                   value ?? default);
-                freezeFilter = false;
+                var newGameFilter = ObjToGameFilter(e.NewValue);
+                gl.StartLimit = newGameFilter.StartLimit == default ? null : (newGameFilter.StartLimit as DateTime?);
+                gl.EndLimit = newGameFilter.EndLimit == default ? null : (newGameFilter.EndLimit as DateTime?);
+                gl.GameMode = newGameFilter.GameModes;
+                gl.FilterChanged?.Invoke(gl, new GameFilterChangedEventArgs(ObjToGameFilter(e.OldValue), newGameFilter));
             }
         }
-        public static readonly DependencyProperty EndLimitProperty = DependencyProperty.Register(nameof(EndLimit), typeof(DateTime?), typeof(GameListFilter));
 
-        public GameMode GameModes
+        private static void OnStartLimitPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            get => (GameMode)(ComboBoxGameMode.SelectedItem ?? GameMode.All);
-            set
+            if (e.NewValue != e.OldValue && sender is GameListFilter gl)
             {
-                if (freezeFilter) return;
-                if (_filter.GameModes == value) return;
-                freezeFilter = true;
-                ComboBoxGameMode.SelectedItem = value;
-                Filter = new GameFilter(
-                    value,
-                    _filter.StartLimit,
-                    _filter.EndLimit);
-                freezeFilter = false;
+                gl.Filter = new GameFilter(
+                    gl.Filter.GameModes,
+                    (e.NewValue as DateTime?)??DateTime.MinValue,
+                    gl.Filter.EndLimit);
             }
         }
-        public static readonly DependencyProperty GameModeProperty = DependencyProperty.Register(nameof(GameModes), typeof(GameMode), typeof(GameListFilter));
 
-        public void ClearFilter() => ClearFilter(null, null);
-        private void ClearFilter(object sender, RoutedEventArgs e)
+        private static void OnEndLimitPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            Filter = new GameFilter(GameMode.All);
+            if (e.NewValue != e.OldValue && sender is GameListFilter gl)
+            {
+                gl.Filter = new GameFilter(
+                    gl.Filter.GameModes,
+                    gl.Filter.StartLimit,
+                    (e.NewValue as DateTime?) ?? DateTime.MinValue);
+            }
         }
 
-
-        private void GameFilterSelectionChanged(object sender, SelectionChangedEventArgs e)
+        private static void OnGameModePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            GameModes = (GameMode)(sender as ComboBox).SelectedItem;
-            e.Handled = true;
+            if (e.NewValue != e.OldValue && sender is GameListFilter gl)
+            {
+                gl.Filter = new GameFilter(
+                    ObjToGameMode(e.NewValue),
+                    gl.Filter.StartLimit,
+                    gl.Filter.EndLimit);
+            }
         }
 
-        private void DateTimePickerStart_SelectedDateTimeChanged(object sender, RoutedPropertyChangedEventArgs<DateTime?> e)
+        private void ClearFilter(object sender, RoutedEventArgs e) => ClearFilter();
+        public void ClearFilter()
         {
-            var dtp = sender as DateTimePicker;
-            if (dtp.Name == nameof(DateTimePickerStart))
-            {
-                StartLimit = dtp.SelectedDateTime;
-                e.Handled = true;
-            }
-            else if (dtp.Name == nameof(DateTimePickerEnd))
-            {
-                EndLimit = dtp.SelectedDateTime;
-                e.Handled = true;
-            }
+            SetValue(StartLimitProperty, null);
+            SetValue(EndLimitProperty, null);
+            SetValue(GameModeProperty, GameMode.All);
         }
 
         private void SetFilterNoonClick(object sender, RoutedEventArgs e)
@@ -163,6 +130,15 @@ namespace CrossoutLogView.GUI.Controls
         {
             StartLimit = DateTime.Today.AddDays(1);
             EndLimit = DateTime.Today.AddDays(1).AddHours(5);
+        }
+
+        private static GameFilter ObjToGameFilter(object obj)
+        {
+            return (GameFilter)(obj ?? new GameFilter(GameMode.All));
+        }
+        private static GameMode ObjToGameMode(object obj)
+        {
+            return (GameMode)(obj ?? GameMode.All);
         }
     }
 }

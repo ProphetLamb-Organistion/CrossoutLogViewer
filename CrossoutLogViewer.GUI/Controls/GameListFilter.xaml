@@ -40,8 +40,7 @@
             <TextBlock Text="Start"
                        Margin="{StaticResource ContentMargin}"
                        VerticalAlignment="Center" />
-            <Controls:DateTimePicker x:Name="DateTimePickerStart"
-                                     SelectedDateTimeChanged="DateTimePickerStart_SelectedDateTimeChanged"
+            <Controls:DateTimePicker SelectedDateTime="{Binding StartLimit, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay}"
                                      Margin="{StaticResource ContentMargin}"
                                      VerticalAlignment="Center" />
         </StackPanel>
@@ -49,8 +48,7 @@
             <TextBlock Text="End"
                        Margin="{StaticResource ContentMargin}"
                        VerticalAlignment="Center" />
-            <Controls:DateTimePicker x:Name="DateTimePickerEnd"
-                                     SelectedDateTimeChanged="DateTimePickerStart_SelectedDateTimeChanged"
+            <Controls:DateTimePicker SelectedDateTime="{Binding EndLimit, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay}"
                                      Margin="{StaticResource ContentMargin}"
                                      VerticalAlignment="Center" />
         </StackPanel>
@@ -59,17 +57,17 @@
                        Margin="{StaticResource ContentMargin}"
                        VerticalAlignment="Center" />
             <ComboBox x:Name="ComboBoxGameMode"
-                      SelectionChanged="GameFilterSelectionChanged"
+                      SelectedItem="{Binding GameMode, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay}"
                       Margin="{StaticResource ContentMargin}"
                       VerticalAlignment="Center" />
+            <Button x:Name="clearFilter"
+                    Content="✕"
+                    FontWeight="Bold"
+                    FontSize="18"
+                    Style="{DynamicResource MahApps.Styles.Button.Chromeless}"
+                    Click="ClearFilter"
+                    Width="{Binding ElementName=clearFilter, Path=ActualHeight}"
+                    Margin="{StaticResource ContentMargin}" />
         </StackPanel>
-        <Button x:Name="clearFilter"
-                Content="✕"
-                FontWeight="Bold"
-                FontSize="18"
-                Style="{DynamicResource MahApps.Styles.Button.Chromeless}"
-                Click="ClearFilter"
-                Width="{Binding ElementName=clearFilter, Path=ActualHeight}"
-                Margin="{StaticResource ContentMargin}" />
     </WrapPanel>
 </UserControl>
