@@ -45,8 +45,7 @@ namespace CrossoutLogView.Database.Collection
             {
                 var fs = new FileStream(fileStream.Name, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                 var sr = new StreamReader(fs);
-                fileStream.Dispose();
-                streamReader.Dispose();
+                DisposeStreams();
                 fileStream = fs;
                 streamReader = sr;
                 linePosition = 0;
@@ -109,8 +108,7 @@ namespace CrossoutLogView.Database.Collection
                 if (disposing)
                 {
                     collector.Dispose();
-                    if (fileStream != null) fileStream.Dispose(); //optional field
-                    streamReader.Dispose();
+                    DisposeStreams();
                 }
                 disposedValue = true;
             }
@@ -118,6 +116,12 @@ namespace CrossoutLogView.Database.Collection
         public void Dispose()
         {
             Dispose(true);
+        }
+
+        private void DisposeStreams()
+        {
+            if (fileStream != null) fileStream.Dispose();
+            if (streamReader != null) streamReader.Dispose();
         }
         #endregion
 
