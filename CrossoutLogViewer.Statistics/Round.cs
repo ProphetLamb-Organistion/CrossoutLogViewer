@@ -62,15 +62,17 @@ namespace CrossoutLogView.Statistics
             if (gameRounds.Count() == 0) rounds.Add(new Round(parent.Start, parent.End, parent.WinningTeam, new List<Kill>()));
             else
             {
-                var thisStart = parent.Start;
+                var previousStart = parent.Start;
                 foreach (var gameRound in gameRounds)
                 {
-                    rounds.Add(new Round(thisStart,
-                        (thisStart = thisStart.AddSeconds(gameRound.RoundDuration)),
+                    var thisStart = previousStart.AddSeconds(gameRound.RoundDuration);
+                    rounds.Add(new Round(previousStart,
+                        thisStart,
                         gameRound.Team,
                         new List<Kill>()));
+                    previousStart = thisStart;
                 }
-                rounds.Add(new Round(thisStart, parent.End, parent.WinningTeam, new List<Kill>()));
+                rounds.Add(new Round(previousStart, parent.End, parent.WinningTeam, new List<Kill>()));
             }
             var kills = gameLog.Where(x => x is Killing).Cast<Killing>();
             var assists = gameLog.Where(x => x is KillAssist).Cast<KillAssist>().GroupBy(x => x.TimeStamp);

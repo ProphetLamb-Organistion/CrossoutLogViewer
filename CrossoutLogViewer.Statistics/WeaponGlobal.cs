@@ -56,7 +56,11 @@ namespace CrossoutLogView.Statistics
                     foreach (var w in p.Weapons)
                     {
                         var weapon = weapons.Find(x => Strings.NameEquals(x.Name, w.Name));
-                        if (weapon == null) weapons.Add(weapon = new WeaponGlobal(w));
+                        if (weapon == null)
+                        {
+                            weapon = new WeaponGlobal(w);
+                            weapons.Add(weapon);
+                        }
                         var userIndex = weapon.Users.FindIndex(x => x.UserID == p.UserID);
                         if (userIndex == -1)
                         {

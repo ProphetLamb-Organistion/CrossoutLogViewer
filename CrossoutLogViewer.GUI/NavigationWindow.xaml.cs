@@ -26,9 +26,9 @@ using System.Windows.Threading;
 namespace CrossoutLogView.GUI
 {
     /// <summary>
-    /// Interaction logic for AuxilaryWindow.xaml
+    /// Interaction logic for NavigationWindow.xaml
     /// </summary>
-    public partial class NavigationWindow : MetroWindow
+    public partial class NavigationWindow
     {
         private readonly ViewModelBase viewModel;
         public NavigationWindow(ViewModelBase viewModel)

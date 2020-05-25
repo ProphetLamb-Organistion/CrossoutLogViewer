@@ -49,7 +49,11 @@ namespace CrossoutLogView.Statistics
             foreach (var weapon in other.Weapons)
             {
                 var myWeapon = master.Weapons.Find(x => x.Name.Equals(weapon.Name, StringComparison.InvariantCulture));
-                if (myWeapon == null) master.Weapons.Add(myWeapon = weapon.Clone());
+                if (myWeapon == null)
+                {
+                    myWeapon = weapon.Clone();
+                    master.Weapons.Add(myWeapon);
+                }
                 else
                 {
                     myWeapon.ArmorDamage += weapon.ArmorDamage;
@@ -60,8 +64,15 @@ namespace CrossoutLogView.Statistics
             foreach (var stripe in other.Stripes)
             {
                 var myStripe = master.Stripes.Find(x => x.Name.Equals(stripe.Name, StringComparison.InvariantCulture));
-                if (myStripe == null) master.Stripes.Add(myStripe = stripe.Clone());
-                else myStripe.Ammount += stripe.Ammount;
+                if (myStripe == null)
+                {
+                    myStripe = stripe.Clone();
+                    master.Stripes.Add(myStripe);
+                }
+                else
+                {
+                    myStripe.Ammount += stripe.Ammount;
+                }
             }
         }
     }

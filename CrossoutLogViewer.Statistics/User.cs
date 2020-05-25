@@ -45,7 +45,11 @@ namespace CrossoutLogView.Statistics
                 foreach (var player in game.Players.Where(x => !x.IsBot))
                 {
                     var user = users.Find(x => x.UserID == player.UserID);
-                    if (user == null) users.Add(user = new User(player.Name, player.UserID));
+                    if (user == null)
+                    {
+                        user = new User(player.Name, player.UserID);
+                        users.Add(user);
+                    }
                     Merge(user, player);
                     if (!user.Participations.Any(x => x.Start == game.Start)) //duplicates
                         user.Participations.Add(game);

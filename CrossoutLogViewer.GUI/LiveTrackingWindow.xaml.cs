@@ -22,7 +22,7 @@ namespace CrossoutLogView.GUI
     /// <summary>
     /// Interaction logic for LiveTracking.xaml
     /// </summary>
-    public partial class LiveTrackingWindow : MetroWindow
+    public partial class LiveTrackingWindow
     {
         private LiveTrackingWindowViewModel viewModel;
 

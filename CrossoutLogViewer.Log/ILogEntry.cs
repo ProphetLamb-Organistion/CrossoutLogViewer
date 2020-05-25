@@ -11,6 +11,6 @@ namespace CrossoutLogView.Log
         /// <summary>
         /// All types that implement this interface, excluding itslef.
         /// </summary>
-        public static Type[] Implementations = AppDomain.CurrentDomain.GetAssemblies().SelectMany(s => s.GetTypes()).Where(p => typeof(ILogEntry).IsAssignableFrom(p) && p.Name != nameof(ILogEntry)).ToArray();
+        public static readonly Type[] Implementations = AppDomain.CurrentDomain.GetAssemblies().SelectMany(s => s.GetTypes()).Where(p => typeof(ILogEntry).IsAssignableFrom(p) && p.Name != nameof(ILogEntry)).ToArray();
     }
 }

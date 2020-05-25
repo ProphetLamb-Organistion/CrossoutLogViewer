@@ -18,7 +18,7 @@ namespace CrossoutLogView.GUI
     /// <summary>
     /// Interaction logic for SettingsWindow.xaml
     /// </summary>
-    public partial class SettingsWindow : MetroWindow
+    public partial class SettingsWindow
     {
         private static string deleteDatabaseConfirmation = String.Concat("This will delete all colleted data. We might not be able to completely restore the data, because Crossout deletes logs after a certain time period.", Environment.NewLine, "Afterwards this application will shutdown.  Are you sure that you wish to proceed?");
         private SettingsWindowViewModel viewModel = new SettingsWindowViewModel();

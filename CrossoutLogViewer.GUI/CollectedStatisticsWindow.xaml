@@ -191,7 +191,7 @@
                 </TabControl.ItemContainerStyle>
                 <!--=================================================== Games ====================================================-->
                 <Controls:MetroTabItem Header="Games">
-                    <UserControls:UserGamesView x:Name="UserGamesViewGames"
+                    <UserControls:UserGamesControl x:Name="UserGamesViewGames"
                                                 Grid.Row="2" />
                 </Controls:MetroTabItem>
                 <!--=================================================== Users ====================================================-->

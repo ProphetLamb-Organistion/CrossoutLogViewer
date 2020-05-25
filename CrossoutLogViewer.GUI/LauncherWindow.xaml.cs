@@ -22,7 +22,7 @@ namespace CrossoutLogView.GUI
     /// <summary>
     /// Interaction logic for LauncherWindow.xaml
     /// </summary>
-    public partial class LauncherWindow : MetroWindow
+    public partial class LauncherWindow
     {
         public LauncherWindow()
         {

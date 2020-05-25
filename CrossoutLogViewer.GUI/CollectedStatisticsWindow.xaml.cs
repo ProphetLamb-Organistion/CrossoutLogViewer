@@ -34,7 +34,7 @@ namespace CrossoutLogView.GUI
     /// <summary>
     /// Interaction logic for CollectedStatisticsWindow.xaml
     /// </summary>
-    public partial class CollectedStatisticsWindow : MetroWindow
+    public partial class CollectedStatisticsWindow
     {
         private CollectedStatisticsWindowViewModel viewModel;
 
@@ -54,7 +54,7 @@ namespace CrossoutLogView.GUI
                 ColorScheme = MetroDialogOptions.ColorScheme
             });
             controller.SetIndeterminate();
-            await Task.Delay(50); //ensure that the wait window loaded, before freezing
+            await Task.Delay(50).ConfigureAwait(true); //ensure that the wait window loaded, before freezing
             DataContext = viewModel = new CollectedStatisticsWindowViewModel();
             viewModel.PropertyChanged += OnPropertyChanged;
 
@@ -84,11 +84,13 @@ namespace CrossoutLogView.GUI
             this.BeginInvoke(delegate
             {
                 UserListViewUsers.ItemsSource = null;
-                CollectionViewSource.GetDefaultView(UserListViewUsers.ItemsSource = viewModel.UserListModels).Refresh();
+                UserListViewUsers.ItemsSource = viewModel.UserListModels;
+                CollectionViewSource.GetDefaultView(UserListViewUsers.ItemsSource).Refresh();
                 WeaponListViewWeapons.ItemsSource = null;
                 WeaponListViewWeapons.ItemsSource = viewModel.WeaponModels;
                 UserGamesViewGames.DataGridGames.ItemsSource = null;
-                CollectionViewSource.GetDefaultView(UserGamesViewGames.DataGridGames.ItemsSource = viewModel.MeUser.Participations).Refresh();
+                UserGamesViewGames.DataGridGames.ItemsSource = viewModel.MeUser.Participations;
+                CollectionViewSource.GetDefaultView(UserGamesViewGames.DataGridGames.ItemsSource).Refresh();
                 MapsView.Maps = null;
                 MapsView.Maps = viewModel.Maps;
             });
@@ -102,6 +104,8 @@ namespace CrossoutLogView.GUI
                 case nameof(CollectedStatisticsWindowViewModel.UserNameFilter):
                     CollectionViewSource.GetDefaultView(UserListViewUsers.ItemsSource).Refresh();
                     break;
+                default:
+                    return;
             }
         }
 
@@ -114,7 +118,7 @@ namespace CrossoutLogView.GUI
                 e.Cancel = true;
                 Dispatcher.BeginInvoke(new Action(async delegate
                 {
-                    await ConfirmClose();
+                    await ConfirmClose().ConfigureAwait(false);
                 }));
             }
             else
