@@ -25,11 +25,11 @@ using System.Windows.Shapes;
 namespace CrossoutLogView.GUI.Controls
 {
     /// <summary>
-    /// Interaction logic for UserGamesView.xaml
+    /// Interaction logic for UserGamesControl.xaml
     /// </summary>
-    public partial class UserGamesView : UserControl
+    public partial class UserGamesControl
     {
-        public UserGamesView()
+        public UserGamesControl()
         {
             InitializeComponent();
         }

@@ -20,7 +20,7 @@ namespace CrossoutLogView.GUI.Controls
     /// <summary>
     /// Interaction logic for UserOverview.xaml
     /// </summary>
-    public partial class UserOverview : UserControl
+    public partial class UserOverview
     {
         public UserOverview()
         {

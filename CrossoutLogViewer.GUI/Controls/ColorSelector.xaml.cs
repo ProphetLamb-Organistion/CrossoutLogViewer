@@ -17,7 +17,7 @@ namespace CrossoutLogView.GUI.Controls
     /// <summary>
     /// Interaction logic for ColorSelector.xaml
     /// </summary>
-    public partial class ColorSelector : UserControl
+    public partial class ColorSelector
     {
         public ColorSelector()
         {

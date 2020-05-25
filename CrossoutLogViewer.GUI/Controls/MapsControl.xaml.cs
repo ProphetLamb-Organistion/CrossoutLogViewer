@@ -27,7 +27,7 @@ namespace CrossoutLogView.GUI.Controls
     /// <summary>
     /// Interaction logic for MapsControl.xaml
     /// </summary>
-    public partial class MapsControl : UserControl
+    public partial class MapsControl
     {
         private GameFilter filter = new GameFilter(GameMode.All);
         private MapModel selectedItem;

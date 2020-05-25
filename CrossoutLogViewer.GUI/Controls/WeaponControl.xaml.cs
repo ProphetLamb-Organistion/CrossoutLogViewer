@@ -25,7 +25,7 @@ namespace CrossoutLogView.GUI.Controls
     /// <summary>
     /// Interaction logic for WeaponDataGrid.xaml
     /// </summary>
-    public partial class WeaponControl : UserControl
+    public partial class WeaponControl
     {
         public event OpenModelViewerEventHandler OpenViewModelDoubleClick;
         public event SelectionChangedEventHandler SelectionChanged;
@@ -83,7 +83,8 @@ namespace CrossoutLogView.GUI.Controls
                     DataGridWeapons.ItemsSource = value;
                 else
                 {
-                    var view = (CollectionView)CollectionViewSource.GetDefaultView(DataGridWeapons.ItemsSource = value);
+                    DataGridWeapons.ItemsSource = value;
+                    var view = (CollectionView)CollectionViewSource.GetDefaultView(DataGridWeapons.ItemsSource);
                     view.Filter = WeaponFilter.Filter;
                     view.Refresh();
                 }

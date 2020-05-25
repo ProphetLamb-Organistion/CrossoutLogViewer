@@ -23,7 +23,7 @@ namespace CrossoutLogView.GUI.Controls
     /// <summary>
     /// Interaction logic for PlayerGamesDataGrid.xaml
     /// </summary>
-    public partial class PlayerGamesDataGrid : DataGrid
+    public partial class PlayerGamesDataGrid
     {
         public event OpenModelViewerEventHandler OpenViewModel;
 
