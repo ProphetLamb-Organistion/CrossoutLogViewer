@@ -62,7 +62,7 @@ namespace CrossoutLogView.Database.Connection
             }
             catch (SQLiteException ex)
             {
-                Logging.WriteLine(ex);
+                Logging.WriteLine(ex, faultCommand: command);
             }
         }
 
