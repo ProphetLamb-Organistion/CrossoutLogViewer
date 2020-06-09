@@ -21,6 +21,7 @@ namespace CrossoutLogView.GUI.Core
         private void OnColorWindowTitlebarChanged(object sender, ColorWindowTitlebarEventArgs e)
         {
             _colorWindowTitlebar = e.NewValue;
+            OnPropertyChanged(nameof(ColorWindowTitlebar));
         }
 
         public bool ColorWindowTitlebar
