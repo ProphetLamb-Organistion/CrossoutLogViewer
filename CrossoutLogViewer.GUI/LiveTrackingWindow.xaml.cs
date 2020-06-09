@@ -1,7 +1,10 @@
 ﻿using CrossoutLogView.Common;
 using CrossoutLogView.Database.Collection;
+using CrossoutLogView.Database.Data;
 using CrossoutLogView.Database.Events;
-
+using CrossoutLogView.GUI.WindowsAuxilary;
+using CrossoutLogView.Log;
+using CrossoutLogView.Statistics;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 
@@ -27,20 +30,40 @@ namespace CrossoutLogView.GUI
     public partial class LiveTrackingWindow
     {
         private readonly LiveTrackingWindowViewModel viewModel;
+        private Game currentGame = new Game();
+        private List<ILogEntry> gameLog;
+        private bool directLaunch;
 
         private bool forceClose = false;
 
-        public LiveTrackingWindow()
+        public LiveTrackingWindow() : this(false) { }
+        public LiveTrackingWindow(bool directLaunch)
         {
+            this.directLaunch = directLaunch;
             Logging.WriteLine<LiveTrackingWindow>("Loading LiveTracking", true);
             InitializeComponent();
             DataContext = viewModel = new LiveTrackingWindowViewModel();
         }
 
-        private void OnLoaded(object sender, RoutedEventArgs e)
+        private async void OnLoaded(object sender, RoutedEventArgs e)
         {
+            var controller = await this.ShowProgressAsync("Starting", "Preparing views.\r\nPlease stand by...", settings: new MetroDialogSettings
+            {
+                AnimateHide = false,
+                AnimateShow = false,
+                ColorScheme = MetroDialogOptions.ColorScheme
+            });
+            controller.SetIndeterminate();
+            await Task.Delay(80); //ensure that the wait window loaded, before freezing
+            if (directLaunch)
+            {
+                App.InitializeSession();
+            }
+            var uri = ImageProvider.GetMapImageUri("powerplant");
+            MapImage.Source = new BitmapImage(uri);
 
             LogUploader.LogUploadEvent += OnLogUpload;
+            await controller.CloseAsync();
 
             Logging.WriteLine<LiveTrackingWindow>("LiveTracking loaded in {TP}");
         }
@@ -48,6 +71,12 @@ namespace CrossoutLogView.GUI
         private void OnLogUpload(object sender, LogUploadEventArgs e)
         {
 
+        }
+
+        private void OpenMapImageClick(object sender, MouseButtonEventArgs e)
+        {
+            if (currentGame != null)
+                ExplorerOpenFile.OpenFile(ImageProvider.GetMapImageUri("powerplant"));
         }
 
         #region Confim close

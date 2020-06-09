@@ -8,6 +8,9 @@ namespace CrossoutLogView.GUI
 {
     public class LiveTrackingWindowViewModel : WindowViewModel
     {
+        public LiveTrackingWindowViewModel() : base()
+        {
 
+        }
     }
 }

@@ -8,11 +8,12 @@
                       xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                       xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                       xmlns:local="clr-namespace:CrossoutLogView.GUI"
+                      Style="{DynamicResource MetroWindowTitlebarColorStyle}"
                       Title="Crossout Log Viewer: LiveTracking"
                       Height="600"
                       Width="850"
-                      MinHeight="500"
-                      MinWidth="600"
+                      MinHeight="600"
+                      MinWidth="850"
                       ShowDialogsOverTitleBar="False"
                       GlowBrush="{DynamicResource MahApps.Brushes.AccentBase}"
                       BorderThickness="1"
@@ -42,6 +43,20 @@
         </Style>
     </Controls:MetroWindow.Resources>
     <Grid>
-
+        <Image x:Name="MapImage"
+               Stretch="Uniform"
+               RenderOptions.BitmapScalingMode="NearestNeighbor"
+               RenderOptions.EdgeMode="Aliased"
+               MouseUp="OpenMapImageClick"
+               Grid.Row="1"
+               Grid.Column="1"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="5*" />
+            <ColumnDefinition Width="3*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="{Binding ElementName=MapImage, Path=ActualWidth}" />
+        </Grid.RowDefinitions>
     </Grid>
 </Controls:MetroWindow>
