@@ -4,9 +4,29 @@ namespace CrossoutLogView.Database.Data
 {
     public static class ImageProvider
     {
-        public static Uri GetMapImageUri(string mapName)
+        public enum FormatSize
         {
-            return new Uri(Environment.CurrentDirectory + "//images//" + mapName.Trim() + ".jpg", UriKind.Absolute);
+            Small_128,
+            Medium_256,
+            Original_992
+        }
+
+        public static Uri GetMapImageUri(string mapName, FormatSize size = FormatSize.Medium_256)
+        {
+            string filename = mapName.Trim();
+            switch(size)
+            {
+                case FormatSize.Small_128:
+                    filename += "_128x128";
+                    break;
+                default:
+                case FormatSize.Medium_256:
+                    filename += "_256x256";
+                    break;
+                case FormatSize.Original_992:
+                    break;
+            }
+            return new Uri(Environment.CurrentDirectory + "//images//" + filename + ".jpg", UriKind.Absolute);
         }
     }
 }
