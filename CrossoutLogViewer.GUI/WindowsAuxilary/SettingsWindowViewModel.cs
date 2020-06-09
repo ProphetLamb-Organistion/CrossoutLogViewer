@@ -14,11 +14,11 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace CrossoutLogView.GUI
+namespace CrossoutLogView.GUI.WindowsAuxilary
 {
     public class SettingsWindowViewModel : WindowViewModel
     {
-        public SettingsWindowViewModel()
+        public SettingsWindowViewModel() : base()
         {
             AccentColors = ThemeManager.Current.Themes
                 .GroupBy(x => x.ColorScheme)

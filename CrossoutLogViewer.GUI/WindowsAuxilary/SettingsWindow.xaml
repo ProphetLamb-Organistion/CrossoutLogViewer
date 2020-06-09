@@ -1,4 +1,4 @@
-﻿<Controls:MetroWindow x:Class="CrossoutLogView.GUI.SettingsWindow"
+﻿<Controls:MetroWindow x:Class="CrossoutLogView.GUI.WindowsAuxilary.SettingsWindow"
                       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -18,7 +18,9 @@
                       MaxHeight="600"
                       GlowBrush="{DynamicResource MahApps.Brushes.AccentBase}"
                       BorderThickness="1"
-                      WindowStartupLocation="CenterScreen">
+                      WindowStartupLocation="CenterScreen"
+                      ShowMaxRestoreButton="False"
+                      PreviewMouseDoubleClick="MetroWindow_PreviewMouseDoubleClick">
     <Controls:MetroWindow.Resources>
         <Style TargetType="{x:Type Controls:WindowButtonCommands}"
                BasedOn="{StaticResource {x:Type Controls:WindowButtonCommands}}">
@@ -45,6 +47,7 @@
         <Grid>
             <StackPanel>
                 <GroupBox Header="Style"
+                          Style="{DynamicResource GroupBox.Border}"
                           Margin="2"
                           VerticalAlignment="Top">
                     <ItemsControl Margin="4">
@@ -69,6 +72,7 @@
                     </ItemsControl>
                 </GroupBox>
                 <GroupBox Header="Colors"
+                          Style="{DynamicResource GroupBox.Border}"
                           Margin="2"
                           VerticalAlignment="Top">
                     <ItemsControl Margin="4">
@@ -109,21 +113,22 @@
             </StackPanel>
             <StackPanel Grid.Column="1">
                 <GroupBox Header="Miscellaneous"
+                          Style="{DynamicResource GroupBox.Border}"
                           Margin="2"
                           VerticalAlignment="Top">
                     <ItemsControl Margin="4">
                         <Button Content="Open event log"
-                                Style="{DynamicResource MahApps.Styles.Button.Flat}"
+                                Style="{DynamicResource Button.Borderless}"
                                 Click="OpenEventLogClick"
                                 Margin="4"
                                 HorizontalAlignment="Left" />
                         <Button Content="Open settings file"
-                                Style="{DynamicResource MahApps.Styles.Button.Flat}"
+                                Style="{DynamicResource Button.Borderless}"
                                 Click="OpenSettingsFileClick"
                                 Margin="4"
                                 HorizontalAlignment="Left" />
                         <Button Content="Delete database"
-                                Style="{DynamicResource MahApps.Styles.Button.Flat}"
+                                Style="{DynamicResource Button.Borderless}"
                                 Click="DeleteDatabaseClick"
                                 Margin="4"
                                 HorizontalAlignment="Left" />

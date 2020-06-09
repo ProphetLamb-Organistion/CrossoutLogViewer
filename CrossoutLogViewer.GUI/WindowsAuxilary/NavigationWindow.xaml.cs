@@ -24,7 +24,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
-namespace CrossoutLogView.GUI
+namespace CrossoutLogView.GUI.WindowsAuxilary
 {
     /// <summary>
     /// Interaction logic for NavigationWindow.xaml

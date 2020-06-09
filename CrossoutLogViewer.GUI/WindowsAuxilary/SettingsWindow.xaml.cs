@@ -15,7 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace CrossoutLogView.GUI
+namespace CrossoutLogView.GUI.WindowsAuxilary
 {
     /// <summary>
     /// Interaction logic for SettingsWindow.xaml
@@ -74,6 +74,12 @@ namespace CrossoutLogView.GUI
                 App.SessionControlService.DeleteDatabase();
                 Application.Current.Shutdown();
             }
+        }
+
+        private void MetroWindow_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (e.GetPosition(this).Y <= TitleBarHeight) //prevent maximize
+                e.Handled = true;
         }
     }
 }
