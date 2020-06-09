@@ -9,6 +9,7 @@ using MahApps.Metro.Controls;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -40,8 +41,8 @@ namespace CrossoutLogView.GUI.Controls
         }
 
 
-        private List<MapModel> _maps;
-        public List<MapModel> Maps
+        private ObservableCollection<MapModel> _maps;
+        public ObservableCollection<MapModel> Maps
         {
             get => _maps;
             set

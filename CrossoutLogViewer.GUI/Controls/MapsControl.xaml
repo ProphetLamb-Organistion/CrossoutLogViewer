@@ -10,7 +10,7 @@
              d:DesignWidth="800">
     <Grid>
         <GroupBox Header="Maps"
-                  Style="{DynamicResource GroupBox}">
+                  Style="{DynamicResource GroupBox.TitleBar}">
             <ListBox x:Name="ListBoxMaps"
                      Background="Transparent"
                      SelectionChanged="ListBoxMaps_SelectionChanged">
@@ -30,14 +30,13 @@
                Stretch="UniformToFill"
                RenderOptions.BitmapScalingMode="NearestNeighbor"
                RenderOptions.EdgeMode="Aliased"
-               MouseUp="OpenMapImageClick"
                Grid.Row="1" />
         <Grid Grid.Column="2"
               Grid.RowSpan="2">
             <local:UserOverview x:Name="UserOverview"
                                 Background="Transparent"/>
             <GroupBox Header="Games"
-                      Style="{DynamicResource GroupBox}"
+                      Style="{DynamicResource GroupBox.TitleBar}"
                       Grid.Row="1"
                       Grid.ColumnSpan="2">
                 <Grid>
@@ -45,7 +44,7 @@
                                           FilterChanged="GameListFilter_FilterChanged"
                                           HorizontalAlignment="Stretch"/>
                     <Button Content="Open Users"
-                            Style="{DynamicResource MahApps.Styles.Button.Flat}"
+                            Style="{DynamicResource Button.Borderless}"
                             Click="OpenUsersClick"
                             VerticalAlignment="Center"
                             HorizontalAlignment="Center"

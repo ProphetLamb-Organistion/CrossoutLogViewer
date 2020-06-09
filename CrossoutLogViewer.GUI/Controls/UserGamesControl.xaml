@@ -15,14 +15,14 @@
         <local:UserOverview x:Name="UserOverview" Height="Auto"/>
 
         <GroupBox Header="Users"
-                  Style="{DynamicResource GroupBox}"
+                  Style="{DynamicResource GroupBox.TitleBar}"
                   Grid.Row="1">
             <Grid>
                 <local:GameListFilter x:Name="GameListFilter"
                                       FilterChanged="RefreshGamesFilter"
                                       HorizontalAlignment="Stretch"/>
                 <Button Content="Open Users"
-                        Style="{DynamicResource MahApps.Styles.Button.Flat}"
+                        Style="{DynamicResource Button.Borderless}"
                         Click="OpenUsersClick"
                         VerticalAlignment="Center"
                         HorizontalAlignment="Center"
