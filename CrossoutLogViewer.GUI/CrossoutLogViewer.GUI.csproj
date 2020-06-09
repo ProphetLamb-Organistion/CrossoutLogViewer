@@ -21,6 +21,10 @@
     <PackageReference Include="JetBrains.Annotations" Version="2020.1.0" />
     <PackageReference Include="MahApps.Metro" Version="2.0.0-alpha0872" />
     <PackageReference Include="MahApps.Metro.IconPacks.Modern" Version="4.1.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.6">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="System.ServiceProcess.ServiceController" Version="5.0.0-preview.4.20251.6" />
   </ItemGroup>
 
@@ -32,6 +36,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="$(SolutionDir)\resources\**" CopyToOutputDirectory="PreserveNewest"/>
+    <None Include="$(SolutionDir)\resources\**" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>
