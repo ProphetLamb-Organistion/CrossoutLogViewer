@@ -3,7 +3,7 @@
 using CrossoutLogView.Common;
 using CrossoutLogView.Database;
 using CrossoutLogView.Database.Data;
-
+using CrossoutLogView.GUI.WindowsAuxilary;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 
@@ -69,10 +69,12 @@ namespace CrossoutLogView.GUI
                     switch (arg)
                     {
                         case "LaunchCollectedStatistics":
-                            launchWindow = new CollectedStatisticsWindow();
+                            if (launchWindow == null)
+                                launchWindow = new CollectedStatisticsWindow(true);
                             break;
                         case "LaunchLiveTracking":
-                            launchWindow = new LiveTrackingWindow();
+                            if (launchWindow == null)
+                                launchWindow = new LiveTrackingWindow(true);
                             break;
                         case "StartMinimized":
                             startMinimized = true;
