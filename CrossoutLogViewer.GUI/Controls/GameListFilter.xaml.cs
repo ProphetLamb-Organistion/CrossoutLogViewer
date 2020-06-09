@@ -1,4 +1,5 @@
-﻿using CrossoutLogView.GUI.Events;
+﻿using CrossoutLogView.Common;
+using CrossoutLogView.GUI.Events;
 using CrossoutLogView.Statistics;
 
 using MahApps.Metro.Controls;
@@ -116,20 +117,95 @@ namespace CrossoutLogView.GUI.Controls
 
         private void SetFilterNoonClick(object sender, RoutedEventArgs e)
         {
-            StartLimit = DateTime.Today.AddHours(12);
-            EndLimit = DateTime.Today.AddHours(17);
+            if (StartLimit.HasValue)
+            {
+                var start = StartLimit.Value;
+                StartLimit = new DateTime(start.Year, start.Month, start.Day).AddHours(12);
+            }
+            else
+            {
+                StartLimit = DateTime.Today.AddHours(12.0);
+            }
+            EndLimit = StartLimit.Value.AddHours(5.0);
         }
 
         private void SetFilterAfternoonClick(object sender, RoutedEventArgs e)
         {
-            StartLimit = DateTime.Today.AddHours(18);
-            EndLimit = DateTime.Today.AddHours(22);
+            if (StartLimit.HasValue)
+            {
+                var start = StartLimit.Value;
+                StartLimit = new DateTime(start.Year, start.Month, start.Day).AddHours(18);
+            }
+            else
+            {
+                StartLimit = DateTime.Today.AddHours(18.0);
+            }
+            EndLimit = StartLimit.Value.AddHours(5.0);
         }
 
         private void SetFilterNightClick(object sender, RoutedEventArgs e)
         {
-            StartLimit = DateTime.Today.AddDays(1);
-            EndLimit = DateTime.Today.AddDays(1).AddHours(5);
+            if (StartLimit.HasValue)
+            {
+                var start = StartLimit.Value;
+                StartLimit = new DateTime(start.Year, start.Month, start.Day);
+            }
+            else
+            {
+                StartLimit = DateTime.Today;
+            }
+            EndLimit = StartLimit.Value.AddHours(5.0);
+        }
+
+        private void SetFilterAllDayClick(object sender, RoutedEventArgs e)
+        {
+            if (StartLimit.HasValue)
+            {
+                var start = StartLimit.Value;
+                StartLimit = new DateTime(start.Year, start.Month, start.Day);
+            }
+            else
+            {
+                StartLimit = DateTime.Today;
+            }
+            EndLimit = StartLimit.Value.AddDays(1.0).AddSeconds(-1.0);
+        }
+
+        private void SetFilterWeekClick(object sender, RoutedEventArgs e)
+        {
+            StartLimit = DateTime.Now.StartOfWeek();
+            EndLimit = StartLimit.Value.AddDays(7.0).AddSeconds(-1.0);
+        }
+
+        private void SetFilterMonthClick(object sender, RoutedEventArgs e)
+        {
+            StartLimit = DateTime.Now.StartOfMonth();
+            EndLimit = DateTime.Now.EndOfMonth();
+        }
+
+        private void OpenCustomFilterPopupClick(object sender, RoutedEventArgs e)
+        {
+            PopupCustomTimeFilter.IsOpen = true;
+        }
+
+        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<int> e)
+        {
+            if (StartLimit.HasValue)
+            {
+                StartLimit = DateTime.Now.Date.AddDays(e.NewValue).Add(StartLimit.Value.TimeOfDay);
+            }
+            else
+            {
+                StartLimit = DateTime.Now.Date;
+            }
+            if (EndLimit.HasValue)
+            {
+                EndLimit = DateTime.Now.Date.AddDays(e.NewValue).Add(EndLimit.Value.TimeOfDay);
+            }
+            else
+            {
+                EndLimit = DateTime.Now.Date.AddDays(1.0).AddSeconds(-1.0);
+            }
         }
 
         private static GameFilter ObjToGameFilter(object obj)

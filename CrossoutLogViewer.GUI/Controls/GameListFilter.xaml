@@ -6,68 +6,141 @@
              xmlns:local="clr-namespace:CrossoutLogView.GUI.Controls"
              mc:Ignorable="d"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              BorderThickness="0"
-             MinHeight="48"
-             MaxWidth="100000000"
-             d:DesignHeight="48"
+             MinHeight="35"
+             d:DesignHeight="40"
              d:DesignWidth="650">
     <UserControl.Resources>
         <ResourceDictionary>
             <Thickness x:Key="ContentMargin"
                        Left="0"
-                       Top="4"
-                       Right="2"
-                       Bottom="4" />
+                       Top="2"
+                       Right="4"
+                       Bottom="2" />
+            <Thickness x:Key="ContentMarginRightMost"
+                       Left="0"
+                       Top="2"
+                       Right="0"
+                       Bottom="2" />
         </ResourceDictionary>
     </UserControl.Resources>
     <WrapPanel Orientation="Horizontal"
                VerticalAlignment="Center">
-        <StackPanel Orientation="Horizontal">
-            <Button Content="Noon"
-                    Style="{DynamicResource MahApps.Styles.Button.Flat}"
-                    Click="SetFilterNoonClick"
-                    Margin="{StaticResource ContentMargin}" />
-            <Button Content="Afternoon"
-                    Style="{DynamicResource MahApps.Styles.Button.Flat}"
-                    Click="SetFilterAfternoonClick"
-                    Margin="{StaticResource ContentMargin}" />
-            <Button Content="Night"
-                    Style="{DynamicResource MahApps.Styles.Button.Flat}"
-                    Click="SetFilterNightClick"
-                    Margin="{StaticResource ContentMargin}" />
-        </StackPanel>
-        <StackPanel Orientation="Horizontal">
-            <TextBlock Text="Start"
-                       Margin="{StaticResource ContentMargin}"
-                       VerticalAlignment="Center" />
-            <Controls:DateTimePicker SelectedDateTime="{Binding StartLimit, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay}"
-                                     Margin="{StaticResource ContentMargin}"
-                                     VerticalAlignment="Center" />
-        </StackPanel>
-        <StackPanel Orientation="Horizontal">
-            <TextBlock Text="End"
-                       Margin="{StaticResource ContentMargin}"
-                       VerticalAlignment="Center" />
-            <Controls:DateTimePicker SelectedDateTime="{Binding EndLimit, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay}"
-                                     Margin="{StaticResource ContentMargin}"
-                                     VerticalAlignment="Center" />
-        </StackPanel>
-        <StackPanel Orientation="Horizontal">
-            <TextBlock Text="Filter"
-                       Margin="{StaticResource ContentMargin}"
-                       VerticalAlignment="Center" />
-            <ComboBox x:Name="ComboBoxGameMode"
-                      SelectedItem="{Binding GameMode, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay}"
-                      Margin="{StaticResource ContentMargin}"
-                      VerticalAlignment="Center" />
-            <Button x:Name="clearFilter"
-                    Content="✕"
-                    FontWeight="Bold"
-                    FontSize="18"
-                    Style="{DynamicResource MahApps.Styles.Button.Chromeless}"
-                    Click="ClearFilter"
-                    Width="{Binding ElementName=clearFilter, Path=ActualHeight}"
-                    Margin="{StaticResource ContentMargin}" />
-        </StackPanel>
+        <Border Style="{DynamicResource BorderStyle}">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Day"
+                           Foreground="{DynamicResource MahApps.Brushes.Gray2}"
+                           Margin="0,0,4,0"/>
+                <Button Style="{DynamicResource Button.Free}"
+                        Click="SetFilterNightClick"
+                        Margin="{StaticResource ContentMargin}"
+                        ToolTip="Set time to night ClanWars session. 00:00 - 05:00">
+                    <IconPacks:Modern Kind="Moon"
+                                      Width="15"
+                                      Height="15" />
+                </Button>
+                <Button Style="{DynamicResource Button.Free}"
+                        Click="SetFilterNoonClick"
+                        Margin="{StaticResource ContentMargin}"
+                        ToolTip="Set time to noon ClanWars session. 12:00 - 17:00">
+                    <IconPacks:Modern Kind="WeatherSun"
+                                      Width="15"
+                                      Height="15" />
+                </Button>
+                <Button Style="{DynamicResource Button.Free}"
+                        Click="SetFilterAfternoonClick"
+                        Margin="{StaticResource ContentMargin}"
+                        ToolTip="Set time to after noon ClanWars session. 18:00 - 23:00">
+                    <IconPacks:Modern Kind="WeatherSunSet"
+                                      Width="15"
+                                      Height="15" />
+                </Button>
+                <Button Style="{DynamicResource Button.Free}"
+                        Click="SetFilterAllDayClick"
+                        Margin="{StaticResource ContentMargin}"
+                        ToolTip="Set time to all day.">
+                    <IconPacks:Modern Kind="CalendarDay"
+                                      Width="15"
+                                      Height="15" />
+                </Button>
+                <local:DateSlider Value="0"
+                                  ValueChanged="Slider_ValueChanged"
+                                  Margin="{StaticResource ContentMarginRightMost}"
+                                  Minimum="-28"
+                                  Maximum="0"
+                                  ToolTip="Choose a day to view the games, relative to today." />
+            </StackPanel>
+        </Border>
+        <Border Style="{DynamicResource BorderStyle}">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Span"
+                           Foreground="{DynamicResource MahApps.Brushes.Gray2}"
+                           Margin="0,0,4,0"/>
+                <Button Content="Week"
+                        Style="{DynamicResource Button.Borderless}"
+                        Click="SetFilterWeekClick"
+                        VerticalAlignment="Center"
+                        ToolTip="Set filter to the current week."
+                        Margin="{StaticResource ContentMargin}" />
+                <Button Content="Month"
+                        Style="{DynamicResource Button.Borderless}"
+                        Click="SetFilterMonthClick"
+                        VerticalAlignment="Center"
+                        ToolTip="Set filter to the current month."
+                        Margin="{StaticResource ContentMargin}" />
+                <Button Style="{DynamicResource Button.Free}"
+                        Click="OpenCustomFilterPopupClick"
+                        Margin="{StaticResource ContentMarginRightMost}"
+                        ToolTip="Opens custom date span popup.">
+                    <IconPacks:Modern Kind="Edit"
+                                      Width="18"
+                                      Height="18" />
+                </Button>
+                <Popup Name="PopupCustomTimeFilter"
+                       StaysOpen="False"
+                       Placement="Bottom"
+                       AllowsTransparency="True">
+                    <Border Style="{DynamicResource BorderStyle}"
+                            Margin="0,0,8,8"
+                            Background="{DynamicResource MahApps.Brushes.ThemeBackground}">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="5"
+                                              Opacity="0.4" />
+                        </Border.Effect>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Start"
+                                       Margin="{StaticResource ContentMargin}"
+                                       VerticalAlignment="Center" />
+                            <Controls:DateTimePicker SelectedDateTime="{Binding StartLimit, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay}"
+                                                     Margin="{StaticResource ContentMargin}"
+                                                     VerticalAlignment="Center" />
+                            <TextBlock Text="End"
+                                       Margin="{StaticResource ContentMargin}"
+                                       VerticalAlignment="Center" />
+                            <Controls:DateTimePicker SelectedDateTime="{Binding EndLimit, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay}"
+                                                     Margin="{StaticResource ContentMarginRightMost}"
+                                                     VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+                </Popup>
+            </StackPanel>
+        </Border>
+        <Border Style="{DynamicResource BorderStyle}">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Mode "
+                           Foreground="{DynamicResource MahApps.Brushes.Gray2}"
+                           Margin="0,0,4,0" />
+                <ComboBox x:Name="ComboBoxGameMode"
+                          SelectedItem="{Binding GameMode, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay}"
+                          Margin="{StaticResource ContentMarginRightMost}"
+                          VerticalAlignment="Center"
+                          ToolTip="Choose what kind of games to show." />
+            </StackPanel>
+        </Border>
+        <Button Style="{DynamicResource Button.Clear}"
+                Click="ClearFilter"
+                Margin="8,4,0,4"
+                ToolTip="Clears all filters, showing all games. Warning might consume a lot of resources." />
     </WrapPanel>
 </UserControl>
