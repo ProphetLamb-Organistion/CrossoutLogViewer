@@ -51,6 +51,11 @@ namespace CrossoutLogView.Common
             WriteLine(exception, typeof(TClass).Name);
         }
 
+        public static void WriteLine<TClass>(Exception sqlException, string faultCommand)
+        {
+            WriteLine(sqlException, faultCommand, typeof(TClass).Name);
+        }
+
         public static void WriteLine<TClass>(string message, bool setBookmark = false)
         {
             WriteLine(message, setBookmark, typeof(TClass).Name);
@@ -59,6 +64,11 @@ namespace CrossoutLogView.Common
         public static void WriteLine(Exception exception, [CallerMemberName] string callerName = "")
         {
             WriteString(String.Concat(exception.GetType().Name, ": ", exception.Message, "\r\nSource: ", exception.Source, "\r\nStacktrace: ", exception.StackTrace, "\r\nInner exception: ", exception.InnerException), callerName, false);
+        }
+
+        public static void WriteLine(Exception sqlException, string faultCommand, [CallerMemberName] string callerName = "")
+        {
+            WriteString(String.Concat(sqlException.GetType().Name, ": ", sqlException.Message, "\r\nSource: ", sqlException.Source, "\r\nStacktrace: ", sqlException.StackTrace, "\r\nInner exception: ", sqlException.InnerException, "\r\nFault command: ", faultCommand), callerName, false);
         }
 
         public static void WriteLine(string message, bool setBookmark = false, [CallerMemberName] string callerName = "")
