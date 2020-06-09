@@ -75,7 +75,7 @@ namespace CrossoutLogView.GUI.Models
         public Visibility UnfinishedVisible => Object.MVP == -1 ? Visibility.Visible : Visibility.Hidden;
 
         public string Title => String.Concat(Object.Start.ToString("t"), " - ", Object.End.ToString("t"),
-                CenterDotSeparator, Object.Map.Name, CenterDotSeparator, Object.Mission, CenterDotSeparator, Object.Mode);
+                CenterDotSeparator, DisplayStringFactory.MapName(Object.Map.Name), CenterDotSeparator, Object.Mission, CenterDotSeparator, Object.Mode);
 
         public string Duration => "Duration: " + (Start - End).ToString(@"mm\:ss");
 
