@@ -11,7 +11,7 @@
     <Grid>
         <GroupBox x:Name="GroupBoxOverview"
                   Header="{Binding DisplayName}"
-                  Style="{DynamicResource GroupBox}"
+                  Style="{DynamicResource GroupBox.TitleBar}"
                   Grid.ColumnSpan="3">
             <StackPanel Orientation="Horizontal"
                         Margin="4,0">
@@ -45,13 +45,12 @@
         </GroupBox>
         <GroupBox x:Name="GroupBoxUsers"
                   Header="Users"
-                  Style="{DynamicResource GroupBox}"
+                  Style="{DynamicResource GroupBox.Border}"
                   Grid.Row="1"
                   Grid.Column="2">
             <ListBox Background="Transparent"
                      ItemsSource="{Binding WeaponUsers}"
-                     ItemContainerStyle="{DynamicResource ListBoxHideSelection}"
-                     MouseDoubleClick="WeaponOpenUserClick">
+                     ItemContainerStyle="{DynamicResource ListBoxHideSelection}">
                 <ListBox.Resources>
                     <ContextMenu x:Key="ListBoxWeaponUsersContextMenu"
                                  Style="{DynamicResource MahApps.Styles.ContextMenu}">
@@ -62,7 +61,8 @@
                 </ListBox.Resources>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel ContextMenu="{DynamicResource ListBoxWeaponUsersContextMenu}">
+                        <StackPanel ContextMenu="{DynamicResource ListBoxWeaponUsersContextMenu}"
+                                    MouseUp="WeaponOpenUserClick">
                             <TextBlock Text="{Binding UserName}"
                                        FontWeight="SemiBold" />
                             <TextBlock>
@@ -82,7 +82,7 @@
             </ListBox>
         </GroupBox>
         <GroupBox Header="Weapons"
-                  Style="{DynamicResource GroupBox}"
+                  Style="{DynamicResource GroupBox.TitleBar}"
                   Grid.Row="2">
             <Grid>
                 <StackPanel Orientation="Horizontal"

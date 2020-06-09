@@ -14,7 +14,7 @@
              MinWidth="200">
     <Grid>
         <GroupBox Header="{Binding GeneralGroup}"
-                  Style="{DynamicResource GroupBox}"
+                  Style="{DynamicResource GroupBox.Border}"
                   Grid.ColumnSpan="2">
             <Grid>
                 <WrapPanel Orientation="Horizontal">
@@ -76,7 +76,6 @@
                             VerticalAlignment="Top"
                             Grid.Column="1">
                     <TextBlock Text="Stats"
-                               
                                Margin="0,0,4,0"
                                VerticalAlignment="Center" />
                     <ComboBox x:Name="ComboBoxDisplayMode"
@@ -91,7 +90,7 @@
         </GroupBox>
         <GroupBox Header="{Binding DamageGroup}"
                   Grid.Row="1"
-                  Style="{DynamicResource GroupBox}">
+                  Style="{DynamicResource GroupBox.Border}">
             <WrapPanel>
                 <TextBlock Style="{DynamicResource Content}"
                            VerticalAlignment="Center">
@@ -118,7 +117,7 @@
         <GroupBox Header="Damage Taken"
                   Grid.Row="1"
                   Grid.Column="1"
-                  Style="{DynamicResource GroupBox}">
+                  Style="{DynamicResource GroupBox.Border}">
             <WrapPanel>
                 <TextBlock Style="{DynamicResource Content}"
                            VerticalAlignment="Center">

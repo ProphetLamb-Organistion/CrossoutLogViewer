@@ -111,7 +111,10 @@ namespace CrossoutLogView.GUI.Controls
             else if (sender is MenuItem mi && mi.CommandParameter is ContextMenu cm) dataContext = cm.DataContext;
 
             if (dataContext is WeaponUserListModel wul)
+            {
+                DataProvider.CompleteUser(wul.User);
                 OpenViewModelDoubleClick?.Invoke(this, new OpenModelViewerEventArgs(new UserModel(wul.User), e));
+            }
         }
 
         private void WeaponsSelectWeapon(object sender, SelectionChangedEventArgs e)
