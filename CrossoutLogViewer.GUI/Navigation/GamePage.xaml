@@ -145,7 +145,7 @@
               Grid.RowSpan="2"
               VerticalAlignment="Stretch">
             <GroupBox Header="{Binding Team1String}"
-                      Style="{DynamicResource GroupBox}"
+                      Style="{DynamicResource GroupBox.Border}"
                       HorizontalAlignment="Stretch">
                 <ListBox x:Name="ListBoxWon"
                          ItemContainerStyle="{DynamicResource ListBoxHideSelection}"
@@ -159,7 +159,7 @@
             </GroupBox>
             <GroupBox Header="{Binding Team2String}"
                       Visibility="{Binding MVPVisible}"
-                      Style="{DynamicResource GroupBox}"
+                      Style="{DynamicResource GroupBox.Border}"
                       HorizontalAlignment="Stretch"
                       Grid.Row="1">
                 <ListBox x:Name="ListBoxLost"
@@ -178,7 +178,6 @@
                    Stretch="UniformToFill"
                    RenderOptions.BitmapScalingMode="NearestNeighbor"
                    RenderOptions.EdgeMode="Aliased"
-                   MouseUp="OpenMapImageClick"
                    Grid.Row="2"/>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
@@ -202,7 +201,7 @@
             <ColumnDefinition Width="*"
                               MinWidth="200" />
             <ColumnDefinition Width="5" />
-            <ColumnDefinition Width="200"
+            <ColumnDefinition Width="220"
                               MinWidth="150"
                               MaxWidth="300" />
         </Grid.ColumnDefinitions>

@@ -13,7 +13,7 @@
     <Grid Background="{DynamicResource MahApps.Brushes.ThemeBackground}">
         <UserControls:UserOverview x:Name="UserOverviewUsers" />
         <GroupBox Header="Users"
-                  Style="{DynamicResource GroupBox}"
+                  Style="{DynamicResource GroupBox.TitleBar}"
                   Grid.Row="1">
             <StackPanel Orientation="Horizontal"
                         VerticalAlignment="Center">

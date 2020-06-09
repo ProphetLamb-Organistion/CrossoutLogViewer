@@ -61,7 +61,7 @@
         </StackPanel>
         <Grid Grid.Row="2">
             <GroupBox Header="Damage Dealt"
-                      Style="{DynamicResource GroupBox}">
+                      Style="{DynamicResource GroupBox.Border}">
                 <WrapPanel>
                     <TextBlock Style="{DynamicResource Content}">
                         <Run Text="Total" />
@@ -83,7 +83,7 @@
                 </WrapPanel>
             </GroupBox>
             <GroupBox Header="Damage Taken"
-                      Style="{DynamicResource GroupBox}"
+                      Style="{DynamicResource GroupBox.Border}"
                       Grid.Column="1">
                 <WrapPanel>
                     <TextBlock Style="{DynamicResource Content}">
@@ -133,7 +133,7 @@
             </DataGrid.Columns>
         </DataGrid>
         <GroupBox Header="Stripes"
-                  Style="{DynamicResource GroupBox}"
+                  Style="{DynamicResource GroupBox.TitleBar}"
                   Grid.Row="1"
                   Grid.Column="2"
                   Grid.RowSpan="3">
