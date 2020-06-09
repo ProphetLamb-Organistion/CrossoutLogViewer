@@ -8,6 +8,11 @@ namespace CrossoutLogView.Common
         public readonly int End;
         public readonly int Count;
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="Int32Range"/>.
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
         public Int32Range(int start, int end) : this()
         {
             Start = start;
@@ -15,11 +20,20 @@ namespace CrossoutLogView.Common
             Count = end - start;
         }
 
-        public Int32Range LeftShift(int count)
+        /// <summary>
+        /// Adds a specific value to both the <see cref="Start"/> and <see cref="End"/> value of this instance.
+        /// </summary>
+        /// <param name="count">The value offset.</param>
+        public Int32Range Offset(int count)
         {
-            return new Int32Range(Start - count, End - count);
+            return new Int32Range(Start + count, End + count);
         }
 
+        /// <summary>
+        /// Returns whether a value is widthin the range. Including the lower bound and excluding the upper bound.
+        /// </summary>
+        /// <param name="value">The value tested.</param>
+        /// <returns>True if the value is widthin the range, otherwise false</returns>
         public bool Contains(int value)
         {
             return Start <= value && value < End;

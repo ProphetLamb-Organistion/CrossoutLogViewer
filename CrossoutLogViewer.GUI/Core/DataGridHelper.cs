@@ -33,6 +33,12 @@ namespace CrossoutLogView.GUI.Core
             return null;
         }
 
+        /// <summary>
+        /// Retuns the source elements of <see cref="RoutedEventArgs"/> from a <see cref="DependencyObject"/>, if the type <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T">The type.</typeparam>
+        /// <param name="originalSource">The <see cref="DependencyObject"/> provided by the <see cref="RoutedEventArgs"/>.</param>
+        /// <returns>The source elements of <see cref="RoutedEventArgs"/> from a <see cref="DependencyObject"/></returns>
         public static T GetSourceElement<T>(object originalSource) where T : DependencyObject
         {
             var type = typeof(T);

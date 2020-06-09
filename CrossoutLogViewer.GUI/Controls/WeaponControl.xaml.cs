@@ -31,6 +31,9 @@ namespace CrossoutLogView.GUI.Controls
         public event SelectionChangedEventHandler SelectionChanged;
         public event WeaponFilterChangedEventHandler FilterChanged;
 
+        private WeaponFilter _weaponFilter;
+
+
         public WeaponControl()
         {
             InitializeComponent();
@@ -41,7 +44,6 @@ namespace CrossoutLogView.GUI.Controls
             }
         }
 
-        private WeaponFilter _weaponFilter;
         public WeaponFilter WeaponFilter
         {
             get => _weaponFilter;

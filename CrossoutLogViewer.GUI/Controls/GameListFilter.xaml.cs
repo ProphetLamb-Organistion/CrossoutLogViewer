@@ -34,6 +34,9 @@ namespace CrossoutLogView.GUI.Controls
             GameMode = GameMode.All;
         }
 
+        /// <summary>
+        /// Gets or sets the instance of <see cref="GameFilter"/> defining the setting of this <see cref="UserControl"/>.
+        /// </summary>
         public GameFilter Filter
         {
             get => ObjToGameFilter(GetValue(FilterProperty));
@@ -41,6 +44,9 @@ namespace CrossoutLogView.GUI.Controls
         }
         public static readonly DependencyProperty FilterProperty = DependencyProperty.Register(nameof(Filter), typeof(GameFilter), typeof(GameListFilter), new PropertyMetadata(OnFilterPropertyChanged));
 
+        /// <summary>
+        /// Gets or sets the lower bound of <see cref="DateTime"/> for <see cref="Game"/>s included in the filter.
+        /// </summary>
         public DateTime? StartLimit
         {
             get => GetValue(StartLimitProperty) as DateTime?;
@@ -48,6 +54,9 @@ namespace CrossoutLogView.GUI.Controls
         }
         public static readonly DependencyProperty StartLimitProperty = DependencyProperty.Register(nameof(StartLimit), typeof(DateTime?), typeof(GameListFilter), new PropertyMetadata(OnStartLimitPropertyChanged));
 
+        /// <summary>
+        /// Gets or sets the upper bound of <see cref="DateTime"/> for <see cref="Game"/>s included in the filter.
+        /// </summary>
         public DateTime? EndLimit
         {
             get => GetValue(EndLimitProperty) as DateTime?;
@@ -55,6 +64,9 @@ namespace CrossoutLogView.GUI.Controls
         }
         public static readonly DependencyProperty EndLimitProperty = DependencyProperty.Register(nameof(EndLimit), typeof(DateTime?), typeof(GameListFilter), new PropertyMetadata(OnEndLimitPropertyChanged));
 
+        /// <summary>
+        /// Gets or sets the enum specifing what kind of games are included in the filter.
+        /// </summary>
         public GameMode GameMode
         {
             get => ObjToGameMode(GetValue(GameModeProperty));

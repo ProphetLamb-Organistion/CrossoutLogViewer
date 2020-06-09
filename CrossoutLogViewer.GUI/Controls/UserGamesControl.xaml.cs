@@ -29,18 +29,22 @@ namespace CrossoutLogView.GUI.Controls
     /// </summary>
     public partial class UserGamesControl
     {
+        private UserModel _user;
+
         public UserGamesControl()
         {
             InitializeComponent();
         }
 
-        private UserModel _user;
+        /// <summary>
+        /// Gets or sets the <see cref="UserModel"/> used to generate the content of the <see cref="UserGamesControl"/>.
+        /// </summary>
         public UserModel User
         {
             get => _user;
             set
             {
-                if (ReferenceEquals(_user, value)) return;
+                if (value == null || ReferenceEquals(_user, value)) return;
                 value.Participations.Sort(new PlayerGameCompositeModelStartTimeDescending());
                 UserOverview.DataContext = _user = value;
                 RefreshGamesFilter();

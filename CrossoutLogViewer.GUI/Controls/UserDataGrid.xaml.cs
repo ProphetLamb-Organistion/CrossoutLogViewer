@@ -22,6 +22,8 @@ namespace CrossoutLogView.GUI.Controls
     /// </summary>
     public partial class UserDataGrid : DataGrid
     {
+        public event OpenModelViewerEventHandler OpenViewModelDoubleClick;
+
         public UserDataGrid()
         {
             InitializeComponent();
@@ -32,7 +34,6 @@ namespace CrossoutLogView.GUI.Controls
             }
         }
 
-        public event OpenModelViewerEventHandler OpenViewModelDoubleClick;
         private void OpenUserMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             if (DataGridHelper.GetSourceCellElement(e) is DataGridCell dgc && dgc.DataContext is UserModel u)

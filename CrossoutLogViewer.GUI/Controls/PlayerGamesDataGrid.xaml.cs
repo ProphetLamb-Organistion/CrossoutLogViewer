@@ -37,31 +37,6 @@ namespace CrossoutLogView.GUI.Controls
             }
         }
 
-        private void OnOpenViewModel(object sender, MouseButtonEventArgs e)
-        {
-            if (DataGridHelper.GetSourceCellElement(e) is DataGridCell)
-            {
-                if (SelectedItems.Count == 1)
-                {
-                    OpenSelectedGame();
-                }
-                else if (SelectedItems.Count > 1)
-                {
-                    OpenSelectedGamesUsers();
-                }
-            }
-        }
-
-        private void OpenGameClick(object sender, RoutedEventArgs e)
-        {
-            OpenSelectedGame();
-        }
-
-        private void OpenGameUsersClick(object sender, RoutedEventArgs e)
-        {
-            OpenSelectedGamesUsers();
-        }
-
         public void OpenSelectedGame()
         {
             if (SelectedItems[0] is PlayerGameCompositeModel pgc)
@@ -93,6 +68,31 @@ namespace CrossoutLogView.GUI.Controls
                 users.Add(new UserModel(user));
             }
             OpenViewModel?.Invoke(this, new OpenModelViewerEventArgs(new UserListModel(users)));
+        }
+
+        private void OnOpenViewModel(object sender, MouseButtonEventArgs e)
+        {
+            if (DataGridHelper.GetSourceCellElement(e) is DataGridCell)
+            {
+                if (SelectedItems.Count == 1)
+                {
+                    OpenSelectedGame();
+                }
+                else if (SelectedItems.Count > 1)
+                {
+                    OpenSelectedGamesUsers();
+                }
+            }
+        }
+
+        private void OpenGameClick(object sender, RoutedEventArgs e)
+        {
+            OpenSelectedGame();
+        }
+
+        private void OpenGameUsersClick(object sender, RoutedEventArgs e)
+        {
+            OpenSelectedGamesUsers();
         }
     }
 }

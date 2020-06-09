@@ -102,7 +102,7 @@ namespace CrossoutLogView.Common
 
 
         #region IntrospectiveSort
-        // All source code in this region is abstracted from following classes:
+        // All source code in this region is based on the reference source of following classes:
         // System.Collections.Generic.GenericArraySortHelper<T> and System.Collections.Generic.IntrospectiveSortUtilities
 
         private const int IntrosortSizeThreshold = 16;
@@ -246,7 +246,7 @@ namespace CrossoutLogView.Common
                 {
                     child++;
                 }
-                if (!(comparer.Compare(d, keys[lo + child - 1]) < 0))
+                if (comparer.Compare(d, keys[lo + child - 1]) >= 0)
                     break;
                 keys[lo + i - 1] = keys[lo + child - 1];
                 i = child;

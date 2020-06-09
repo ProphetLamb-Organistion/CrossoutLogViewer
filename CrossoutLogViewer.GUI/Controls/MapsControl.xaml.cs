@@ -32,6 +32,7 @@ namespace CrossoutLogView.GUI.Controls
     {
         private GameFilter filter = new GameFilter(GameMode.All);
         private MapModel selectedItem;
+        private ObservableCollection<MapModel> _maps;
 
         public MapsControl()
         {
@@ -40,8 +41,9 @@ namespace CrossoutLogView.GUI.Controls
             PlayerGamesDataGrid.Columns.First(x => String.Equals(x.Header as string, "Map", StringComparison.InvariantCultureIgnoreCase)).Visibility = Visibility.Hidden;
         }
 
-
-        private ObservableCollection<MapModel> _maps;
+        /// <summary>
+        /// Gets or sets the <see cref="ObservableCollection{MapModel}"/> used to generate the selection of the <see cref="MapsControl"/>.
+        /// </summary>
         public ObservableCollection<MapModel> Maps
         {
             get => _maps;

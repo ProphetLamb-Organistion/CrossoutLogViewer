@@ -5,6 +5,12 @@ namespace CrossoutLogView.Common
 {
     public static class TimeConverter
     {
+        /// <summary>
+        /// Returns the ticks of the <see cref="DateTime"/> obtained by combining the log date with the line timestamp.
+        /// </summary>
+        /// <param name="lineTimeStamp">The <see cref="String"/> containing the hour, minute, second and millisecond data of the line.</param>
+        /// <param name="logDate">The <see cref="DateTime"/> containing the year, month and day data.</param>
+        /// <returns>The ticks of the <see cref="DateTime"/> obtained by combining the log date with the line timestamp.</returns>
         public static long FromString(ReadOnlySpan<char> lineTimeStamp, DateTime logDate)
         {
             int hour, minute, second, millisecond;

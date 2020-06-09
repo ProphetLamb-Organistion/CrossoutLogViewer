@@ -7,6 +7,11 @@ namespace CrossoutLogView.Common
     {
         public const string Alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!#$%&()*+-;<=>?@^_`{|}~";
 
+        /// <summary>
+        /// Returns the base85 encoded representation of the input integer type value.
+        /// </summary>
+        /// <param name="integer">The integer type value.</param>
+        /// <returns>The base85 encoded representation of the input integer type value.</returns>
         public static string Encode(int integer)
         {
             if (integer < 0) throw new ArgumentOutOfRangeException(nameof(integer));
@@ -19,6 +24,12 @@ namespace CrossoutLogView.Common
             } while (integer != 0);
             return sb.ToString();
         }
+
+        /// <summary>
+        /// Returns the base85 encoded representation of the input integer type value.
+        /// </summary>
+        /// <param name="integer">The integer type value.</param>
+        /// <returns>The base85 encoded representation of the input integer type value.</returns>
         public static string Encode(long integer)
         {
             if (integer < 0) throw new ArgumentOutOfRangeException(nameof(integer));
@@ -32,6 +43,11 @@ namespace CrossoutLogView.Common
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Returns the 32bit ineger encoded in the input string.
+        /// </summary>
+        /// <param name="encodedValue">The encoded representation of a 32bit ineger in base85.</param>
+        /// <returns>The 32bit ineger encoded in the input string.</returns>
         public static int DecodeInt32(string encodedValue)
         {
             if (String.IsNullOrEmpty(encodedValue)) throw new ArgumentNullException(nameof(encodedValue));
@@ -48,6 +64,11 @@ namespace CrossoutLogView.Common
             return integer;
         }
 
+        /// <summary>
+        /// Returns the 64bit ineger encoded in the input string.
+        /// </summary>
+        /// <param name="encodedValue">The encoded representation of a 64bit ineger in base85.</param>
+        /// <returns>The 64bit ineger encoded in the input string.</returns>
         public static long DecodeInt64(string encodedValue)
         {
             if (String.IsNullOrEmpty(encodedValue)) throw new ArgumentNullException(nameof(encodedValue));
