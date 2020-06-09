@@ -1,6 +1,4 @@
-﻿using ControlzEx.Theming;
-
-using CrossoutLogView.Common;
+﻿using CrossoutLogView.Common;
 using CrossoutLogView.Database;
 using CrossoutLogView.Database.Collection;
 using CrossoutLogView.Database.Connection;
@@ -10,6 +8,7 @@ using CrossoutLogView.GUI.Controls;
 using CrossoutLogView.GUI.Core;
 using CrossoutLogView.GUI.Events;
 using CrossoutLogView.GUI.Models;
+using CrossoutLogView.GUI.WindowsAuxilary;
 using CrossoutLogView.Statistics;
 
 using MahApps.Metro.Controls;
@@ -29,6 +28,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Navigation;
 
+using NavigationWindow = CrossoutLogView.GUI.WindowsAuxilary.NavigationWindow;
+
 namespace CrossoutLogView.GUI
 {
     /// <summary>
@@ -39,12 +40,20 @@ namespace CrossoutLogView.GUI
         private CollectedStatisticsWindowViewModel viewModel;
 
         private bool forceClose = false;
+        private bool directLaunch;
 
-        public CollectedStatisticsWindow()
+
+        public CollectedStatisticsWindow() : this(false) { }
+        public CollectedStatisticsWindow(bool directLaunch)
         {
+            this.directLaunch = directLaunch;
             Logging.WriteLine<CollectedStatisticsWindow>("Loading CollectedStatisticsWindow", true);
+            AsyncDispatcher = new TaskFactory(TaskScheduler.FromCurrentSynchronizationContext());
             InitializeComponent();
         }
+
+        private TaskFactory AsyncDispatcher { get; }
+
         private async void OnLoaded(object sender, RoutedEventArgs e)
         {
             var controller = await this.ShowProgressAsync("Starting", "Preparing views.\r\nPlease stand by...", settings: new MetroDialogSettings
@@ -54,14 +63,18 @@ namespace CrossoutLogView.GUI
                 ColorScheme = MetroDialogOptions.ColorScheme
             });
             controller.SetIndeterminate();
-            await Task.Delay(50).ConfigureAwait(true); //ensure that the wait window loaded, before freezing
-            DataContext = viewModel = new CollectedStatisticsWindowViewModel();
+            await Task.Delay(80); //ensure that the wait window loaded, before freezing
+            if (directLaunch)
+            {
+                App.InitializeSession();
+            }
+            DataContext = viewModel = new CollectedStatisticsWindowViewModel(this.Dispatcher);
             viewModel.PropertyChanged += OnPropertyChanged;
 
             UserGamesViewGames.User = viewModel.MeUser;
             UserGamesViewGames.DataGridGames.OpenViewModel += GamesOpenGameDoubleClick;
 
-            UserListViewUsers.ItemsSource = viewModel.UserListModels;
+            UserListViewUsers.ItemsSource = viewModel.UserModels;
             var userListView = (CollectionView)CollectionViewSource.GetDefaultView(UserListViewUsers.ItemsSource);
             userListView.Filter = UserListFilter;
 
@@ -83,16 +96,10 @@ namespace CrossoutLogView.GUI
         {
             this.BeginInvoke(delegate
             {
-                UserListViewUsers.ItemsSource = null;
-                UserListViewUsers.ItemsSource = viewModel.UserListModels;
                 CollectionViewSource.GetDefaultView(UserListViewUsers.ItemsSource).Refresh();
-                WeaponListViewWeapons.ItemsSource = null;
-                WeaponListViewWeapons.ItemsSource = viewModel.WeaponModels;
-                UserGamesViewGames.DataGridGames.ItemsSource = null;
-                UserGamesViewGames.DataGridGames.ItemsSource = viewModel.MeUser.Participations;
+                CollectionViewSource.GetDefaultView(WeaponListViewWeapons.ItemsSource).Refresh();
                 CollectionViewSource.GetDefaultView(UserGamesViewGames.DataGridGames.ItemsSource).Refresh();
-                MapsView.Maps = null;
-                MapsView.Maps = viewModel.Maps;
+                CollectionViewSource.GetDefaultView(MapsView.Maps).Refresh();
             });
         }
 
@@ -147,7 +154,10 @@ namespace CrossoutLogView.GUI
             switch (result)
             {
                 case MessageDialogResult.Affirmative:
-                    new LauncherWindow().Show();
+                    await AsyncDispatcher.StartNew(delegate
+                    {
+                        new LauncherWindow().Show();
+                    });
                     forceClose = true;
                     break;
                 case MessageDialogResult.FirstAuxiliary:
@@ -165,9 +175,11 @@ namespace CrossoutLogView.GUI
         {
             if (args.InvokedItem is HamburgerMenuItem hmi && hmi.Label == "Settings")
             {
-                //ContentTabControl.SelectedItem = TabItemSettings;
+                AsyncDispatcher.StartNew(delegate
+                {
+                    new SettingsWindow().ShowDialog();
+                });
                 HamburgerMenuControl.SelectedIndex = ContentTabControl.SelectedIndex;
-                new SettingsWindow().ShowDialog();
                 args.Handled = true;
             }
             else
