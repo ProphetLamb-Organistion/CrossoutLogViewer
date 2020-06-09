@@ -4,8 +4,8 @@ using CrossoutLogView.Statistics;
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows.Data;
 
 namespace CrossoutLogView.GUI.Models
 {
@@ -18,7 +18,7 @@ namespace CrossoutLogView.GUI.Models
         public UserModel()
         {
             Object = new User();
-            Participations = new List<PlayerGameCompositeModel>();
+            Participations = new ObservableCollection<PlayerGameCompositeModel>();
             Weapons = new List<WeaponModel>();
             Stripes = new List<StripeModel>();
         }
@@ -32,7 +32,7 @@ namespace CrossoutLogView.GUI.Models
                 var pv = new PlayerModel(gv, Object.Participations[i].Players.First(x => x.UserID == Object.UserID));
                 participations[i] = new PlayerGameCompositeModel(gv, pv);
             }
-            ParticipationsFiltered = Participations = participations.ToList();
+            ParticipationsFiltered = Participations = new ObservableCollection<PlayerGameCompositeModel>(participations);
             UpdateCollections();
             UpdateProperties();
         }
@@ -63,8 +63,8 @@ namespace CrossoutLogView.GUI.Models
             }
         }
 
-        private List<PlayerGameCompositeModel> _participations;
-        public List<PlayerGameCompositeModel> Participations { get => _participations; private set => Set(ref _participations, value); }
+        private ObservableCollection<PlayerGameCompositeModel> _participations;
+        public ObservableCollection<PlayerGameCompositeModel> Participations { get => _participations; private set => Set(ref _participations, value); }
 
         private IEnumerable<PlayerGameCompositeModel> _participationsFiltered;
         public IEnumerable<PlayerGameCompositeModel> ParticipationsFiltered { get => _participationsFiltered; private set => Set(ref _participationsFiltered, value); }
