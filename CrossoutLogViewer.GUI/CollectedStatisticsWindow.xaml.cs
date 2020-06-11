@@ -40,34 +40,24 @@ namespace CrossoutLogView.GUI
         private CollectedStatisticsWindowViewModel viewModel;
 
         private bool forceClose = false;
-        private bool directLaunch;
-
 
         public CollectedStatisticsWindow() : this(false) { }
         public CollectedStatisticsWindow(bool directLaunch)
         {
-            this.directLaunch = directLaunch;
-            Logging.WriteLine<CollectedStatisticsWindow>("Loading CollectedStatisticsWindow", true);
-            MyTaskFactory = new TaskFactory(TaskScheduler.FromCurrentSynchronizationContext());
-            InitializeComponent();
-        }
-
-        private TaskFactory MyTaskFactory { get; }
-
-        private async void OnLoaded(object sender, RoutedEventArgs e)
-        {
-            var controller = await this.ShowProgressAsync("Starting", "Preparing views.\r\nPlease stand by...", settings: new MetroDialogSettings
-            {
-                AnimateHide = false,
-                AnimateShow = false,
-                ColorScheme = MetroDialogOptions.ColorScheme
-            });
-            controller.SetIndeterminate();
-            await Task.Delay(80); //ensure that the wait window loaded, before freezing
             if (directLaunch)
             {
                 App.InitializeSession();
             }
+            Logging.WriteLine<CollectedStatisticsWindow>("Loading CollectedStatisticsWindow", true);
+            MyTaskFactory = new TaskFactory(TaskScheduler.FromCurrentSynchronizationContext());
+            InitializeComponent();
+            Logging.WriteLine<CollectedStatisticsWindow>("Initialized Component.");
+        }
+
+        private TaskFactory MyTaskFactory { get; }
+
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
             DataContext = viewModel = new CollectedStatisticsWindowViewModel(this.Dispatcher);
 
             UserGamesViewGames.User = viewModel.MeUser;
@@ -85,9 +75,8 @@ namespace CrossoutLogView.GUI
 
             Title = String.Concat(Title, " (", viewModel.MeUser.Object.Name, ")");
             HamburgerMenuControl.Focus();
-            await controller.CloseAsync();
 
-            Logging.WriteLine<CollectedStatisticsWindow>("CollectedStatisticsWindow loaded in {TP}");
+            Logging.WriteLine<CollectedStatisticsWindow>("Loaded in {TP}");
         }
 
         private void OnInvalidateCachedData(object sender, InvalidateCachedDataEventArgs e)

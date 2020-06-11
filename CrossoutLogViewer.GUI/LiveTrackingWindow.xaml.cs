@@ -32,14 +32,16 @@ namespace CrossoutLogView.GUI
         private readonly LiveTrackingWindowViewModel viewModel;
         private Game currentGame = new Game();
         private List<ILogEntry> gameLog;
-        private bool directLaunch;
 
         private bool forceClose = false;
 
         public LiveTrackingWindow() : this(false) { }
         public LiveTrackingWindow(bool directLaunch)
         {
-            this.directLaunch = directLaunch;
+            if (directLaunch)
+            {
+                App.InitializeSession();
+            }
             Logging.WriteLine<LiveTrackingWindow>("Loading LiveTracking", true);
             InitializeComponent();
             DataContext = viewModel = new LiveTrackingWindowViewModel();
@@ -47,23 +49,10 @@ namespace CrossoutLogView.GUI
 
         private async void OnLoaded(object sender, RoutedEventArgs e)
         {
-            var controller = await this.ShowProgressAsync("Starting", "Preparing views.\r\nPlease stand by...", settings: new MetroDialogSettings
-            {
-                AnimateHide = false,
-                AnimateShow = false,
-                ColorScheme = MetroDialogOptions.ColorScheme
-            });
-            controller.SetIndeterminate();
-            await Task.Delay(80); //ensure that the wait window loaded, before freezing
-            if (directLaunch)
-            {
-                App.InitializeSession();
-            }
             var uri = ImageProvider.GetMapImageUri("powerplant");
             MapImage.Source = new BitmapImage(uri);
 
             LogUploader.LogUploadEvent += OnLogUpload;
-            await controller.CloseAsync();
 
             Logging.WriteLine<LiveTrackingWindow>("LiveTracking loaded in {TP}");
         }
