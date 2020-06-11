@@ -47,9 +47,6 @@ namespace CrossoutLogView.GUI
 
         public ObservableCollection<MapModel> Maps { get; set; }
 
-        private string _userName;
-        public string UserNameFilter { get => _userName; set => Set(ref _userName, value?.TrimStart()); }
-
         public override void UpdateCollections()
         {
             dispatcher.Invoke(delegate
