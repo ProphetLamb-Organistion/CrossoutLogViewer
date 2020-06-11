@@ -15,7 +15,8 @@
     <Grid>
         <GroupBox Header="{Binding GeneralGroup}"
                   Style="{DynamicResource GroupBox.Border}"
-                  Grid.ColumnSpan="2">
+                  Grid.ColumnSpan="2"
+                  Margin="0,0,0,2">
             <Grid>
                 <WrapPanel Orientation="Horizontal">
                     <StackPanel Orientation="Horizontal"
@@ -90,7 +91,8 @@
         </GroupBox>
         <GroupBox Header="{Binding DamageGroup}"
                   Grid.Row="1"
-                  Style="{DynamicResource GroupBox.Border}">
+                  Style="{DynamicResource GroupBox.Border}"
+                  Margin="0,2,0,0">
             <WrapPanel>
                 <TextBlock Style="{DynamicResource Content}"
                            VerticalAlignment="Center">
