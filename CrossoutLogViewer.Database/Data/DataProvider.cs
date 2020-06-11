@@ -1,10 +1,12 @@
-﻿using CrossoutLogView.Database.Collection;
+﻿using CrossoutLogView.Common;
+using CrossoutLogView.Database.Collection;
 using CrossoutLogView.Database.Connection;
 using CrossoutLogView.Database.Events;
 using CrossoutLogView.Database.Reflection;
 using CrossoutLogView.Statistics;
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,20 +15,20 @@ namespace CrossoutLogView.Database.Data
 {
     public static class DataProvider
     {
-        private static Dictionary<int, User> users = new Dictionary<int, User>();
+        private static ConcurrentDictionary<int, User> users = new ConcurrentDictionary<int, User>();
         private static SortedSet<int> usersCompleted = new SortedSet<int>();
-        private static Dictionary<int, long[]> userParticipationRowIds = new Dictionary<int, long[]>();
+        private static ConcurrentDictionary<int, long[]> userParticipationRowIds = new ConcurrentDictionary<int, long[]>();
 
-        private static Dictionary<long, Game> games = new Dictionary<long, Game>();
-        private static Dictionary<DateTime, long> gamesStartRowIds = new Dictionary<DateTime, long>();
-        private static Dictionary<long, long[]> gamesPlayerRowIds = new Dictionary<long, long[]>();
+        private static ConcurrentDictionary<long, Game> games = new ConcurrentDictionary<long, Game>();
+        private static ConcurrentDictionary<DateTime, long> gamesStartRowIds = new ConcurrentDictionary<DateTime, long>();
+        private static ConcurrentDictionary<long, long[]> gamesPlayerRowIds = new ConcurrentDictionary<long, long[]>();
         private static SortedSet<long> gamesCompleted = new SortedSet<long>();
 
-        private static Dictionary<int, WeaponGlobal> weapons = new Dictionary<int, WeaponGlobal>();
+        private static ConcurrentDictionary<int, WeaponGlobal> weapons = new ConcurrentDictionary<int, WeaponGlobal>();
         private static SortedSet<int> completedWeapons = new SortedSet<int>();
 
-        private static Dictionary<long, GameMap> gameMaps = new Dictionary<long, GameMap>();
-        private static Dictionary<string, long> gameMapRowIds = new Dictionary<string, long>();
+        private static ConcurrentDictionary<long, GameMap> gameMaps = new ConcurrentDictionary<long, GameMap>();
+        private static ConcurrentDictionary<string, long> gameMapRowIds = new ConcurrentDictionary<string, long>();
 
         public static InvalidateCachedDataEventHandler InvalidateCachedData;
 
