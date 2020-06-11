@@ -1,4 +1,5 @@
-﻿using CrossoutLogView.GUI.Core;
+﻿using CrossoutLogView.Common;
+using CrossoutLogView.GUI.Core;
 using CrossoutLogView.GUI.Events;
 using CrossoutLogView.Statistics;
 
@@ -32,7 +33,8 @@ namespace CrossoutLogView.GUI.Models
                 var pv = new PlayerModel(gv, Object.Participations[i].Players.First(x => x.UserID == Object.UserID));
                 participations[i] = new PlayerGameCompositeModel(gv, pv);
             }
-            ParticipationsFiltered = Participations = new ObservableCollection<PlayerGameCompositeModel>(participations);
+            Participations = new ObservableCollection<PlayerGameCompositeModel>(participations);
+            ParticipationsFiltered = new ObservableCollection<PlayerGameCompositeModel>(participations);
             UpdateCollections();
             UpdateProperties();
         }
@@ -46,7 +48,7 @@ namespace CrossoutLogView.GUI.Models
             set
             {
                 Set(ref _filterParticipations, value);
-                ParticipationsFiltered = _participations.Where(x => value.Filter(x));
+                ParticipationsFiltered.Filter(Participations, value.Filter);
                 UpdateProperties();
             }
         }
@@ -66,8 +68,8 @@ namespace CrossoutLogView.GUI.Models
         private ObservableCollection<PlayerGameCompositeModel> _participations;
         public ObservableCollection<PlayerGameCompositeModel> Participations { get => _participations; private set => Set(ref _participations, value); }
 
-        private IEnumerable<PlayerGameCompositeModel> _participationsFiltered;
-        public IEnumerable<PlayerGameCompositeModel> ParticipationsFiltered { get => _participationsFiltered; private set => Set(ref _participationsFiltered, value); }
+        private ObservableCollection<PlayerGameCompositeModel> _participationsFiltered;
+        public ObservableCollection<PlayerGameCompositeModel> ParticipationsFiltered { get => _participationsFiltered; private set => Set(ref _participationsFiltered, value); }
 
         private List<WeaponModel> _weapons;
         public List<WeaponModel> Weapons { get => _weapons; private set => Set(ref _weapons, value); }
