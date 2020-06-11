@@ -28,7 +28,7 @@ namespace CrossoutLogView.Database.Reflection
         }
 
         private static Dictionary<Guid, VariableInfo[]> generatedVarInfos = new Dictionary<Guid, VariableInfo[]>();
-        public static VariableInfo[] FromType(Type type)
+        public static VariableInfo[] FromType(Type type, bool includeReadonly = false)
         {
             if (!generatedVarInfos.TryGetValue(type.GUID, out VariableInfo[] vars))
             {
@@ -39,7 +39,7 @@ namespace CrossoutLogView.Database.Reflection
                 }
                 foreach (var pi in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
                 {
-                    if (pi.CanWrite) temp.Add(FromPropertyInfo(pi));
+                    if (pi.CanWrite || includeReadonly) temp.Add(FromPropertyInfo(pi));
                 }
                 vars = temp.ToArray();
                 generatedVarInfos.Add(type.GUID, vars);
