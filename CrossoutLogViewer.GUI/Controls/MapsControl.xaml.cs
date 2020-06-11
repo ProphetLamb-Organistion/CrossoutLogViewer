@@ -37,9 +37,12 @@ namespace CrossoutLogView.GUI.Controls
         public MapsControl()
         {
             InitializeComponent();
+            PlayerGamesDataGrid = ScrollableHeaderedControl_Scroller.Content as PlayerGamesDataGrid;
             //hide map column
             PlayerGamesDataGrid.Columns.First(x => String.Equals(x.Header as string, "Map", StringComparison.InvariantCultureIgnoreCase)).Visibility = Visibility.Hidden;
         }
+
+        public PlayerGamesDataGrid PlayerGamesDataGrid { get; }
 
         /// <summary>
         /// Gets or sets the <see cref="ObservableCollection{MapModel}"/> used to generate the selection of the <see cref="MapsControl"/>.
