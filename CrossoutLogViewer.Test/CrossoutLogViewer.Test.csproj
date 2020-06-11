@@ -15,6 +15,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="LiveCharts.Wpf" Version="0.9.7" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\CrossoutLogViewer.Common\CrossoutLogViewer.Common.csproj" />
     <ProjectReference Include="..\CrossoutLogViewer.Database\CrossoutLogViewer.Database.csproj" />
     <ProjectReference Include="..\CrossoutLogViewer.GUI\CrossoutLogViewer.GUI.csproj" />

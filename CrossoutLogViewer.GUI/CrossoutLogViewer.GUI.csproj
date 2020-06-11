@@ -19,9 +19,10 @@
 
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2020.1.0" />
-    <PackageReference Include="MahApps.Metro" Version="2.0.0-alpha0872" />
-    <PackageReference Include="MahApps.Metro.IconPacks.Modern" Version="4.1.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.6">
+    <PackageReference Include="LiveCharts.Wpf.NetCore3" Version="0.9.7" />
+    <PackageReference Include="MahApps.Metro" Version="2.0.1" />
+    <PackageReference Include="MahApps.Metro.IconPacks.Modern" Version="4.2.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
