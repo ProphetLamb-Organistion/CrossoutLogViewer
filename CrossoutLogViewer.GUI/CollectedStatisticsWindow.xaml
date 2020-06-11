@@ -192,43 +192,16 @@
                 <!--=================================================== Games ====================================================-->
                 <Controls:MetroTabItem Header="Games">
                     <UserControls:UserGamesControl x:Name="UserGamesViewGames"
-                                                Grid.Row="2" />
+                                                   Grid.Row="2" />
                 </Controls:MetroTabItem>
                 <!--=================================================== Users ====================================================-->
                 <Controls:MetroTabItem Header="Users">
-                    <Grid>
-                        <UserControls:UserOverview x:Name="UserOverviewUsers" />
-                        <GroupBox Header="Users"
-                                  Style="{DynamicResource GroupBox.TitleBar}"
-                                  Grid.Row="1">
-                            <StackPanel Orientation="Horizontal"
-                                        VerticalAlignment="Center">
-                                <TextBlock Text="Name"
-                                           Margin="0,0,4,0"
-                                           VerticalAlignment="Center" />
-                                <TextBox Text="{Binding UserNameFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                         Width="150"
-                                         Controls:TextBoxHelper.AutoWatermark="True"
-                                         Controls:TextBoxHelper.Watermark="Nickname"
-                                         Controls:TextBoxHelper.ClearTextButton="True" />
-                            </StackPanel>
-                        </GroupBox>
-                        <UserControls:UserDataGrid x:Name="UserListViewUsers"
-                                                   OpenViewModelDoubleClick="UserOpenUserDoubleClick"
-                                                   SelectionChanged="UserSelectUser"
-                                                   SelectedIndex="0"
-                                                   Grid.Row="2" />
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="auto" />
-                            <RowDefinition Height="58" />
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-                    </Grid>
+                    <UserControls:UsersListControl x:Name="UsersListControl" />
                 </Controls:MetroTabItem>
                 <!--=================================================== Weapons ==================================================-->
                 <Controls:MetroTabItem Header="Weapons">
                     <UserControls:WeaponControl x:Name="WeaponListViewWeapons"
-                                                OpenViewModelDoubleClick="WeaponOpenUserDoubleClick" />
+                                                OpenViewModel="WeaponOpenUserDoubleClick" />
                 </Controls:MetroTabItem>
                 <!--=================================================== Maps =====================================================-->
                 <Controls:MetroTabItem Header="Maps">

@@ -48,11 +48,11 @@ namespace CrossoutLogView.GUI
         {
             this.directLaunch = directLaunch;
             Logging.WriteLine<CollectedStatisticsWindow>("Loading CollectedStatisticsWindow", true);
-            AsyncDispatcher = new TaskFactory(TaskScheduler.FromCurrentSynchronizationContext());
+            MyTaskFactory = new TaskFactory(TaskScheduler.FromCurrentSynchronizationContext());
             InitializeComponent();
         }
 
-        private TaskFactory AsyncDispatcher { get; }
+        private TaskFactory MyTaskFactory { get; }
 
         private async void OnLoaded(object sender, RoutedEventArgs e)
         {
@@ -69,14 +69,12 @@ namespace CrossoutLogView.GUI
                 App.InitializeSession();
             }
             DataContext = viewModel = new CollectedStatisticsWindowViewModel(this.Dispatcher);
-            viewModel.PropertyChanged += OnPropertyChanged;
 
             UserGamesViewGames.User = viewModel.MeUser;
             UserGamesViewGames.DataGridGames.OpenViewModel += GamesOpenGameDoubleClick;
 
-            UserListViewUsers.ItemsSource = viewModel.UserModels;
-            var userListView = (CollectionView)CollectionViewSource.GetDefaultView(UserListViewUsers.ItemsSource);
-            userListView.Filter = UserListFilter;
+            UsersListControl.ItemsSource = viewModel.UserModels;
+            UsersListControl.SelectedItem = UsersListControl.ItemsSource[0];
 
             WeaponListViewWeapons.ItemsSource = viewModel.WeaponModels;
 
@@ -96,24 +94,10 @@ namespace CrossoutLogView.GUI
         {
             this.BeginInvoke(delegate
             {
-                CollectionViewSource.GetDefaultView(UserListViewUsers.ItemsSource).Refresh();
                 CollectionViewSource.GetDefaultView(WeaponListViewWeapons.ItemsSource).Refresh();
                 CollectionViewSource.GetDefaultView(UserGamesViewGames.DataGridGames.ItemsSource).Refresh();
                 CollectionViewSource.GetDefaultView(MapsView.Maps).Refresh();
             });
-        }
-
-
-        private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            switch (e.PropertyName)
-            {
-                case nameof(CollectedStatisticsWindowViewModel.UserNameFilter):
-                    CollectionViewSource.GetDefaultView(UserListViewUsers.ItemsSource).Refresh();
-                    break;
-                default:
-                    return;
-            }
         }
 
         #region Confim close
@@ -154,7 +138,7 @@ namespace CrossoutLogView.GUI
             switch (result)
             {
                 case MessageDialogResult.Affirmative:
-                    await AsyncDispatcher.StartNew(delegate
+                    await MyTaskFactory.StartNew(delegate
                     {
                         new LauncherWindow().Show();
                     });
@@ -175,7 +159,7 @@ namespace CrossoutLogView.GUI
         {
             if (args.InvokedItem is HamburgerMenuItem hmi && hmi.Label == "Settings")
             {
-                AsyncDispatcher.StartNew(delegate
+                MyTaskFactory.StartNew(delegate
                 {
                     new SettingsWindow().ShowDialog();
                 });
@@ -206,25 +190,6 @@ namespace CrossoutLogView.GUI
                 Logging.WriteLine<CollectedStatisticsWindow>("Open user list.");
                 new NavigationWindow(ul).ShowDialog();
             }
-        }
-
-        private void UserSelectUser(object sender, SelectionChangedEventArgs e)
-        {
-            if ((sender as UserDataGrid).SelectedItem is UserModel model)
-            {
-                UserOverviewUsers.DataContext = new UserModel(model.Object);
-            }
-        }
-
-        private bool UserListFilter(object obj)
-        {
-            if (String.IsNullOrEmpty(viewModel.UserNameFilter)) return true;
-            if (!(obj is UserModel ul)) return false;
-            foreach (var part in viewModel.UserNameFilter.TrimEnd().Split(' ', '-', '_'))
-            {
-                if (!ul.Object.Name.Contains(part, StringComparison.InvariantCultureIgnoreCase)) return false;
-            }
-            return true;
         }
 
         private void UserOpenUserDoubleClick(object sender, OpenModelViewerEventArgs e)

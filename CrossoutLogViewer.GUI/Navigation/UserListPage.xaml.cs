@@ -26,63 +26,20 @@ namespace CrossoutLogView.GUI.Navigation
     public partial class UserListPage
     {
         private readonly Frame frame;
+        private UserListModel userListViewModel;
 
         public UserListPage(Frame frame, UserListModel userList)
         {
             this.frame = frame;
             InitializeComponent();
             DataContext = userList;
-            Object = userList;
-
-            userList.PropertyChanged += OnPropertyChanged;
-            userList.Users.Sort(new UserModelParticipationCountDescending());
-
-            UserListViewUsers.ItemsSource = userList.Users;
-            var view = (CollectionView)CollectionViewSource.GetDefaultView(UserListViewUsers.ItemsSource);
-            view.Filter = UserListFilter;
-            view.Refresh();
+            userListViewModel = userList;
         }
 
-        private void OnPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            switch (e.PropertyName)
-            {
-                case nameof(CollectedStatisticsWindowViewModel.UserNameFilter):
-                    CollectionViewSource.GetDefaultView(UserListViewUsers.ItemsSource).Refresh();
-                    break;
-                default:
-                    return;
-            }
-        }
-
-        public UserListModel Object { get; }
-
-        private void UserSelectUser(object sender, SelectionChangedEventArgs e)
-        {
-            if ((sender as UserDataGrid).SelectedItem is UserModel model)
-            {
-                UserOverviewUsers.DataContext = new UserModel(model.Object);
-            }
-        }
-
-        private void UserOpenUserClick(object sender, OpenModelViewerEventArgs e)
-        {
-            if (e.ViewModel is UserModel user)
-            {
-                Logging.WriteLine<CollectedStatisticsWindow>("Open user view.");
-                frame.Navigate(new UserPage(frame, user));
-            }
-        }
-
-        private bool UserListFilter(object obj)
-        {
-            if (String.IsNullOrEmpty(Object.UserNameFilter)) return true;
-            if (!(obj is UserModel ul)) return false;
-            foreach (var part in Object.UserNameFilter.TrimEnd().Split(' ', '-', '_'))
-            {
-                if (!ul.Object.Name.Contains(part, StringComparison.InvariantCultureIgnoreCase)) return false;
-            }
-            return true;
+            UsersListControl.ItemsSource = userListViewModel.Users;
+            UsersListControl.FilterUserName = userListViewModel.FilterUserName;
         }
     }
 }
