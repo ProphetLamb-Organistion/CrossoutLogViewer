@@ -1,4 +1,5 @@
 ﻿using CrossoutLogView.Common;
+using CrossoutLogView.Database.Data;
 using CrossoutLogView.GUI.Core;
 using CrossoutLogView.GUI.Events;
 using CrossoutLogView.GUI.Models;
@@ -30,11 +31,22 @@ namespace CrossoutLogView.GUI.Controls
     public partial class UserGamesControl
     {
         private UserModel _user;
-
         public UserGamesControl()
         {
             InitializeComponent();
+            var scroller = (Content as Grid).FindChild<ScrollableHeaderedControl>();
+            var header = scroller.HeaderContent as Grid;
+            DataGridGames = scroller.Content as PlayerGamesDataGrid;
+            GameListFilter = header.FindChild<GameListFilter>();
+            GamesChart = header.FindChild<Expander>().Content as PlayerGamesChart;
         }
+
+        public PlayerGamesDataGrid DataGridGames { get; }
+
+        public GameListFilter GameListFilter { get; }
+
+        public PlayerGamesChart GamesChart { get; }
+
 
         /// <summary>
         /// Gets or sets the <see cref="UserModel"/> used to generate the content of the <see cref="UserGamesControl"/>.
@@ -46,20 +58,37 @@ namespace CrossoutLogView.GUI.Controls
             {
                 if (value == null || ReferenceEquals(_user, value)) return;
                 value.Participations.Sort(new PlayerGameCompositeModelStartTimeDescending());
-                UserOverview.DataContext = _user = value;
+                value.FilterParticipations = GameListFilter.Filter;
+                GamesChart.ItemsSource = value.ParticipationsFiltered;
+                DataContext = _user = value;
                 RefreshGamesFilter();
             }
         }
-
+        
         private void RefreshGamesFilter(object sender = null, GameFilterChangedEventArgs e = null)
         {
-            _user.FilterParticipations = GameListFilter.Filter;
-            DataGridGames.ItemsSource = _user.ParticipationsFiltered;
+            if (_user != null)
+            {
+                _user.FilterParticipations = GameListFilter.Filter;
+                DataGridGames.ItemsSource = _user.ParticipationsFiltered;
+                GamesChart.ItemsSource = _user.ParticipationsFiltered;
+            }
         }
 
         private void OpenUsersClick(object sender, RoutedEventArgs e)
         {
             DataGridGames.OpenAllGamesUsers();
+        }
+
+        private void MultiFlagComboBox_SelectedValueChanged(object sender, RoutedPropertyChangedEventArgs<NamedEnum> e)
+        {
+            GamesChart.Dimensions = (Dimensions)e.NewValue.Value;
+        }
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            GameListFilter.SetFilterWeek();
+            RefreshGamesFilter();
         }
     }
 }
