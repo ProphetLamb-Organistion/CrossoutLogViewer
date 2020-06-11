@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
@@ -25,12 +26,39 @@ namespace CrossoutLogView.Common
             while (en.MoveNext()) target.Add(selector(en.Current));
         }
 
+        // Filter
+        public static void Filter<T>(this Collection<T> target, Collection<T> source, Predicate<T> filter)
+        {
+            for (int i = 0; i < source.Count; i++)
+            {
+                var index = target.IndexOf(source[i]);
+                if (filter(source[i]))
+                {
+                    if (index == -1)
+                        target.Add(source[i]);
+                }
+                else
+                {
+                    if (index != -1)
+                        target.RemoveAt(index);
+                }
+            }
+        }
+
         // FindIndex
         public static int FindIndex<T>(this Collection<T> collection, Predicate<T> match)
         {
             return FindIndex(collection, 0, collection.Count, match);
         }
+        public static int FindIndex(this ICollection collection, Predicate<object> match)
+        {
+            return FindIndex(collection, 0, collection.Count, match);
+        }
         public static int FindIndex<T>(this Collection<T> collection, int startIndex, Predicate<T> match)
+        {
+            return FindIndex(collection, startIndex, collection.Count - startIndex, match);
+        }
+        public static int FindIndex(this ICollection collection, int startIndex, Predicate<object> match)
         {
             return FindIndex(collection, startIndex, collection.Count - startIndex, match);
         }
@@ -45,6 +73,23 @@ namespace CrossoutLogView.Common
             for (int i = startIndex; i < endIndex; i++)
             {
                 if (match(collection[i])) return i;
+            }
+            return -1;
+        }
+
+        public static int FindIndex(this ICollection collection, int startIndex, int count, Predicate<object> match)
+        {
+            if (collection == null) throw new ArgumentNullException(nameof(collection));
+            if (startIndex > collection.Count) throw new ArgumentOutOfRangeException(nameof(startIndex));
+            if (count < 0 || startIndex > collection.Count - count) throw new ArgumentOutOfRangeException(nameof(count));
+            if (match == null) throw new ArgumentNullException(nameof(match));
+            int endIndex = startIndex + count, i = 0;
+            var em = collection.GetEnumerator();
+            while (i < startIndex && em.MoveNext()) i++; //skip until i=startindex
+            while (i < endIndex && em.MoveNext()) //take until i=endindex-1
+            {
+                if (match(em.Current)) return i;
+                i++;
             }
             return -1;
         }
