@@ -4,6 +4,7 @@ using CrossoutLogView.GUI.Models;
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,7 +23,7 @@ namespace CrossoutLogView.GUI.Controls
     /// </summary>
     public partial class UserDataGrid : DataGrid
     {
-        public event OpenModelViewerEventHandler OpenViewModelDoubleClick;
+        public event OpenModelViewerEventHandler OpenViewModel;
 
         public UserDataGrid()
         {
@@ -38,7 +39,7 @@ namespace CrossoutLogView.GUI.Controls
         {
             if (DataGridHelper.GetSourceCellElement(e) is DataGridCell dgc && dgc.DataContext is UserModel u)
             {
-                OpenViewModelDoubleClick?.Invoke(e.OriginalSource, new OpenModelViewerEventArgs(u, e));
+                OpenViewModel?.Invoke(e.OriginalSource, new OpenModelViewerEventArgs(u, e));
                 e.Handled = true;
             }
         }
@@ -47,7 +48,7 @@ namespace CrossoutLogView.GUI.Controls
         {
             if (SelectedItem is UserModel u)
             {
-                OpenViewModelDoubleClick?.Invoke(e.OriginalSource, new OpenModelViewerEventArgs(u, e));
+                OpenViewModel?.Invoke(e.OriginalSource, new OpenModelViewerEventArgs(u, e));
                 e.Handled = true;
             }
         }
