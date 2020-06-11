@@ -22,15 +22,13 @@ namespace CrossoutLogView.GUI.Navigation
     public partial class UserPage
     {
         private readonly Frame frame;
+        private readonly UserModel model;
         public UserPage(Frame frame, UserModel userViewModel)
         {
             this.frame = frame;
             DataProvider.CompleteUser(userViewModel.Object);
-            userViewModel.UpdateCollections();
+            model = userViewModel;
             InitializeComponent();
-            DataContext = UserGamesViewGames.User = userViewModel;
-            ListBoxWeapons.ItemsSource = userViewModel.Weapons;
-            ListBoxStripes.ItemsSource = userViewModel.Stripes;
             UserGamesViewGames.DataGridGames.OpenViewModel += OpenViewModelClick;
         }
 
@@ -46,6 +44,14 @@ namespace CrossoutLogView.GUI.Navigation
                 Logging.WriteLine<UserPage>("Navigate to userlist");
                 frame.Navigate(new UserListPage(frame, ul));
             }
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            model.UpdateCollections();
+            DataContext = UserGamesViewGames.User = model;
+            ListBoxWeapons.ItemsSource = model.Weapons;
+            ListBoxStripes.ItemsSource = model.Stripes;
         }
     }
 }

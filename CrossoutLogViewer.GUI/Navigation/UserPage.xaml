@@ -8,6 +8,7 @@
       xmlns:models="clr-namespace:CrossoutLogView.GUI.Models"
       xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
       xmlns:UserControls="clr-namespace:CrossoutLogView.GUI.Controls"
+      Loaded="Page_Loaded"
       d:DesignHeight="500"
       d:DesignWidth="600"
       Title="UserPage">
