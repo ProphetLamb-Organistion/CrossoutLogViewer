@@ -16,7 +16,7 @@
                       GlowBrush="{DynamicResource AccentBaseColorBrush}"
                       BorderThickness="1"
                       ResizeMode="CanResizeWithGrip"
-                      WindowStartupLocation="CenterOwner"
+                      WindowStartupLocation="CenterScreen"
                       Loaded="OnLoaded">
     <Window.Resources>
         <ResourceDictionary>
