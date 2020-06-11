@@ -176,6 +176,16 @@ namespace CrossoutLogView.Database.Data
             }
         }
 
+        private int _dimensions = 7;
+        public int Dimensions
+        {
+            get => _dimensions;
+            set
+            {
+                _dimensions = value;
+                if (!lockWrite) WriteInstance();
+            }
+        }
 
         private static bool lockWrite = false;
 
@@ -194,7 +204,8 @@ namespace CrossoutLogView.Database.Data
             _criticalDamageColor = "Orange",
             _armorDamageColor = "DodgerBlue",
             _suicideColor = "Red",
-            _despawnColor = "Brown"
+            _despawnColor = "Brown",
+            _dimensions = 7
         };
 
         public static Settings ReadInstance()
