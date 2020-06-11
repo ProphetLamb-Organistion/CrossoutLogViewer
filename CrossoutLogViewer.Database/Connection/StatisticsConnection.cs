@@ -8,6 +8,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -316,8 +317,9 @@ namespace CrossoutLogView.Database.Connection
             //update existing user            
             var sets = new StringBuilder();
             var varInfos = VariableInfo.FromType(typeof(User));
-            foreach (var vi in varInfos)
+            for (int varInfoIndex = 0; varInfoIndex < varInfos.Length; varInfoIndex++)
             {
+                var vi = varInfos[varInfoIndex];
                 if (vi.Name.Equals(nameof(User.UserID), StringComparison.InvariantCulture)
                     || vi.Name.Equals(nameof(User.Name), StringComparison.InvariantCulture))
                     continue;
@@ -332,10 +334,10 @@ namespace CrossoutLogView.Database.Connection
                     if (vi.Name.Equals(nameof(User.Participations), StringComparison.InvariantCulture)) //globaly unique: find by start&end time make ref
                     {
                         var refs = new StringBuilder();
-                        foreach (var game in user.Participations)
+                        for (int i = 0; i < user.Participations.Count; i++)
                         {
                             var gameReq = String.Format(FormatRequest, RowIdName, nameof(Game)) //request rowid
-                                + String.Format(" WHERE {0} == {1}", nameof(Game.Start).ToLowerInvariant(), game.Start.Ticks);
+                                + String.Format(" WHERE {0} == {1}", nameof(Game.Start).ToLowerInvariant(), user.Participations[i].Start.Ticks);
                             using var gameCmd = new SQLiteCommand(gameReq, connection);
                             using var gameReader = gameCmd.ExecuteReader();
                             refs.Append(Strings.ArrayDelimiter);
@@ -343,14 +345,34 @@ namespace CrossoutLogView.Database.Connection
                             {
                                 refs.Append(Base85.Encode(ReadField<long>(RowIdName, gameReader)));
                             }
-                            else
-                            {
-                                throw new NotImplementedException();
-                                //Insert(game);
-                                //refs.Append(Strings.Base85EncodeInteger(LastInsertRowId));
-                            }
                         }
                         sets.AppendFormat(FormatEquals, name, SQLiteVariable(ReadField<string>(vi.Name, reader) + refs.ToString()));
+                    }
+                    else if (vi.Name.Equals(nameof(User.Weapons), StringComparison.InvariantCulture))
+                    {
+                        var references = ReadField<string>(vi.Name, reader);
+                        var rowIds = ParseSerializedArray(references, Base85.DecodeInt64);
+                        var newWeapons = new List<Weapon>(user.Weapons);
+                        for (int i = 0; i < rowIds.Length; i++)
+                        {
+                            var weapon = ExecuteRequestSingleObject<Weapon>(GetRowIdRequestString(typeof(Weapon), rowIds[i], TableRepresentation.Store));
+                            if (weapon == null) continue;
+                            var newWeaponIndex = newWeapons.FindIndex(w => w.Name.Equals(weapon.Name, StringComparison.InvariantCultureIgnoreCase));
+                            if (newWeaponIndex != -1) //weapon already exists; update existing 
+                            {
+                                UpdateValues(weapon.Merge(newWeapons[newWeaponIndex]), VariableInfo.FromType(typeof(Weapon)), nameof(Weapon), RowIdName + " == " + rowIds[i]);
+                                newWeapons.RemoveAt(newWeaponIndex);
+                            }
+                        }
+                        //insert remaining weapons
+                        var newRowIds = new long[newWeapons.Count + rowIds.Length];
+                        for (int i = 0; i < newWeapons.Count; i++)
+                        {
+                            Insert(newWeapons[i]);
+                            newRowIds[i] = LastInsertRowId;
+                        }
+                        Array.Copy(rowIds, 0, newRowIds, newWeapons.Count, rowIds.Length);
+                        sets.AppendFormat(FormatEquals, name, SQLiteVariable(SerializeArray(newRowIds, Base85.Encode)));
                     }
                     else //unique per player: increment stats per element
                     {
@@ -368,26 +390,7 @@ namespace CrossoutLogView.Database.Connection
                             var requestCommand = GetRequestString(itemType, true) + " WHERE " + String.Join(" OR ", conditions);
                             var additions = new ConcurrentQueue<object>();
                             RequestRowIds.Clear();
-                            if (vi.Name.Equals(nameof(User.Weapons), StringComparison.InvariantCulture))
-                            {
-                                var weapons = ExecuteRequest<Weapon>(requestCommand);
-                                var requestRowIds = RequestRowIds.ToArray();
-                                Parallel.ForEach(user.Weapons, new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount * 2 },
-                                delegate (Weapon userWeapon)
-                                {
-                                    var dbWeaponIndex = weapons.FindIndex(x => Strings.NameEquals(x.Name, userWeapon.Name));
-                                    if (dbWeaponIndex == -1) //add new weapon
-                                    {
-                                        additions.Enqueue(userWeapon);
-                                    }
-                                    else //merge & update existing weapon
-                                    {
-                                        UpdateValues(weapons[dbWeaponIndex].Merge(userWeapon), VariableInfo.FromType(itemType), itemType.Name,
-                                            RowIdName + " == " + requestRowIds[dbWeaponIndex]);
-                                    }
-                                });
-                            }
-                            else if (vi.Name.Equals(nameof(User.Stripes), StringComparison.InvariantCulture))
+                            if (vi.Name.Equals(nameof(User.Stripes), StringComparison.InvariantCulture))
                             {
                                 var stripes = ExecuteRequest<Stripe>(requestCommand);
                                 var requestRowIds = RequestRowIds.ToArray();
