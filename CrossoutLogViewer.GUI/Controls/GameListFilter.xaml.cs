@@ -127,7 +127,8 @@ namespace CrossoutLogView.GUI.Controls
             SetValue(GameModeProperty, GameMode.All);
         }
 
-        private void SetFilterNoonClick(object sender, RoutedEventArgs e)
+        private void SetFilterNoonClick(object sender, RoutedEventArgs e) => SetFilterNoon();
+        public void SetFilterNoon()
         {
             if (StartLimit.HasValue)
             {
@@ -141,7 +142,8 @@ namespace CrossoutLogView.GUI.Controls
             EndLimit = StartLimit.Value.AddHours(5.0);
         }
 
-        private void SetFilterAfternoonClick(object sender, RoutedEventArgs e)
+        private void SetFilterAfternoonClick(object sender, RoutedEventArgs e) => SetFilterAfternoon();
+        public void SetFilterAfternoon() 
         {
             if (StartLimit.HasValue)
             {
@@ -155,7 +157,8 @@ namespace CrossoutLogView.GUI.Controls
             EndLimit = StartLimit.Value.AddHours(5.0);
         }
 
-        private void SetFilterNightClick(object sender, RoutedEventArgs e)
+        private void SetFilterNightClick(object sender, RoutedEventArgs e) => SetFilterNight();
+        public void SetFilterNight()
         {
             if (StartLimit.HasValue)
             {
@@ -169,7 +172,8 @@ namespace CrossoutLogView.GUI.Controls
             EndLimit = StartLimit.Value.AddHours(5.0);
         }
 
-        private void SetFilterAllDayClick(object sender, RoutedEventArgs e)
+        private void SetFilterAllDayClick(object sender, RoutedEventArgs e) => SetFilterAllDay();
+        public void SetFilterAllDay()
         {
             if (StartLimit.HasValue)
             {
@@ -183,13 +187,15 @@ namespace CrossoutLogView.GUI.Controls
             EndLimit = StartLimit.Value.AddDays(1.0).AddSeconds(-1.0);
         }
 
-        private void SetFilterWeekClick(object sender, RoutedEventArgs e)
+        private void SetFilterWeekClick(object sender, RoutedEventArgs e) => SetFilterWeek();
+        public void SetFilterWeek()
         {
             StartLimit = DateTime.Now.StartOfWeek();
             EndLimit = StartLimit.Value.AddDays(7.0).AddSeconds(-1.0);
         }
 
-        private void SetFilterMonthClick(object sender, RoutedEventArgs e)
+        private void SetFilterMonthClick(object sender, RoutedEventArgs e) => SetFilterMonth();
+        public void SetFilterMonth()
         {
             StartLimit = DateTime.Now.StartOfMonth();
             EndLimit = DateTime.Now.EndOfMonth();
