@@ -27,7 +27,7 @@ namespace CrossoutLogView.GUI.Controls
     /// </summary>
     public partial class WeaponControl
     {
-        public event OpenModelViewerEventHandler OpenViewModelDoubleClick;
+        public event OpenModelViewerEventHandler OpenViewModel;
         public event SelectionChangedEventHandler SelectionChanged;
         public event WeaponFilterChangedEventHandler FilterChanged;
 
@@ -100,7 +100,9 @@ namespace CrossoutLogView.GUI.Controls
             {
                 if (DataProvider.CompleteWeapon(value.Object))
                     value.UpdateCollections();
-                GroupBoxOverview.DataContext = GroupBoxUsers.DataContext = DataGridWeapons.SelectedItem = value;
+                GroupBoxOverview.DataContext = value;
+                GroupBoxUsers.DataContext = value;
+                DataGridWeapons.SelectedItem = value;
             }
         }
 
@@ -115,7 +117,7 @@ namespace CrossoutLogView.GUI.Controls
             if (dataContext is WeaponUserListModel wul)
             {
                 DataProvider.CompleteUser(wul.User);
-                OpenViewModelDoubleClick?.Invoke(this, new OpenModelViewerEventArgs(new UserModel(wul.User), e));
+                OpenViewModel?.Invoke(this, new OpenModelViewerEventArgs(new UserModel(wul.User), e));
             }
         }
 
