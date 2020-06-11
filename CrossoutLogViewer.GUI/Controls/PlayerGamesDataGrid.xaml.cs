@@ -5,6 +5,7 @@ using CrossoutLogView.Statistics;
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -46,11 +47,10 @@ namespace CrossoutLogView.GUI.Controls
         public void OpenSelectedGamesUsers()
         {
             if (SelectedItems == null || SelectedItems.Count == 0) return;
-            var users = User.ParseUsers(SelectedItems
+            var users = new ObservableCollection<UserModel>(User.ParseUsers(SelectedItems
                 .Cast<PlayerGameCompositeModel>()
                 .Select(x => x.Game.Object))
-                .Select(x => new UserModel(x))
-                .ToList();
+                .Select(x => new UserModel(x)));
             OpenViewModel?.Invoke(this, new OpenModelViewerEventArgs(new UserListModel(users)));
         }
 
@@ -62,7 +62,7 @@ namespace CrossoutLogView.GUI.Controls
             {
                 if (item is PlayerGameCompositeModel pgm) games.Add(pgm.Game.Object);
             }
-            var users = new List<UserModel>();
+            var users = new ObservableCollection<UserModel>();
             foreach (var user in User.ParseUsers(games))
             {
                 users.Add(new UserModel(user));
