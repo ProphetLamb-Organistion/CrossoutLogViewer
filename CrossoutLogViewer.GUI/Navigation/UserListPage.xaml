@@ -11,5 +11,6 @@
       d:DesignHeight="450"
       d:DesignWidth="800"
       Title="UserListPage">
-    <UserControls:UsersListControl x:Name="UsersListControl"/>
+    <UserControls:UsersListControl x:Name="UsersListControl"
+                                   OpenViewModel="UsersListControl_OpenViewModel"/>
 </Page>

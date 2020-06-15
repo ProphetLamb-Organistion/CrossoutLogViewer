@@ -43,6 +43,14 @@ namespace CrossoutLogView.GUI.Navigation
             UsersListControl.FilterUserName = userListViewModel.FilterUserName;
         }
 
+        private void UsersListControl_OpenViewModel(object sender, OpenModelViewerEventArgs e)
+        {
+            if (e.ViewModel is UserModel viewModel)
+            {
+                nav.Navigate(viewModel);
+            }
+        }
+
         #region ILogging support
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         NLog.Logger ILogging.Logger { get; } = logger;
