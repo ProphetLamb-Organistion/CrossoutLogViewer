@@ -154,7 +154,30 @@
                 <Setter Property="Controls:ControlsHelper.CornerRadius"
                         Value="3" />
             </Style>
-            
+            <Style x:Key="ToggleButton.Outline"
+                   BasedOn="{StaticResource MahApps.Styles.ToggleButton.Flat}"
+                   TargetType="{x:Type ToggleButton}">
+                <Setter Property="Background"
+                        Value="Transparent" />
+                <Setter Property="BorderBrush"
+                        Value="{DynamicResource MahApps.Brushes.Gray4}" />
+                <Setter Property="Foreground"
+                        Value="{DynamicResource MahApps.Brushes.ThemeForeground}" />
+                <Setter Property="BorderThickness"
+                        Value="1" />
+                <Setter Property="Controls:ControlsHelper.CornerRadius"
+                        Value="3" />
+                <Style.Triggers>
+                    <Trigger Property="IsChecked"
+                             Value="True">
+                        <Setter Property="Background"
+                                Value="{DynamicResource MahApps.Brushes.Accent}" />
+                        <Setter Property="BorderBrush"
+                                Value="{DynamicResource MahApps.Brushes.Accent3}" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
             <Style x:Key="Button.Free"
                    BasedOn="{StaticResource MahApps.Styles.Button.Flat}"
                    TargetType="{x:Type Button}">
@@ -167,6 +190,27 @@
                 <Setter Property="Foreground"
                         Value="{DynamicResource MahApps.Brushes.ThemeForeground}" />
             </Style>
+            <Style x:Key="ToggleButton.Free"
+                   BasedOn="{StaticResource MahApps.Styles.ToggleButton.Flat}"
+                   TargetType="{x:Type ToggleButton}">
+                <Setter Property="Background"
+                        Value="Transparent" />
+                <Setter Property="BorderThickness"
+                        Value="0" />
+                <Setter Property="Controls:ControlsHelper.CornerRadius"
+                        Value="3" />
+                <Setter Property="Foreground"
+                        Value="{DynamicResource MahApps.Brushes.ThemeForeground}" />
+                <Style.Triggers>
+                    <Trigger Property="IsChecked"
+                             Value="True">
+                        <Setter Property="Background"
+                                Value="{DynamicResource MahApps.Brushes.Accent}" />
+                        <Setter Property="BorderBrush"
+                                Value="{DynamicResource MahApps.Brushes.Accent3}" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
 
             <Style x:Key="BorderStyle"
                    TargetType="{x:Type Border}">
@@ -178,6 +222,14 @@
                         Value="3" />
                 <Setter Property="Padding"
                         Value="4,2" />
+            </Style>
+            <Style x:Key="BorderStyle.Highlight"
+                   TargetType="{x:Type Border}"
+                   BasedOn="{StaticResource BorderStyle}">
+                <Setter Property="BorderBrush"
+                        Value="{DynamicResource MahApps.Brushes.Accent2}" />
+                <Setter Property="BorderThickness"
+                        Value="2" />
             </Style>
             
             <Style x:Key="Button.Clear"
