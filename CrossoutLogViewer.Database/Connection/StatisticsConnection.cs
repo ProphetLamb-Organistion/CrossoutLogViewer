@@ -354,11 +354,11 @@ namespace CrossoutLogView.Database.Connection
             {
                 using var cmd = new SQLiteCommand(request, Connection);
                 using var reader = cmd.ExecuteReader();
-                if (!reader.Read()) //insert new user
+                if (!reader.Read()) // Insert new user
                 {
                     Insert(user);
                 }
-                else //update existing user            
+                else // Update existing user            
                 {
                     var sets = new StringBuilder();
                     var varInfos = VariableInfo.FromType(typeof(User));
@@ -369,19 +369,19 @@ namespace CrossoutLogView.Database.Connection
                             || vi.Name.Equals(nameof(User.Name), StringComparison.InvariantCulture))
                             continue;
                         var name = vi.Name.ToLowerInvariant();
-                        //increment numerical stats
+                        // Increment numerical stats
                         if (vi.VariableType == typeof(double))
                             sets.AppendFormat(FormatEquals, name, ReadField<double>(vi.Name, reader) + (double)vi.GetValue(user));
                         else if (vi.VariableType == typeof(int))
                             sets.AppendFormat(FormatEquals, name, ReadField<int>(vi.Name, reader) + (int)vi.GetValue(user));
                         else if (GetTableRepresentation(vi.VariableType, DatabaseTableTypes) == TableRepresentation.ReferenceArray)
                         {
-                            if (vi.Name.Equals(nameof(User.Participations), StringComparison.InvariantCulture)) //globaly unique: find by start&end time make ref
+                            if (vi.Name.Equals(nameof(User.Participations), StringComparison.InvariantCulture)) // Globaly unique: find by start&end time make ref
                             {
                                 var refs = new StringBuilder();
                                 for (int i = 0; i < user.Participations.Count; i++)
                                 {
-                                    var gameReq = String.Format(FormatRequest, RowIdName, nameof(Game)) //request rowid
+                                    var gameReq = String.Format(FormatRequest, RowIdName, nameof(Game)) // Request rowid
                                         + String.Format(" WHERE {0} == {1}", nameof(Game.Start).ToLowerInvariant(), user.Participations[i].Start.Ticks);
                                     using var gameCmd = new SQLiteCommand(gameReq, Connection);
                                     using var gameReader = gameCmd.ExecuteReader();
@@ -402,13 +402,13 @@ namespace CrossoutLogView.Database.Connection
                                     var weapon = ExecuteRequestSingleObject<Weapon>(GetRowIdRequestString(typeof(Weapon), rowIds[i], TableRepresentation.Store));
                                     if (weapon == null) continue;
                                     var newWeaponIndex = newWeapons.FindIndex(w => w.Name.Equals(weapon.Name, StringComparison.InvariantCultureIgnoreCase));
-                                    if (newWeaponIndex != -1) //weapon already exists; update existing 
+                                    if (newWeaponIndex != -1) // Weapon already exists; update existing 
                                     {
                                         UpdateValues(weapon.Merge(newWeapons[newWeaponIndex]), VariableInfo.FromType(typeof(Weapon)), nameof(Weapon), RowIdName + " == " + rowIds[i]);
                                         newWeapons.RemoveAt(newWeaponIndex);
                                     }
                                 }
-                                //insert remaining weapons
+                                // Insert remaining weapons
                                 var newRowIds = new long[newWeapons.Count + rowIds.Length];
                                 for (int i = 0; i < newWeapons.Count; i++)
                                 {
@@ -427,13 +427,13 @@ namespace CrossoutLogView.Database.Connection
                                     var stripe = ExecuteRequestSingleObject<Stripe>(GetRowIdRequestString(typeof(Stripe), rowIds[i], TableRepresentation.Store));
                                     if (stripe == null) continue;
                                     var newStripeIndex = newStripes.FindIndex(s => s.Name.Equals(stripe.Name, StringComparison.InvariantCultureIgnoreCase));
-                                    if (newStripeIndex != -1) //weapon already exists; update existing 
+                                    if (newStripeIndex != -1) // Weapon already exists; update existing 
                                     {
                                         UpdateValues(stripe.Merge(newStripes[newStripeIndex]), VariableInfo.FromType(typeof(Stripe)), nameof(Stripe), RowIdName + " == " + rowIds[i]);
                                         newStripes.RemoveAt(newStripeIndex);
                                     }
                                 }
-                                //insert remaining weapons
+                                // Insert remaining weapons
                                 var newRowIds = new long[newStripes.Count + rowIds.Length];
                                 for (int i = 0; i < newStripes.Count; i++)
                                 {
@@ -445,7 +445,7 @@ namespace CrossoutLogView.Database.Connection
                             }
                         }
                     }
-                    //compose update string
+                    // Compose update string
                     InvokeNonQuery(String.Format(FormatUpdate, nameof(User), sets.Remove(0, 2).ToString(),
                         String.Format("{0} == {1}", nameof(User.UserID), user.UserID)),
                         Connection);
