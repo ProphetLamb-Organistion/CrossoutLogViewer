@@ -1,4 +1,6 @@
-﻿using CrossoutLogView.Common;
+﻿using ControlzEx.Standard;
+
+using CrossoutLogView.Common;
 using CrossoutLogView.GUI.Core;
 using CrossoutLogView.GUI.Events;
 using CrossoutLogView.Statistics;
@@ -9,8 +11,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -34,6 +38,11 @@ namespace CrossoutLogView.GUI.Controls
             ComboBoxGameMode.ItemsSource = Enum.GetValues(typeof(GameMode)).Cast<GameMode>();
             Filter = DefaultFilter;
         }
+
+        public static (TimeSpan Start, TimeSpan End) AllDayTimeSpan = (new TimeSpan(0, 0, 0), new TimeSpan(23, 59, 59));
+        public static (TimeSpan Start, TimeSpan End) NightTimeSpan = (new TimeSpan(12, 0, 0), new TimeSpan(16, 59, 59));
+        public static (TimeSpan Start, TimeSpan End) NoonTimeSpan = (new TimeSpan(0, 0, 0), new TimeSpan(23, 59, 59));
+        public static (TimeSpan Start, TimeSpan End) AfternoonTimeSpan = (new TimeSpan(18, 0, 0), new TimeSpan(21, 59, 59));
 
         /// <summary>
         /// Gets or sets the default value of <see cref="GameFilter"/> used when initializing a new instance of <see cref="GameListFilter"/>.
@@ -80,11 +89,137 @@ namespace CrossoutLogView.GUI.Controls
         }
         public static readonly DependencyProperty GameModeProperty = DependencyProperty.Register(nameof(GameMode), typeof(GameMode), typeof(GameListFilter), new PropertyMetadata(OnGameModePropertyChanged));
 
+        public void ClearFilter()
+        {
+            HighlightDailyGroupBox(false);
+            HighlightSpanGroupBox(false);
+            SetValue(StartLimitProperty, null);
+            SetValue(EndLimitProperty, null);
+            SetValue(GameModeProperty, GameMode.All);
+        }
+        private void ClearFilter(object sender, RoutedEventArgs e) => ClearFilter();
+
+        public void SetFilterNoon()
+        {
+            HighlightDailyGroupBox(true);
+            HighlightSpanGroupBox(false);
+            if (StartLimit.HasValue)
+            {
+                var start = StartLimit.Value;
+                StartLimit = new DateTime(start.Year, start.Month, start.Day).AddHours(12);
+            }
+            else
+            {
+                StartLimit = DateTime.Today.AddHours(12.0);
+            }
+            EndLimit = StartLimit.Value.AddHours(5.0);
+        }
+        private void SetFilterNoonClick(object sender, RoutedEventArgs e) => SetFilterNoon();
+
+        public void SetFilterAfternoon()
+        {
+            HighlightDailyGroupBox(true);
+            HighlightSpanGroupBox(false);
+            if (StartLimit.HasValue)
+            {
+                var start = StartLimit.Value;
+                StartLimit = new DateTime(start.Year, start.Month, start.Day).AddHours(18);
+            }
+            else
+            {
+                StartLimit = DateTime.Today.AddHours(18.0);
+            }
+            EndLimit = StartLimit.Value.AddHours(5.0);
+        }
+        private void SetFilterAfternoonClick(object sender, RoutedEventArgs e) => SetFilterAfternoon();
+
+        public void SetFilterNight()
+        {
+            HighlightDailyGroupBox(true);
+            HighlightSpanGroupBox(false);
+            if (StartLimit.HasValue)
+            {
+                var start = StartLimit.Value;
+                StartLimit = new DateTime(start.Year, start.Month, start.Day);
+            }
+            else
+            {
+                StartLimit = DateTime.Today;
+            }
+            EndLimit = StartLimit.Value.AddHours(5.0);
+        }
+        private void SetFilterNightClick(object sender, RoutedEventArgs e) => SetFilterNight();
+
+        public void SetFilterAllDay()
+        {
+            HighlightDailyGroupBox(true);
+            HighlightSpanGroupBox(false);
+            if (StartLimit.HasValue)
+            {
+                var start = StartLimit.Value;
+                StartLimit = new DateTime(start.Year, start.Month, start.Day);
+            }
+            else
+            {
+                StartLimit = DateTime.Today;
+            }
+            EndLimit = StartLimit.Value.AddDays(1.0).AddSeconds(-1.0);
+        }
+        private void SetFilterAllDayClick(object sender, RoutedEventArgs e) => SetFilterAllDay();
+
+        public void SetFilterWeek()
+        {
+            HighlightDailyGroupBox(false);
+            HighlightSpanGroupBox(true);
+            StartLimit = DateTime.Now.StartOfWeek();
+            EndLimit = StartLimit.Value.AddDays(7.0).AddSeconds(-1.0);
+        }
+        private void SetFilterWeekClick(object sender, RoutedEventArgs e) => SetFilterWeek();
+
+        public void SetFilterMonth()
+        {
+            HighlightDailyGroupBox(false);
+            HighlightSpanGroupBox(true);
+            StartLimit = DateTime.Now.StartOfMonth();
+            EndLimit = DateTime.Now.EndOfMonth();
+        }
+        private void SetFilterMonthClick(object sender, RoutedEventArgs e) => SetFilterMonth();
+
+        private void OpenCustomFilterPopupClick(object sender, RoutedEventArgs e)
+        {
+            HighlightDailyGroupBox(false);
+            HighlightSpanGroupBox(true);
+            PopupCustomTimeFilter.IsOpen = true;
+        }
+
+        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<int> e)
+        {
+            HighlightDailyGroupBox(true);
+            HighlightSpanGroupBox(false);
+            if (StartLimit.HasValue)
+            {
+                StartLimit = DateTime.Now.Date.AddDays(e.NewValue).Add(StartLimit.Value.TimeOfDay);
+            }
+            else
+            {
+                StartLimit = DateTime.Now.Date;
+            }
+            if (EndLimit.HasValue)
+            {
+                EndLimit = DateTime.Now.Date.AddDays(e.NewValue).Add(EndLimit.Value.TimeOfDay);
+            }
+            else
+            {
+                EndLimit = DateTime.Now.Date.AddDays(1.0).AddSeconds(-1.0);
+            }
+        }
+
         private static void OnFilterPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
             if (sender is GameListFilter cntr && e.NewValue is GameFilter newValue)
             {
                 var newGameFilter = ObjToGameFilter(e.NewValue);
+                // Update values in control
                 cntr.StartLimit = newGameFilter.StartLimit == default ? null : (newGameFilter.StartLimit as DateTime?);
                 cntr.EndLimit = newGameFilter.EndLimit == default ? null : (newGameFilter.EndLimit as DateTime?);
                 cntr.GameMode = newGameFilter.GameModes;
@@ -126,113 +261,6 @@ namespace CrossoutLogView.GUI.Controls
             }
         }
 
-        private void ClearFilter(object sender, RoutedEventArgs e) => ClearFilter();
-        public void ClearFilter()
-        {
-            SetValue(StartLimitProperty, null);
-            SetValue(EndLimitProperty, null);
-            SetValue(GameModeProperty, GameMode.All);
-        }
-
-        private void SetFilterNoonClick(object sender, RoutedEventArgs e) => SetFilterNoon();
-        public void SetFilterNoon()
-        {
-            if (StartLimit.HasValue)
-            {
-                var start = StartLimit.Value;
-                StartLimit = new DateTime(start.Year, start.Month, start.Day).AddHours(12);
-            }
-            else
-            {
-                StartLimit = DateTime.Today.AddHours(12.0);
-            }
-            EndLimit = StartLimit.Value.AddHours(5.0);
-        }
-
-        private void SetFilterAfternoonClick(object sender, RoutedEventArgs e) => SetFilterAfternoon();
-        public void SetFilterAfternoon()
-        {
-            if (StartLimit.HasValue)
-            {
-                var start = StartLimit.Value;
-                StartLimit = new DateTime(start.Year, start.Month, start.Day).AddHours(18);
-            }
-            else
-            {
-                StartLimit = DateTime.Today.AddHours(18.0);
-            }
-            EndLimit = StartLimit.Value.AddHours(5.0);
-        }
-
-        private void SetFilterNightClick(object sender, RoutedEventArgs e) => SetFilterNight();
-        public void SetFilterNight()
-        {
-            if (StartLimit.HasValue)
-            {
-                var start = StartLimit.Value;
-                StartLimit = new DateTime(start.Year, start.Month, start.Day);
-            }
-            else
-            {
-                StartLimit = DateTime.Today;
-            }
-            EndLimit = StartLimit.Value.AddHours(5.0);
-        }
-
-        private void SetFilterAllDayClick(object sender, RoutedEventArgs e) => SetFilterAllDay();
-        public void SetFilterAllDay()
-        {
-            if (StartLimit.HasValue)
-            {
-                var start = StartLimit.Value;
-                StartLimit = new DateTime(start.Year, start.Month, start.Day);
-            }
-            else
-            {
-                StartLimit = DateTime.Today;
-            }
-            EndLimit = StartLimit.Value.AddDays(1.0).AddSeconds(-1.0);
-        }
-
-        private void SetFilterWeekClick(object sender, RoutedEventArgs e) => SetFilterWeek();
-        public void SetFilterWeek()
-        {
-            StartLimit = DateTime.Now.StartOfWeek();
-            EndLimit = StartLimit.Value.AddDays(7.0).AddSeconds(-1.0);
-        }
-
-        private void SetFilterMonthClick(object sender, RoutedEventArgs e) => SetFilterMonth();
-        public void SetFilterMonth()
-        {
-            StartLimit = DateTime.Now.StartOfMonth();
-            EndLimit = DateTime.Now.EndOfMonth();
-        }
-
-        private void OpenCustomFilterPopupClick(object sender, RoutedEventArgs e)
-        {
-            PopupCustomTimeFilter.IsOpen = true;
-        }
-
-        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<int> e)
-        {
-            if (StartLimit.HasValue)
-            {
-                StartLimit = DateTime.Now.Date.AddDays(e.NewValue).Add(StartLimit.Value.TimeOfDay);
-            }
-            else
-            {
-                StartLimit = DateTime.Now.Date;
-            }
-            if (EndLimit.HasValue)
-            {
-                EndLimit = DateTime.Now.Date.AddDays(e.NewValue).Add(EndLimit.Value.TimeOfDay);
-            }
-            else
-            {
-                EndLimit = DateTime.Now.Date.AddDays(1.0).AddSeconds(-1.0);
-            }
-        }
-
         private static GameFilter ObjToGameFilter(object obj)
         {
             return (GameFilter)(obj ?? new GameFilter(GameMode.All));
@@ -240,6 +268,16 @@ namespace CrossoutLogView.GUI.Controls
         private static GameMode ObjToGameMode(object obj)
         {
             return (GameMode)(obj ?? GameMode.All);
+        }
+
+        private void HighlightDailyGroupBox(bool highlighted)
+        {
+            Border_DayFilter.Style = App.Current.Resources[highlighted ? "BorderStyle.Highlight" : "BorderStyle"] as Style;
+        }
+
+        private void HighlightSpanGroupBox(bool highlighted)
+        {
+            Border_SpanFilter.Style = App.Current.Resources[highlighted ? "BorderStyle.Highlight" : "BorderStyle"] as Style;
         }
 
         #region ILogging support

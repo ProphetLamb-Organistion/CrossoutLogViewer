@@ -27,12 +27,14 @@
     </UserControl.Resources>
     <WrapPanel Orientation="Horizontal"
                VerticalAlignment="Center">
-        <Border Style="{DynamicResource BorderStyle}">
+        <Border x:Name="Border_DayFilter"
+                Style="{DynamicResource BorderStyle}">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Day"
                            Foreground="{DynamicResource MahApps.Brushes.Gray2}"
-                           Margin="0,0,4,0"/>
-                <Button Style="{DynamicResource Button.Free}"
+                           Margin="0,0,4,0" />
+                <Button x:Name="Button_Night"
+                        Style="{DynamicResource Button.Free}"
                         Click="SetFilterNightClick"
                         Margin="{StaticResource ContentMargin}"
                         ToolTip="Set time to night ClanWars session. 00:00 - 05:00">
@@ -40,7 +42,8 @@
                                       Width="15"
                                       Height="15" />
                 </Button>
-                <Button Style="{DynamicResource Button.Free}"
+                <Button x:Name="Button_Noon"
+                        Style="{DynamicResource Button.Free}"
                         Click="SetFilterNoonClick"
                         Margin="{StaticResource ContentMargin}"
                         ToolTip="Set time to noon ClanWars session. 12:00 - 17:00">
@@ -48,7 +51,8 @@
                                       Width="15"
                                       Height="15" />
                 </Button>
-                <Button Style="{DynamicResource Button.Free}"
+                <Button x:Name="Button_Afternoon"
+                        Style="{DynamicResource Button.Free}"
                         Click="SetFilterAfternoonClick"
                         Margin="{StaticResource ContentMargin}"
                         ToolTip="Set time to after noon ClanWars session. 18:00 - 23:00">
@@ -56,7 +60,8 @@
                                       Width="15"
                                       Height="15" />
                 </Button>
-                <Button Style="{DynamicResource Button.Free}"
+                <Button x:Name="Button_Allday"
+                        Style="{DynamicResource Button.Free}"
                         Click="SetFilterAllDayClick"
                         Margin="{StaticResource ContentMargin}"
                         ToolTip="Set time to all day.">
@@ -72,18 +77,21 @@
                                   ToolTip="Choose a day to view the games, relative to today." />
             </StackPanel>
         </Border>
-        <Border Style="{DynamicResource BorderStyle}">
+        <Border x:Name="Border_SpanFilter"
+                Style="{DynamicResource BorderStyle}">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Span"
                            Foreground="{DynamicResource MahApps.Brushes.Gray2}"
-                           Margin="0,0,4,0"/>
-                <Button Content="Week"
+                           Margin="0,0,4,0" />
+                <Button x:Name="Button_Week"
+                        Content="Week"
                         Style="{DynamicResource Button.Outline}"
                         Click="SetFilterWeekClick"
                         VerticalAlignment="Center"
                         ToolTip="Set filter to the current week."
                         Margin="{StaticResource ContentMargin}" />
-                <Button Content="Month"
+                <Button x:Name="Button_Month"
+                        Content="Month"
                         Style="{DynamicResource Button.Outline}"
                         Click="SetFilterMonthClick"
                         VerticalAlignment="Center"
