@@ -107,16 +107,20 @@ namespace CrossoutLogView.Database.Reflection
             }
             return String.Join(Strings.ArrayDelimiter, result);
         }
-        public static T[] ParseSerializedArray<T>(string text, Func<string, T> deserializer)
+        public static T[] ParseSerializedArray<T>(string text, Func<string, T> deserializer) where T : IEquatable<T>
         {
             if (String.IsNullOrWhiteSpace(text)) return Array.Empty<T>();
             var parts = text.Split(Strings.ArrayDelimiter);
-            var result = new T[parts.Length];
+            var result = new List<T>(parts.Length);
             for (int i = 0; i < parts.Length; i++)
             {
-                result[i] = deserializer(parts[i]);
+                if (String.IsNullOrEmpty(parts[i]))
+                    continue;
+                var deserialized = deserializer(parts[i]);
+                if (!deserialized.Equals(default(T)))
+                    result.Add(deserialized);
             }
-            return result;
+            return result.ToArray();
         }
 
         public static string SQLiteVariable(object value)
@@ -127,9 +131,17 @@ namespace CrossoutLogView.Database.Reflection
                 : t == typeof(bool)
                 ? ((bool)value == false ? "0" : "1")
                 : t == typeof(DateTime)
-                ? ((DateTime)value).Ticks.ToString()
+                ? ((DateTime)value).Ticks.ToString(System.Globalization.CultureInfo.InvariantCulture.NumberFormat)
                 : t.IsEnum
-                ? ((int)value).ToString()
+                ? ((int)value).ToString(System.Globalization.CultureInfo.InvariantCulture.NumberFormat)
+                : t == typeof(float)
+                ? ((float)value).ToString(System.Globalization.CultureInfo.InvariantCulture.NumberFormat)
+                : t == typeof(double)
+                ? ((double)value).ToString(System.Globalization.CultureInfo.InvariantCulture.NumberFormat)
+                : t == typeof(int)
+                ? ((int)value).ToString(System.Globalization.CultureInfo.InvariantCulture.NumberFormat)
+                : t == typeof(long)
+                ? ((long)value).ToString(System.Globalization.CultureInfo.InvariantCulture.NumberFormat)
                 : value.ToString();
         }
 

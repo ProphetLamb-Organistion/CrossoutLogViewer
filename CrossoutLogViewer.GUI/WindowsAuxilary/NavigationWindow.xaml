@@ -9,15 +9,18 @@
                       xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                       Style="{DynamicResource MetroWindowTitlebarColorStyle}"
                       Title="Crossout Log Viewer"
+                      Icon="..\App.ico"
                       Height="550"
                       Width="850"
                       MinHeight="400"
                       MinWidth="700"
-                      GlowBrush="{DynamicResource AccentBaseColorBrush}"
+                      ShowDialogsOverTitleBar="False"
+                      GlowBrush="{DynamicResource MahApps.Brushes.Accent2}"
                       BorderThickness="1"
                       ResizeMode="CanResizeWithGrip"
                       WindowStartupLocation="CenterScreen"
-                      Loaded="OnLoaded">
+                      Loaded="OnLoaded"
+                      StateChanged="Window_StateChanged">
     <Window.Resources>
         <ResourceDictionary>
             <Style TargetType="{x:Type Controls:WindowButtonCommands}"
@@ -30,13 +33,13 @@
                         <Setter Property="LightMaxButtonStyle"
                                 Value="{StaticResource CustomLightMetroWindowButtonStyle}" />
                         <Setter Property="LightCloseButtonStyle"
-                                Value="{StaticResource CustomLightMetroWindowButtonStyle}" />
+                                Value="{StaticResource CustomLightMetroWindowCloseButtonStyle}" />
                         <Setter Property="DarkMinButtonStyle"
                                 Value="{StaticResource CustomDarkMetroWindowButtonStyle}" />
                         <Setter Property="DarkMaxButtonStyle"
                                 Value="{StaticResource CustomDarkMetroWindowButtonStyle}" />
                         <Setter Property="DarkCloseButtonStyle"
-                                Value="{StaticResource CustomDarkMetroWindowButtonStyle}" />
+                                Value="{StaticResource CustomDarkMetroWindowCloseButtonStyle}" />
                     </DataTrigger>
                 </Style.Triggers>
             </Style>

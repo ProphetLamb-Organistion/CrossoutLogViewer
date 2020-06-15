@@ -4,6 +4,7 @@ using CrossoutLogView.GUI.Core;
 using CrossoutLogView.Statistics;
 
 using System;
+using System.Globalization;
 
 namespace CrossoutLogView.GUI.Models
 {
@@ -12,33 +13,31 @@ namespace CrossoutLogView.GUI.Models
         public WeaponModel()
         {
             Parent = null;
-            Object = new Weapon();
+            Weapon = new Weapon();
             Name = String.Empty;
         }
 
         public WeaponModel(object parent, Weapon obj)
         {
-            Parent = parent;
-            Object = obj;
-            Name = DisplayStringFactory.AssetName(Object.Name);
+            Parent = parent ?? throw new ArgumentNullException(nameof(parent));
+            Weapon = obj ?? throw new ArgumentNullException(nameof(obj));
+            Name = DisplayStringFactory.AssetName(Weapon.Name);
         }
 
-        public override void UpdateCollections() { }
+        public Weapon Weapon { get; }
 
-        public Weapon Object { get; }
+        public object Parent { get; } // Either playerview or gameview
 
-        public object Parent { get; } //either playerview or gameview
+        public double TotalDamage => Weapon.ArmorDamage + Weapon.CriticalDamage;
 
-        public double TotalDamage => Object.ArmorDamage + Object.CriticalDamage;
-
-        public string ListItemString => String.Concat(TotalDamage.ToString("0.##"), Strings.CenterDotSeparator, Name);
+        public string ListItemString => String.Concat(TotalDamage.ToString("0.##", CultureInfo.InvariantCulture.NumberFormat), Strings.CenterDotSeparator, Name);
 
         public string Name { get; }
 
-        public double CriticalDamage => Object.CriticalDamage;
+        public double CriticalDamage => Weapon.CriticalDamage;
 
-        public double ArmorDamage => Object.ArmorDamage;
+        public double ArmorDamage => Weapon.ArmorDamage;
 
-        public int Uses => Object.Uses;
+        public int Uses => Weapon.Uses;
     }
 }

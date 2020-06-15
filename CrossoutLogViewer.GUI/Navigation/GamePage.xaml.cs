@@ -4,6 +4,7 @@ using CrossoutLogView.GUI.Core;
 using CrossoutLogView.GUI.Helpers;
 using CrossoutLogView.GUI.Models;
 using CrossoutLogView.GUI.WindowsAuxilary;
+
 using System;
 using System.Linq;
 using System.Windows.Controls;

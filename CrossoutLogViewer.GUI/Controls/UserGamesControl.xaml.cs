@@ -28,9 +28,10 @@ namespace CrossoutLogView.GUI.Controls
     /// <summary>
     /// Interaction logic for UserGamesControl.xaml
     /// </summary>
-    public partial class UserGamesControl
+    public partial class UserGamesControl : ILogging
     {
-        private UserModel _user;
+        public event OpenModelViewerEventHandler OpenViewModel;
+
         public UserGamesControl()
         {
             InitializeComponent();
@@ -39,6 +40,7 @@ namespace CrossoutLogView.GUI.Controls
             DataGridGames = scroller.Content as PlayerGamesDataGrid;
             GameListFilter = header.FindChild<GameListFilter>();
             GamesChart = header.FindChild<Expander>().Content as PlayerGamesChart;
+            GamesChart.OpenViewModel += (s, e) => OpenViewModel?.Invoke(s, e);
         }
 
         public PlayerGamesDataGrid DataGridGames { get; }
@@ -51,27 +53,28 @@ namespace CrossoutLogView.GUI.Controls
         /// <summary>
         /// Gets or sets the <see cref="UserModel"/> used to generate the content of the <see cref="UserGamesControl"/>.
         /// </summary>
-        public UserModel User
+        public UserModel User { get => GetValue(UserProperty) as UserModel; set => SetValue(UserProperty, value); }
+        public static readonly DependencyProperty UserProperty = DependencyProperty.Register(nameof(User), typeof(UserModel), typeof(UserGamesControl), new PropertyMetadata(OnUserPropertyChanged));
+
+        private static void OnUserPropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
         {
-            get => _user;
-            set
+            if (obj is UserGamesControl cntr && e.NewValue is UserModel newValue)
             {
-                if (value == null || ReferenceEquals(_user, value)) return;
-                value.Participations.Sort(new PlayerGameCompositeModelStartTimeDescending());
-                value.FilterParticipations = GameListFilter.Filter;
-                GamesChart.ItemsSource = value.ParticipationsFiltered;
-                DataContext = _user = value;
-                RefreshGamesFilter();
+                if (newValue.Participations != null)
+                    newValue.Participations.Sort(new PlayerGameCompositeModelStartTimeDescending());
+                cntr.DataContext = newValue;
+                cntr.RefreshGamesFilter();
             }
         }
-        
-        private void RefreshGamesFilter(object sender = null, GameFilterChangedEventArgs e = null)
+
+        private void RefreshGamesFilter(object sender, GameFilterChangedEventArgs e) => RefreshGamesFilter();
+        private void RefreshGamesFilter()
         {
-            if (_user != null)
+            if (User != null)
             {
-                _user.FilterParticipations = GameListFilter.Filter;
-                DataGridGames.ItemsSource = _user.ParticipationsFiltered;
-                GamesChart.ItemsSource = _user.ParticipationsFiltered;
+                User.FilterParticipations = GameListFilter.Filter;
+                GamesChart.ItemsSource = User.ParticipationsFiltered;
+                DataGridGames.ItemsSource = User.ParticipationsFiltered;
             }
         }
 
@@ -87,8 +90,12 @@ namespace CrossoutLogView.GUI.Controls
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            GameListFilter.SetFilterWeek();
             RefreshGamesFilter();
         }
+
+        #region ILogging support
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        NLog.Logger ILogging.Logger { get; } = logger;
+        #endregion
     }
 }

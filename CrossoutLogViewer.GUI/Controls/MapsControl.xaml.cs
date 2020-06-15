@@ -1,5 +1,6 @@
 ﻿using CrossoutLogView.Common;
 using CrossoutLogView.Database.Data;
+using CrossoutLogView.GUI.Core;
 using CrossoutLogView.GUI.Events;
 using CrossoutLogView.GUI.Models;
 using CrossoutLogView.Statistics;
@@ -28,18 +29,21 @@ namespace CrossoutLogView.GUI.Controls
     /// <summary>
     /// Interaction logic for MapsControl.xaml
     /// </summary>
-    public partial class MapsControl
+    public partial class MapsControl : ILogging
     {
         private GameFilter filter = new GameFilter(GameMode.All);
         private MapModel selectedItem;
-        private ObservableCollection<MapModel> _maps;
+
+        public event OpenModelViewerEventHandler OpenViewModel;
 
         public MapsControl()
         {
             InitializeComponent();
             PlayerGamesDataGrid = ScrollableHeaderedControl_Scroller.Content as PlayerGamesDataGrid;
-            //hide map column
-            PlayerGamesDataGrid.Columns.First(x => String.Equals(x.Header as string, "Map", StringComparison.InvariantCultureIgnoreCase)).Visibility = Visibility.Hidden;
+            // Hide map column
+            PlayerGamesDataGrid.Columns.FirstOrDefault(x => String.Equals(x.Header as string, "Map", StringComparison.InvariantCultureIgnoreCase)).Visibility = Visibility.Hidden;
+            // Passthought OpenViewModel event
+            PlayerGamesDataGrid.OpenViewModel += (s, e) => OpenViewModel?.Invoke(s, e);
         }
 
         public PlayerGamesDataGrid PlayerGamesDataGrid { get; }
@@ -49,13 +53,17 @@ namespace CrossoutLogView.GUI.Controls
         /// </summary>
         public ObservableCollection<MapModel> Maps
         {
-            get => _maps;
-            set
+            get => GetValue(MapsProperty) as ObservableCollection<MapModel>;
+            set => SetValue(MapsProperty, value);
+        }
+        public static readonly DependencyProperty MapsProperty = DependencyProperty.Register(nameof(Maps), typeof(ObservableCollection<MapModel>), typeof(MapsControl), new PropertyMetadata(OnMapsPropertyChanged));
+
+        private static void OnMapsPropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        {
+            if (obj is MapsControl cntr && e.NewValue is ObservableCollection<MapModel> newValue)
             {
-                if (value != null)
-                    value.Sort(new MapModelGamesPlayedDecending());
-                ListBoxMaps.ItemsSource = _maps = value;
-                ListBoxMaps.SelectedIndex = 0;
+                newValue.Sort(new MapModelGamesPlayedDecending());
+                cntr.ListBoxMaps.SelectedIndex = 0;
             }
         }
 
@@ -68,15 +76,9 @@ namespace CrossoutLogView.GUI.Controls
                 PlayerGamesDataGrid.ItemsSource = map.Games;
                 RefreshGameFilter();
                 selectedItem = map;
-                try
-                {
-                    var uri = ImageProvider.GetMapImageUri(map.Object.Map.Name);
+                var uri = ImageProvider.GetMapImageUri(map.GameMap.Map.Name);
+                if (uri != null)
                     MapBackgroundImage.Source = new BitmapImage(uri);
-                }
-                catch (System.IO.FileNotFoundException ex)
-                {
-                    Logging.WriteLine<MapsControl>(ex);
-                }
             }
         }
 
@@ -99,9 +101,9 @@ namespace CrossoutLogView.GUI.Controls
             PlayerGamesDataGrid.OpenAllGamesUsers();
         }
 
-        private void OpenMapImageClick(object sender, MouseButtonEventArgs e)
-        {
-            ExplorerOpenFile.OpenFile(ImageProvider.GetMapImageUri(selectedItem.Object.Map.Name));
-        }
+        #region ILogging support
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        NLog.Logger ILogging.Logger { get; } = logger;
+        #endregion
     }
 }

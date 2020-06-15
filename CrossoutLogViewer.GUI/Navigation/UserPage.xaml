@@ -22,7 +22,7 @@
 
         </WrapPanel>
         <UserControls:UserGamesControl x:Name="UserGamesViewGames"
-                                    Grid.Row="2" />
+                                       Grid.Row="2" />
         <Grid Grid.Row="1"
               Grid.Column="2">
             <GroupBox Header="Weapons"

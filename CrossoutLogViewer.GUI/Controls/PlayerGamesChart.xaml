@@ -12,28 +12,23 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <lvc:CartesianChart Series="{Binding Series}"
-                            AxisY="{Binding AxisYCollection}"
                             Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                             DataClick="CartesianChart_DataClick"
-                            Hoverable="True"
+                            Hoverable="False"
                             DisableAnimations="True"
                             Margin="0"
                             LegendLocation="Right">
-            <lvc:CartesianChart.AxisX>
-                <lvc:Axis Labels="{Binding Labels}"
-                          LabelsRotation="1"
-                          MinValue="{Binding AxisXLowerValue, Mode=OneWay}"
-                          MaxValue="{Binding AxisXUpperValue, Mode=OneWay}"/>
-            </lvc:CartesianChart.AxisX>
             <lvc:CartesianChart.DataTooltip>
                 <lvc:DefaultTooltip Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
                                     Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                                     CornerRadius="3"
                                     IsWrapped="True"
+                                    IsHitTestVisible="False"
                                     Opacity=".95" />
             </lvc:CartesianChart.DataTooltip>
         </lvc:CartesianChart>
-        <Controls:RangeSlider Style="{DynamicResource MahApps.Styles.RangeSlider.Win10}"
+        <Controls:RangeSlider x:Name="RangeSlider_Zoom"
+                              Style="{DynamicResource MahApps.Styles.RangeSlider.Win10}"
                               Orientation="Horizontal"
                               MouseDoubleClick="RangeSlider_MouseDoubleClick"
                               LowerValue="{Binding AxisXLowerValue, Mode=TwoWay}"

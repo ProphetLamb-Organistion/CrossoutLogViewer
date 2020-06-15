@@ -119,7 +119,8 @@
         <GroupBox Header="Damage Taken"
                   Grid.Row="1"
                   Grid.Column="1"
-                  Style="{DynamicResource GroupBox.Border}">
+                  Style="{DynamicResource GroupBox.Border}"
+                  Margin="0,2,0,0">
             <WrapPanel>
                 <TextBlock Style="{DynamicResource Content}"
                            VerticalAlignment="Center">

@@ -10,9 +10,11 @@
                       mc:Ignorable="d"
                       Style="{DynamicResource MetroWindowTitlebarColorStyle}"
                       Title="Crossout Log Viewer: Launcher"
+                      Icon="..\App.ico"
                       Width="750"
                       Height="220"
-                      GlowBrush="{DynamicResource MahApps.Brushes.AccentBase}"
+                      ShowDialogsOverTitleBar="False"
+                      GlowBrush="{DynamicResource MahApps.Brushes.Accent2}"
                       BorderThickness="1"
                       ResizeMode="NoResize"
                       WindowStartupLocation="CenterScreen"
@@ -64,13 +66,13 @@
                     <Setter Property="LightMaxButtonStyle"
                             Value="{StaticResource CustomLightMetroWindowButtonStyle}" />
                     <Setter Property="LightCloseButtonStyle"
-                            Value="{StaticResource CustomLightMetroWindowButtonStyle}" />
+                            Value="{StaticResource CustomLightMetroWindowCloseButtonStyle}" />
                     <Setter Property="DarkMinButtonStyle"
                             Value="{StaticResource CustomDarkMetroWindowButtonStyle}" />
                     <Setter Property="DarkMaxButtonStyle"
                             Value="{StaticResource CustomDarkMetroWindowButtonStyle}" />
                     <Setter Property="DarkCloseButtonStyle"
-                            Value="{StaticResource CustomDarkMetroWindowButtonStyle}" />
+                            Value="{StaticResource CustomDarkMetroWindowCloseButtonStyle}" />
                 </DataTrigger>
             </Style.Triggers>
         </Style>

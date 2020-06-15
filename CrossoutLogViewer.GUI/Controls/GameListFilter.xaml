@@ -78,13 +78,13 @@
                            Foreground="{DynamicResource MahApps.Brushes.Gray2}"
                            Margin="0,0,4,0"/>
                 <Button Content="Week"
-                        Style="{DynamicResource Button.Borderless}"
+                        Style="{DynamicResource Button.Outline}"
                         Click="SetFilterWeekClick"
                         VerticalAlignment="Center"
                         ToolTip="Set filter to the current week."
                         Margin="{StaticResource ContentMargin}" />
                 <Button Content="Month"
-                        Style="{DynamicResource Button.Borderless}"
+                        Style="{DynamicResource Button.Outline}"
                         Click="SetFilterMonthClick"
                         VerticalAlignment="Center"
                         ToolTip="Set filter to the current month."

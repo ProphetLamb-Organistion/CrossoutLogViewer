@@ -6,6 +6,7 @@ using CrossoutLogView.GUI.Core;
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -14,9 +15,9 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace CrossoutLogView.GUI.WindowsAuxilary
+namespace CrossoutLogView.GUI.Models
 {
-    public class SettingsWindowViewModel : WindowViewModel
+    public class SettingsWindowViewModel : WindowViewModelBase
     {
         public SettingsWindowViewModel() : base()
         {
@@ -98,16 +99,13 @@ namespace CrossoutLogView.GUI.WindowsAuxilary
             {
                 var c = (Color)ColorConverter.ConvertFromString(color);
                 if (setAlpha) c.A = App.BaseColorScheme == "Light" ? App.LightThemeColorAlpha : App.DarkThemeColorAlpha;
-                if (App.Current.Resources.Contains(resourceKey))
+                if (Application.Current.Resources.Contains(resourceKey))
                 {
-                    App.Current.Resources[resourceKey] = new SolidColorBrush(c);
-                    typeof(Settings).GetProperty(resourceKey).SetValue(Settings.Current, c.ToString());
+                    Application.Current.Resources[resourceKey] = new SolidColorBrush(c);
+                    typeof(Settings).GetProperty(resourceKey).SetValue(Settings.Current, c.ToString(CultureInfo.InvariantCulture));
                 }
             }
-            catch (FormatException ex)
-            {
-                Logging.WriteLine<App>(ex);
-            }
+            catch (FormatException) { }
         }
 
         private AccentColorMenuData AccentColorDataFromColor(string color)

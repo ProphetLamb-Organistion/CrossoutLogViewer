@@ -9,17 +9,20 @@
                       xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                       xmlns:local="clr-namespace:CrossoutLogView.GUI"
                       Style="{DynamicResource MetroWindowTitlebarColorStyle}"
-                      Title="Crossout Log Viewer: SettingsWindow"
+                      Title="Crossout Log Viewer: Settings"
+                      Icon="..\App.ico"
                       Width="400"
                       Height="480"
                       MinWidth="300"
                       MinHeight="300"
                       MaxWidth="500"
                       MaxHeight="600"
-                      GlowBrush="{DynamicResource MahApps.Brushes.AccentBase}"
+                      ShowDialogsOverTitleBar="False"
+                      GlowBrush="{DynamicResource MahApps.Brushes.Accent2}"
                       BorderThickness="1"
                       WindowStartupLocation="CenterScreen"
                       ShowMaxRestoreButton="False"
+                      ShowMinButton="False"
                       PreviewMouseDoubleClick="MetroWindow_PreviewMouseDoubleClick">
     <Controls:MetroWindow.Resources>
         <Style TargetType="{x:Type Controls:WindowButtonCommands}"
@@ -32,16 +35,21 @@
                     <Setter Property="LightMaxButtonStyle"
                             Value="{StaticResource CustomLightMetroWindowButtonStyle}" />
                     <Setter Property="LightCloseButtonStyle"
-                            Value="{StaticResource CustomLightMetroWindowButtonStyle}" />
+                            Value="{StaticResource CustomLightMetroWindowCloseButtonStyle}" />
                     <Setter Property="DarkMinButtonStyle"
                             Value="{StaticResource CustomDarkMetroWindowButtonStyle}" />
                     <Setter Property="DarkMaxButtonStyle"
                             Value="{StaticResource CustomDarkMetroWindowButtonStyle}" />
                     <Setter Property="DarkCloseButtonStyle"
-                            Value="{StaticResource CustomDarkMetroWindowButtonStyle}" />
+                            Value="{StaticResource CustomDarkMetroWindowCloseButtonStyle}" />
                 </DataTrigger>
             </Style.Triggers>
         </Style>
+        <Thickness x:Key="ContentMargin"
+                   Left="2"
+                   Top="2"
+                   Right="2"
+                   Bottom="2" />
     </Controls:MetroWindow.Resources>
     <ScrollViewer>
         <Grid>
@@ -55,15 +63,17 @@
                                                     ItemsSource="{Binding AppThemes}"
                                                     SelectedItem="{Binding AppTheme, Mode=TwoWay}"
                                                     ComboBoxWidth="100"
+                                                    Margin="{StaticResource ContentMargin}"
                                                     HorizontalAlignment="Stretch" />
                         <UserControls:ColorSelector Text="Accent"
                                                     ItemsSource="{Binding AccentColors}"
                                                     SelectedItem="{Binding AccentColor, Mode=TwoWay}"
                                                     ComboBoxWidth="100"
+                                                    Margin="{StaticResource ContentMargin}"
                                                     HorizontalAlignment="Stretch" />
                         <Controls:ToggleSwitch Content="Color window titlebar"
                                                IsOn="{Binding ColorWindowTitlebar, Mode=TwoWay}"
-                                               Margin="4"
+                                               Margin="{StaticResource ContentMargin}"
                                                HorizontalAlignment="Stretch" />
                         <Button Content="Apply"
                                 Click="ChangeThemeClick"
@@ -79,31 +89,38 @@
                         <UserControls:ColorSelector Text="Total"
                                                     ItemsSource="{Binding Colors}"
                                                     SelectedItem="{Binding TotalDamage, Mode=TwoWay}"
-                                                    ComboBoxWidth="100" />
+                                                    ComboBoxWidth="100"
+                                                    Margin="{StaticResource ContentMargin}" />
                         <UserControls:ColorSelector Text="Critical"
                                                     ItemsSource="{Binding Colors}"
                                                     SelectedItem="{Binding CriticalDamage, Mode=TwoWay}"
-                                                    ComboBoxWidth="100" />
+                                                    ComboBoxWidth="100"
+                                                    Margin="{StaticResource ContentMargin}" />
                         <UserControls:ColorSelector Text="Armor"
                                                     ItemsSource="{Binding Colors}"
                                                     SelectedItem="{Binding ArmorDamage, Mode=TwoWay}"
-                                                    ComboBoxWidth="100" />
+                                                    ComboBoxWidth="100"
+                                                    Margin="{StaticResource ContentMargin}" />
                         <UserControls:ColorSelector Text="Sucicide"
                                                     ItemsSource="{Binding Colors}"
                                                     SelectedItem="{Binding Suicide, Mode=TwoWay}"
-                                                    ComboBoxWidth="100" />
+                                                    ComboBoxWidth="100"
+                                                    Margin="{StaticResource ContentMargin}" />
                         <UserControls:ColorSelector Text="Despawn"
                                                     ItemsSource="{Binding Colors}"
                                                     SelectedItem="{Binding Despawn, Mode=TwoWay}"
-                                                    ComboBoxWidth="100" />
+                                                    ComboBoxWidth="100"
+                                                    Margin="{StaticResource ContentMargin}" />
                         <UserControls:ColorSelector Text="Won"
                                                     ItemsSource="{Binding Colors}"
                                                     SelectedItem="{Binding TeamWon, Mode=TwoWay}"
-                                                    ComboBoxWidth="100" />
+                                                    ComboBoxWidth="100"
+                                                    Margin="{StaticResource ContentMargin}" />
                         <UserControls:ColorSelector Text="Lost"
                                                     ItemsSource="{Binding Colors}"
                                                     SelectedItem="{Binding TeamLost, Mode=TwoWay}"
-                                                    ComboBoxWidth="100" />
+                                                    ComboBoxWidth="100"
+                                                    Margin="{StaticResource ContentMargin}" />
                         <Button Content="Reset"
                                 Click="ResetColorsClick"
                                 Margin="4"
@@ -114,24 +131,33 @@
             <StackPanel Grid.Column="1">
                 <GroupBox Header="Miscellaneous"
                           Style="{DynamicResource GroupBox.Border}"
-                          Margin="2"
+                          Margin="{StaticResource ContentMargin}"
                           VerticalAlignment="Top">
                     <ItemsControl Margin="4">
                         <Button Content="Open event log"
-                                Style="{DynamicResource Button.Borderless}"
+                                Style="{DynamicResource Button.Outline}"
                                 Click="OpenEventLogClick"
-                                Margin="4"
+                                Margin="{StaticResource ContentMargin}"
                                 HorizontalAlignment="Left" />
                         <Button Content="Open settings file"
-                                Style="{DynamicResource Button.Borderless}"
+                                Style="{DynamicResource Button.Outline}"
                                 Click="OpenSettingsFileClick"
-                                Margin="4"
+                                Margin="{StaticResource ContentMargin}"
                                 HorizontalAlignment="Left" />
                         <Button Content="Delete database"
-                                Style="{DynamicResource Button.Borderless}"
+                                Style="{DynamicResource Button.Outline}"
                                 Click="DeleteDatabaseClick"
-                                Margin="4"
+                                Margin="{StaticResource ContentMargin}"
                                 HorizontalAlignment="Left" />
+                        <TextBlock>
+                            <Hyperlink NavigateUri="https://icons8.com/icons/set/rebalance-portfolio"
+                                       RequestNavigate="Hyperlink_RequestNavigate">Chart icon</Hyperlink>
+                            <LineBreak />
+                            <Run>icon by </Run>
+                            <Hyperlink NavigateUri="https://icons8.com"
+                                       RequestNavigate="Hyperlink_RequestNavigate">Icons8</Hyperlink>
+                            <Run>.</Run>
+                        </TextBlock>
                     </ItemsControl>
                 </GroupBox>
             </StackPanel>

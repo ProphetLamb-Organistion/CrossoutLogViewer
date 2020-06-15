@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data.SQLite;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -19,6 +20,7 @@ namespace CrossoutLogView.Database.Connection
 {
     public class StatisticsConnection : ConnectionBase
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         public StatisticsConnection()
         {
             InitializeDataStructure();
@@ -27,6 +29,7 @@ namespace CrossoutLogView.Database.Connection
 
         protected override object InsertVariableHandler(in object obj, in VariableInfo vi)
         {
+            if (obj is null || vi is null) return default;
             //Maps
             if (vi.VariableType.Equals(typeof(Map)))
             {
@@ -34,7 +37,7 @@ namespace CrossoutLogView.Database.Connection
                 //request existing map
                 var request = GetRequestString(vi.VariableType, true)
                 + String.Format(" WHERE {0} == {1}", nameof(Map.Name), SQLiteVariable(map.Name));
-                using var cmd = new SQLiteCommand(request, connection);
+                using var cmd = new SQLiteCommand(request, Connection);
                 using var reader = cmd.ExecuteReader();
                 if (reader.Read()) //existing map
                 {
@@ -90,6 +93,7 @@ namespace CrossoutLogView.Database.Connection
 
         public void Insert(User user)
         {
+            if (user is null) return;
             if (user.UserID > 0) Insert<User>(user);
         }
 
@@ -167,7 +171,7 @@ namespace CrossoutLogView.Database.Connection
         {
             var rowIds = new List<long>();
             var request = String.Format(FormatRequestWhere, RowIdName, nameof(Game), nameof(Game.Map) + " == " + rowId);
-            using var cmd = new SQLiteCommand(request, connection);
+            using var cmd = new SQLiteCommand(request, Connection);
             using var reader = cmd.ExecuteReader();
             while (reader.Read())
             {
@@ -180,22 +184,38 @@ namespace CrossoutLogView.Database.Connection
         {
             var rowIds = new List<long>();
             var request = String.Format(FormatRequest, RowIdName, nameof(Map));
-            using var cmd = new SQLiteCommand(request, connection);
-            using var reader = cmd.ExecuteReader();
-            while (reader.Read())
+            try
             {
-                rowIds.Add(ReadField<long>(RowIdName, reader));
+                using var cmd = new SQLiteCommand(request, Connection);
+                using var reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    rowIds.Add(ReadField<long>(RowIdName, reader));
+                }
+            }
+            catch (SQLiteException)
+            {
+                logger.Error(request.Substring(0, 254));
             }
             return rowIds;
         }
 
         public long RequestMapRowId(string mapName)
         {
+            long rowId = -1;
             var request = String.Format(FormatRequestWhere, RowIdName, nameof(Map), nameof(Map.Name) + " == " + SQLiteVariable(mapName));
-            using var cmd = new SQLiteCommand(request, connection);
-            using var reader = cmd.ExecuteReader();
-            if (!reader.Read()) return -1;
-            return ReadField<long>(RowIdName, reader);
+            try
+            {
+                using var cmd = new SQLiteCommand(request, Connection);
+                using var reader = cmd.ExecuteReader();
+                if (reader.Read())
+                    rowId = ReadField<long>(RowIdName, reader);
+            }
+            catch (SQLiteException)
+            {
+                logger.Error(request.Substring(0, 254));
+            }
+            return rowId;
         }
 
         public User RequestUser(string name, TableRepresentation includeTableRepresentation = TableRepresentation.All)
@@ -234,19 +254,27 @@ namespace CrossoutLogView.Database.Connection
 
         public List<int> RequestUserIDs()
         {
-            var request = String.Format(FormatRequest, nameof(User.UserID), nameof(User));
-            using var cmd = new SQLiteCommand(request, connection);
-            using var reader = cmd.ExecuteReader();
             var userIDs = new List<int>();
-            while (reader.Read())
+            var request = String.Format(FormatRequest, nameof(User.UserID), nameof(User));
+            try
             {
-                userIDs.Add(reader.GetInt32(0));
+                using var cmd = new SQLiteCommand(request, Connection);
+                using var reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    userIDs.Add(reader.GetInt32(0));
+                }
+            }
+            catch (SQLiteException)
+            {
+                logger.Error(request.Substring(0, 254));
             }
             return userIDs;
         }
 
         public List<int> RequestUserIDs(long[] rowIDs)
         {
+            if (rowIDs is null) return new List<int>();
             var conditions = new string[rowIDs.Length];
             var conditionTemplate = RowIdName + " == ";
             for (int i = 0; i < rowIDs.Length; i++)
@@ -255,11 +283,18 @@ namespace CrossoutLogView.Database.Connection
             }
             var userIDs = new List<int>();
             var request = String.Concat(String.Format(FormatRequest, nameof(User.UserID), nameof(User)), " WHERE ", String.Join(" OR ", conditions));
-            using var cmd = new SQLiteCommand(request, connection);
-            using var reader = cmd.ExecuteReader();
-            while (reader.Read())
+            try
             {
-                userIDs.Add(reader.GetInt32(0));
+                using var cmd = new SQLiteCommand(request, Connection);
+                using var reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    userIDs.Add(reader.GetInt32(0));
+                }
+            }
+            catch (SQLiteException)
+            {
+                logger.Error(request.Substring(0, 254));
             }
             return userIDs;
         }
@@ -291,218 +326,225 @@ namespace CrossoutLogView.Database.Connection
             var names = new List<string>();
             var field = nameof(WeaponGlobal.Name).ToLowerInvariant();
             var request = String.Format(FormatRequest, field, nameof(WeaponGlobal));
-            using var cmd = new SQLiteCommand(request, connection);
-            using var reader = cmd.ExecuteReader();
-            while (reader.Read())
+            try
             {
-                names.Add(ReadField<string>(field, reader));
+                using var cmd = new SQLiteCommand(request, Connection);
+                using var reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    names.Add(ReadField<string>(field, reader));
+                }
+            }
+            catch (SQLiteException)
+            {
+                logger.Error(request.Length > 254 ? request.Substring(0, 254) : request);
             }
             return names;
         }
 
         public void UpdateUser(User user)
         {
-            if (user.UserID <= 0) throw new ArgumentOutOfRangeException(nameof(User.UserID), "Valid UserIDs range from 1 upwards. UserID: " + user.UserID);
+            if (user is null) return;
+            if (user.UserID <= 0) throw new ArgumentOutOfRangeException(nameof(User.UserID), "Value must be greater then zero. Value = " + user.UserID);
             var type = typeof(User);
             var request = GetRequestString(type) + String.Format(" WHERE {0} == {1}",
                 nameof(User.UserID).ToLowerInvariant(),
                 user.UserID);
-            using var cmd = new SQLiteCommand(request, connection);
-            using var reader = cmd.ExecuteReader();
-            if (!reader.Read()) //insert new user
+            try
             {
-                Insert(user);
-                return;
-            }
-            //update existing user            
-            var sets = new StringBuilder();
-            var varInfos = VariableInfo.FromType(typeof(User));
-            for (int varInfoIndex = 0; varInfoIndex < varInfos.Length; varInfoIndex++)
-            {
-                var vi = varInfos[varInfoIndex];
-                if (vi.Name.Equals(nameof(User.UserID), StringComparison.InvariantCulture)
-                    || vi.Name.Equals(nameof(User.Name), StringComparison.InvariantCulture))
-                    continue;
-                var name = vi.Name.ToLowerInvariant();
-                //increment numerical stats
-                if (vi.VariableType == typeof(double))
-                    sets.AppendFormat(FormatEquals, name, ReadField<double>(vi.Name, reader) + (double)vi.GetValue(user));
-                else if (vi.VariableType == typeof(int))
-                    sets.AppendFormat(FormatEquals, name, ReadField<int>(vi.Name, reader) + (int)vi.GetValue(user));
-                else if (GetTableRepresentation(vi.VariableType, DatabaseTableTypes) == TableRepresentation.ReferenceArray)
+                using var cmd = new SQLiteCommand(request, Connection);
+                using var reader = cmd.ExecuteReader();
+                if (!reader.Read()) //insert new user
                 {
-                    if (vi.Name.Equals(nameof(User.Participations), StringComparison.InvariantCulture)) //globaly unique: find by start&end time make ref
+                    Insert(user);
+                }
+                else //update existing user            
+                {
+                    var sets = new StringBuilder();
+                    var varInfos = VariableInfo.FromType(typeof(User));
+                    for (int varInfoIndex = 0; varInfoIndex < varInfos.Length; varInfoIndex++)
                     {
-                        var refs = new StringBuilder();
-                        for (int i = 0; i < user.Participations.Count; i++)
+                        var vi = varInfos[varInfoIndex];
+                        if (vi.Name.Equals(nameof(User.UserID), StringComparison.InvariantCulture)
+                            || vi.Name.Equals(nameof(User.Name), StringComparison.InvariantCulture))
+                            continue;
+                        var name = vi.Name.ToLowerInvariant();
+                        //increment numerical stats
+                        if (vi.VariableType == typeof(double))
+                            sets.AppendFormat(FormatEquals, name, ReadField<double>(vi.Name, reader) + (double)vi.GetValue(user));
+                        else if (vi.VariableType == typeof(int))
+                            sets.AppendFormat(FormatEquals, name, ReadField<int>(vi.Name, reader) + (int)vi.GetValue(user));
+                        else if (GetTableRepresentation(vi.VariableType, DatabaseTableTypes) == TableRepresentation.ReferenceArray)
                         {
-                            var gameReq = String.Format(FormatRequest, RowIdName, nameof(Game)) //request rowid
-                                + String.Format(" WHERE {0} == {1}", nameof(Game.Start).ToLowerInvariant(), user.Participations[i].Start.Ticks);
-                            using var gameCmd = new SQLiteCommand(gameReq, connection);
-                            using var gameReader = gameCmd.ExecuteReader();
-                            refs.Append(Strings.ArrayDelimiter);
-                            if (gameReader.Read())
+                            if (vi.Name.Equals(nameof(User.Participations), StringComparison.InvariantCulture)) //globaly unique: find by start&end time make ref
                             {
-                                refs.Append(Base85.Encode(ReadField<long>(RowIdName, gameReader)));
-                            }
-                        }
-                        sets.AppendFormat(FormatEquals, name, SQLiteVariable(ReadField<string>(vi.Name, reader) + refs.ToString()));
-                    }
-                    else if (vi.Name.Equals(nameof(User.Weapons), StringComparison.InvariantCulture))
-                    {
-                        var references = ReadField<string>(vi.Name, reader);
-                        var rowIds = ParseSerializedArray(references, Base85.DecodeInt64);
-                        var newWeapons = new List<Weapon>(user.Weapons);
-                        for (int i = 0; i < rowIds.Length; i++)
-                        {
-                            var weapon = ExecuteRequestSingleObject<Weapon>(GetRowIdRequestString(typeof(Weapon), rowIds[i], TableRepresentation.Store));
-                            if (weapon == null) continue;
-                            var newWeaponIndex = newWeapons.FindIndex(w => w.Name.Equals(weapon.Name, StringComparison.InvariantCultureIgnoreCase));
-                            if (newWeaponIndex != -1) //weapon already exists; update existing 
-                            {
-                                UpdateValues(weapon.Merge(newWeapons[newWeaponIndex]), VariableInfo.FromType(typeof(Weapon)), nameof(Weapon), RowIdName + " == " + rowIds[i]);
-                                newWeapons.RemoveAt(newWeaponIndex);
-                            }
-                        }
-                        //insert remaining weapons
-                        var newRowIds = new long[newWeapons.Count + rowIds.Length];
-                        for (int i = 0; i < newWeapons.Count; i++)
-                        {
-                            Insert(newWeapons[i]);
-                            newRowIds[i] = LastInsertRowId;
-                        }
-                        Array.Copy(rowIds, 0, newRowIds, newWeapons.Count, rowIds.Length);
-                        sets.AppendFormat(FormatEquals, name, SQLiteVariable(SerializeArray(newRowIds, Base85.Encode)));
-                    }
-                    else //unique per player: increment stats per element
-                    {
-                        //request existing elements
-                        var itemType = Types.GetEnumerableBaseType(vi.VariableType);
-                        var references = ReadField<string>(vi.Name, reader);
-                        var rowIds = ParseSerializedArray(references, Base85.DecodeInt64);
-                        if (rowIds.Length != 0) //update exisitng elements
-                        {
-                            var conditions = new string[rowIds.Length];
-                            for (int i = 0; i < conditions.Length; i++)
-                            {
-                                conditions[i] = RowIdName + " = " + rowIds[i];
-                            }
-                            var requestCommand = GetRequestString(itemType, true) + " WHERE " + String.Join(" OR ", conditions);
-                            var additions = new ConcurrentQueue<object>();
-                            RequestRowIds.Clear();
-                            if (vi.Name.Equals(nameof(User.Stripes), StringComparison.InvariantCulture))
-                            {
-                                var stripes = ExecuteRequest<Stripe>(requestCommand);
-                                var requestRowIds = RequestRowIds.ToArray();
-                                Parallel.ForEach(user.Stripes, new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount * 2 },
-                                delegate (Stripe userStripe)
+                                var refs = new StringBuilder();
+                                for (int i = 0; i < user.Participations.Count; i++)
                                 {
-                                    var dbStripeIndex = stripes.FindIndex(x => Strings.NameEquals(x.Name, userStripe.Name));
-                                    if (dbStripeIndex == -1) //add new stripe
+                                    var gameReq = String.Format(FormatRequest, RowIdName, nameof(Game)) //request rowid
+                                        + String.Format(" WHERE {0} == {1}", nameof(Game.Start).ToLowerInvariant(), user.Participations[i].Start.Ticks);
+                                    using var gameCmd = new SQLiteCommand(gameReq, Connection);
+                                    using var gameReader = gameCmd.ExecuteReader();
+                                    refs.Append(Strings.ArrayDelimiter);
+                                    if (gameReader.Read())
                                     {
-                                        additions.Enqueue(userStripe);
+                                        refs.Append(Base85.Encode(ReadField<long>(RowIdName, gameReader)));
                                     }
-                                    else //merge & update existing stripe
-                                    {
-                                        UpdateValues(Stripe.Merge(stripes[dbStripeIndex], userStripe), VariableInfo.FromType(itemType), itemType.Name,
-                                            "rowid == " + requestRowIds[dbStripeIndex]);
-                                    }
-                                });
+                                }
+                                sets.AppendFormat(FormatEquals, name, SQLiteVariable(ReadField<string>(vi.Name, reader) + refs.ToString()));
                             }
-                            sets.AppendFormat(FormatEquals, name, SQLiteVariable(references + UpdateListReferenceHelper(additions, itemType)));
-                        }
-                        else //element doesnt yet exist for the user
-                        {
-                            var refs = UpdateListReferenceHelper(user, vi);
-                            if (!String.IsNullOrEmpty(refs))
-                                sets.AppendFormat(FormatEquals, name, SQLiteVariable(refs.Remove(0, 1)));
+                            else if (vi.Name.Equals(nameof(User.Weapons), StringComparison.InvariantCulture))
+                            {
+                                var rowIds = ParseSerializedArray(ReadField<string>(vi.Name, reader), Base85.DecodeInt64);
+                                var newWeapons = new List<Weapon>(user.Weapons);
+                                for (int i = 0; i < rowIds.Length; i++)
+                                {
+                                    var weapon = ExecuteRequestSingleObject<Weapon>(GetRowIdRequestString(typeof(Weapon), rowIds[i], TableRepresentation.Store));
+                                    if (weapon == null) continue;
+                                    var newWeaponIndex = newWeapons.FindIndex(w => w.Name.Equals(weapon.Name, StringComparison.InvariantCultureIgnoreCase));
+                                    if (newWeaponIndex != -1) //weapon already exists; update existing 
+                                    {
+                                        UpdateValues(weapon.Merge(newWeapons[newWeaponIndex]), VariableInfo.FromType(typeof(Weapon)), nameof(Weapon), RowIdName + " == " + rowIds[i]);
+                                        newWeapons.RemoveAt(newWeaponIndex);
+                                    }
+                                }
+                                //insert remaining weapons
+                                var newRowIds = new long[newWeapons.Count + rowIds.Length];
+                                for (int i = 0; i < newWeapons.Count; i++)
+                                {
+                                    Insert(newWeapons[i]);
+                                    newRowIds[i] = LastInsertRowId;
+                                }
+                                Array.Copy(rowIds, 0, newRowIds, newWeapons.Count, rowIds.Length);
+                                sets.AppendFormat(FormatEquals, name, SQLiteVariable(SerializeArray(newRowIds, Base85.Encode)));
+                            }
+                            else if (vi.Name.Equals(nameof(User.Stripes), StringComparison.InvariantCulture))
+                            {
+                                var rowIds = ParseSerializedArray(ReadField<string>(vi.Name, reader), Base85.DecodeInt64);
+                                var newStripes = new List<Stripe>(user.Stripes);
+                                for (int i = 0; i < rowIds.Length; i++)
+                                {
+                                    var stripe = ExecuteRequestSingleObject<Stripe>(GetRowIdRequestString(typeof(Stripe), rowIds[i], TableRepresentation.Store));
+                                    if (stripe == null) continue;
+                                    var newStripeIndex = newStripes.FindIndex(s => s.Name.Equals(stripe.Name, StringComparison.InvariantCultureIgnoreCase));
+                                    if (newStripeIndex != -1) //weapon already exists; update existing 
+                                    {
+                                        UpdateValues(stripe.Merge(newStripes[newStripeIndex]), VariableInfo.FromType(typeof(Stripe)), nameof(Stripe), RowIdName + " == " + rowIds[i]);
+                                        newStripes.RemoveAt(newStripeIndex);
+                                    }
+                                }
+                                //insert remaining weapons
+                                var newRowIds = new long[newStripes.Count + rowIds.Length];
+                                for (int i = 0; i < newStripes.Count; i++)
+                                {
+                                    Insert(newStripes[i]);
+                                    newRowIds[i] = LastInsertRowId;
+                                }
+                                Array.Copy(rowIds, 0, newRowIds, newStripes.Count, rowIds.Length);
+                                sets.AppendFormat(FormatEquals, name, SQLiteVariable(SerializeArray(newRowIds, Base85.Encode)));
+                            }
                         }
                     }
+                    //compose update string
+                    InvokeNonQuery(String.Format(FormatUpdate, nameof(User), sets.Remove(0, 2).ToString(),
+                        String.Format("{0} == {1}", nameof(User.UserID), user.UserID)),
+                        Connection);
                 }
             }
-            //compose update string
-            InvokeNonQuery(String.Format(FormatUpdate, nameof(User), sets.Remove(0, 2).ToString(),
-                String.Format("{0} == {1}", nameof(User.UserID), user.UserID)),
-                connection);
-
+            catch (SQLiteException)
+            {
+                logger.Error(request.Substring(0, 254));
+            }
         }
 
         public void UpdateWeaponGlobal(WeaponGlobal weapon)
         {
+            if (weapon is null) return;
             var type = typeof(WeaponGlobal);
-            var condtion = nameof(WeaponGlobal.Name) + " == " + SQLiteVariable(weapon.Name);
-            var request = GetRequestString(type) + " WHERE " + condtion;
-            var dbWeapon = ExecuteRequestSingleObject<WeaponGlobal>(request, TableRepresentation.All & ~TableRepresentation.ReferenceArray); //do not request users: TableRepresentation.ReferenceArray
-            if (dbWeapon == null)
+            var condition = nameof(WeaponGlobal.Name) + " == " + SQLiteVariable(weapon.Name);
+            var request = GetRequestString(type) + " WHERE " + condition;
+            // Request weapon from database
+            var dbWeapon = ExecuteRequestSingleObject<WeaponGlobal>(request, TableRepresentation.All & ~TableRepresentation.ReferenceArray);
+            if (dbWeapon is null)
             {
                 Insert(weapon);
                 return;
             }
-            //increment uses on existing users
-            var refs = RequestReferences(nameof(WeaponGlobal.Name) + " == " + SQLiteVariable(weapon.Name), type, nameof(WeaponGlobal.Users));
-            var uses = new List<int>();
-            for (int i = 0; i < refs.Length; i++)
+            // References to users of dbWeapon
+            var dbUserRefs = RequestReferences(nameof(WeaponGlobal.Name) + " == " + SQLiteVariable(weapon.Name), type, nameof(WeaponGlobal.Users));
+            var uses = new List<int>(weapon.Users.Count + dbUserRefs.Length);
+            for (int i = 0; i < dbUserRefs.Length; i++)
             {
-                var userID = RequestUserId(refs[i]);
-                var userIndex = weapon.Users.FindIndex(x => x.UserID == userID);
-                if (userIndex == -1)
-                {
-                    //consume use
+                var uid = RequestUserId(dbUserRefs[i]);
+                var index = weapon.Users.FindIndex(u => u.UserID == uid);
+                if (index == -1)
                     uses.Add(dbWeapon.Uses[i]);
-                }
                 else
                 {
-                    uses.Add(dbWeapon.Uses[i] + weapon.Uses[userIndex]);
-                    //consume from weapon
-                    weapon.Users.RemoveAt(userIndex);
-                    weapon.Uses.RemoveAt(userIndex);
+                    uses.Add(weapon.Uses[index] + dbWeapon.Uses[i]);
+                    // Remove user in dbWeapon from weapon
+                    weapon.Users.RemoveAt(index);
+                    weapon.Uses.RemoveAt(index);
                 }
             }
-            //get rowid refereces from unconsumed/new users
-            var newRefs = new List<long>(refs);
-            if (weapon.Users.Count != 0) //no new users
+            // Obtain references to remaining users
+            var newRefs = new List<long>(weapon.Users.Count + dbUserRefs.Length);
+            for (int i = 0; i < newRefs.Count; i++)
             {
-                var condtions = new string[weapon.Users.Count];
-                var conditionTemplate = nameof(User.UserID) + " == ";
-                for (int i = 0; i < condtions.Length; i++)
-                {
-                    condtions[i] = conditionTemplate + RequestUserRowId(weapon.Users[i].UserID);
-                }
-                var rowIdRequest = String.Format(FormatRequestWhere, RowIdName, nameof(User), String.Join(" OR ", condtions));
-                using var cmd = new SQLiteCommand(rowIdRequest, connection);
-                using var reader = cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    newRefs.Add(ReadField<long>(RowIdName, reader));
-                }
+                uses.Add(weapon.Uses[i]);
+                var rowId = RequestUserRowId(weapon.Users[i].UserID);
+                if (rowId != -1)
+                    newRefs.Add(rowId);
             }
-            //update existing weapon
+            newRefs.AddRange(dbUserRefs);
+            // Update string
             var sets = new StringBuilder();
             sets.Append(nameof(WeaponGlobal.ArmorDamage)).Append(" = ").Append(SQLiteVariable(dbWeapon.ArmorDamage + weapon.ArmorDamage)).Append(", ");
             sets.Append(nameof(WeaponGlobal.CriticalDamage)).Append(" = ").Append(SQLiteVariable(dbWeapon.CriticalDamage + weapon.CriticalDamage)).Append(", ");
             sets.Append(nameof(WeaponGlobal.Users)).Append(" = ").Append(SQLiteVariable(SerializeArray(newRefs, Base85.Encode))).Append(", ");
             sets.Append(nameof(WeaponGlobal.Uses)).Append(" = ").Append(SQLiteVariable(SerializeArray(uses, Base85.Encode)));
-            var update = String.Format(FormatUpdate, nameof(WeaponGlobal), sets.ToString(), condtion);
-            InvokeNonQuery(update, connection);
+            InvokeNonQuery(String.Format(FormatUpdate, nameof(WeaponGlobal), sets.ToString(), condition), Connection);
         }
 
         public long RequestUserRowId(int userId)
         {
+            long rowId = -1;
             var request = String.Concat(String.Format(FormatRequest, RowIdName, nameof(User)), " WHERE ", nameof(User.UserID).ToLowerInvariant(), " == ", userId);
-            using var cmd = new SQLiteCommand(request, connection);
-            using var reader = cmd.ExecuteReader();
-            if (!reader.Read()) return -1;
-            return ReadField<long>(RowIdName, reader);
+            try
+            {
+                using var cmd = new SQLiteCommand(request, Connection);
+                using var reader = cmd.ExecuteReader();
+                if (reader.Read())
+                    rowId = ReadField<long>(RowIdName, reader);
+            }
+            catch (InvalidOperationException) { }
+            catch (ArgumentException) { }
+            catch (SQLiteException)
+            {
+                logger.Error(request.Substring(0, 254));
+            }
+            return rowId;
         }
 
         public int RequestUserId(long rowId)
         {
-            if (rowId < 0) return -1;
+            if (rowId == -1) return -1;
+            int uid = -1;
             var request = String.Concat(String.Format(FormatRequest, nameof(User.UserID), nameof(User)), " WHERE ", RowIdName, " == ", rowId);
-            using var cmd = new SQLiteCommand(request, connection);
-            using var reader = cmd.ExecuteReader();
-            if (!reader.Read()) return -1;
-            return reader.GetInt32(0);
+            try
+            {
+                using var cmd = new SQLiteCommand(request, Connection);
+                using var reader = cmd.ExecuteReader();
+                if (reader.Read())
+                    uid = reader.GetInt32(0);
+            }
+            catch (InvalidOperationException) { }
+            catch (ArgumentException) { }
+            catch (SQLiteException)
+            {
+                logger.Error(request.Substring(0, 254));
+            }
+            return uid;
         }
 
         private static ConcurrentDictionary<long, long> gameRowIdStart = new ConcurrentDictionary<long, long>();
@@ -510,10 +552,20 @@ namespace CrossoutLogView.Database.Connection
         {
             if (gameRowIdStart.TryGetValue(startTicks, out var rowId)) return rowId;
             var request = String.Concat(String.Format(FormatRequest, RowIdName, nameof(Game)), " WHERE ", nameof(Game.Start).ToLowerInvariant(), " == ", startTicks);
-            using var cmd = new SQLiteCommand(request, connection);
-            using var reader = cmd.ExecuteReader();
-            if (!reader.Read()) return -1;
-            gameRowIdStart.AddOrUpdate(startTicks, rowId = ReadField<long>(RowIdName, reader), (rid, st) => rowId);
+            try
+            {
+                using var cmd = new SQLiteCommand(request, Connection);
+                using var reader = cmd.ExecuteReader();
+                if (reader.Read())
+                    gameRowIdStart.AddOrUpdate(startTicks, rowId = ReadField<long>(RowIdName, reader), (rid, st) => rowId);
+                else rowId = -1;
+            }
+            catch (InvalidOperationException) { }
+            catch (ArgumentException) { }
+            catch (SQLiteException)
+            {
+                logger.Error(request.Substring(0, 254));
+            }
             return rowId;
         }
 
@@ -549,18 +601,19 @@ namespace CrossoutLogView.Database.Connection
             //{ typeof(Map).GUID, nameof(Map.Name) },
             { typeof(User).GUID, nameof(User.UserID) },
         };
+
         public override void InitializeDataStructure()
         {
-            if (!Directory.Exists(Strings.DataBaseRootPath)) Directory.CreateDirectory(Strings.DataBaseRootPath);
+            if (!Directory.Exists(Strings.DataBasePath)) Directory.CreateDirectory(Strings.DataBasePath);
             if (!File.Exists(Strings.DataBaseStatisticsPath)) SQLiteConnection.CreateFile(Strings.DataBaseStatisticsPath);
-            connection = new SQLiteConnection("Data Source = " + Strings.DataBaseStatisticsPath);
-            connection.Open();
+            Connection = new SQLiteConnection("Data Source = " + Strings.DataBaseStatisticsPath);
+            Connection.Open();
             //create datatables
             foreach (var type in IStatisticData.Implementations)
             {
                 if (primaryKeys.TryGetValue(type.GUID, out var primaryKey))
-                    CreateDataTable(type, primaryKey, connection);
-                else CreateDataTable(type, connection);
+                    CreateDataTable(type, primaryKey, Connection);
+                else CreateDataTable(type, Connection);
             }
         }
     }

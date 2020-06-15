@@ -14,113 +14,11 @@ namespace CrossoutLogView.Database.Data
         private static Dictionary<string, string> stripes = new Dictionary<string, string>();
         private static Dictionary<string, string> maps = new Dictionary<string, string>();
 
-        private static readonly Dictionary<string, string> defaultAssets = new Dictionary<string, string>()
-        {
-            { "CarPart_AutoGuidedCourseGun_epic", "Cricket" },
-            { "CarPart_Harvester_legend", "Harvester" },
-            { "CarPart_Gun_Flamethrower_light", "Remedy" },
-            { "CarPart_Gun_Flamethrower_frontal", "Firebug" },
-            { "CarPart_Gun_Flamethrower_fixed", "Draco" },
-            { "CarPart_ModuleAmmoBig_epic", "Expanded ammo pack" },
-            { "CarPart_PowerGiverExplosive_legend", "Appollo" },
-            { "Cabin_Pestilence", "Blight" },
-            { "CarPart_Gun_Catapult", "Incinerator" },
-            { "CarPart_Gun_Minigun_Legend", "Reaper" },
-            { "CarPart_Quadrocopter_Syfy", "Annihilator" },
-            { "CarPart_Gun_Syfy_Tesla", "Spark" },
-            { "CarPart_Hover_rare", "Icarus VII" },
-            { "CarPart_Hover_rare_bundle", "Icarus IV" },
-            { "CarPart_Gun_GrenadeLauncher_Shotgun", "Retcher" },
-            { "CarPart_Gun_Syfy_Plazma_Legend", "Helios" },
-            { "CarPart_EngineMini_epic", "Hotred" },
-            { "CarPart_MechaLeg", "ML 200" },
-            { "CarPart_Gun_BigCannon_EX_Legend", "Tsunami" },
-            { "CarPart_Gun_Minigun", "MG13 Equalizer" },
-            { "CarPart_Gun_Syfy_FusionRifle_legend", "Assembler" },
-            { "CarPart_HomingMissileLauncherBurstR_legend", "Hurricane" },
-            { "CarPart_Gun_Shotgun_Relic", "Breaker" },
-            { "CarPart_MechaWheelLeg", "Bigram" },
-            { "CarPart_Gun_Harpoon", "Skinner" },
-            { "Cabin_Death", "The Call" },
-            { "CarPart_Stealth_Seeker_epic", "Verifier" },
-            { "Cabin_Workers_epic", "Omnibox" },
-            { "CarPart_Gun_ShotGun_Garbage_legend", "Nidhogg" },
-            { "CarPart_Gun_ClassicCrossbow", "Spike-1" },
-            { "CarPart_Gun_DoubleCrossbow", "Toadfish" },
-            { "Chassis_Spider", "Steppespider" },
-            { "CarPart_Gun_Machinegun_epic", "Spectre-1" },
-            { "CarPart_TankTrackBig_epic", "Goliath" },
-            { "CarPart_Gun_BigCannon_EX_Relic", "Typhoon" },
-            { "CarPart_Gun_SniperCrossbow", "Scorpion" },
-            { "CarPart_Gun_BigCannon_Free_legend", "Mammoth" },
-            { "Cabin_War", "Echo" },
-            { "Cabin_Lambo", "Torero" },
-            { "CarPart_Gun_MineLauncher_Legend", "Fortune" },
-            { "CarPart_PowerGiver_epic", "Gasgen" },
-            { "CarPart_Gun_GrenadeLauncher_Auto", "Gl-55 Impulse" },
-            { "CarPart_Quadrocopter_epic", "MD-3 Owl" },
-            { "Cabin_Famine", "Howl" },
-            { "CarPart_PowerGiver_legend", "Appollo" },
-            { "CarPart_Gun_AutoGuidedCourseGun_Epic2", "Locust" },
-            { "CarPart_Gun_Syfy_ParticleBeam", "Assembler" },
-            { "CarPart_Gun_Machinegun_Legendary", "Aspect" },
-            { "CarPart_Gun_AutoGuidedCourseGun_Nurs_Preepic", "Pyralid" },
-            { "CarPart_Gun_NailGun_rare", "Summator" },
-            { "CarPart_Gun_Machinegun_Relic", "Punisher" },
-            { "CarPart_Gun_Machinegun_rare", "Vector" },
-            { "CarPart_Gun_Machinegun_Preepic", "Sinus-0" },
-            { "CarPart_Gun_Machinegun_Frontal", "ST-M23 Defender" },
-            { "CarPart_Gun_Machinegun_Frontal_Epic", "M-29 Protector" },
-            { "CarPart_Gun_Machinegun_Corner", "ST-M26 Tackler" },
-            { "CarPart_Gun_SmartMachinegun", "Caucasus" },
-            { "CarPart_Gun_Shotgun_rare", "Sledgehammer" },
-            { "CarPart_Gun_Shotgun_legend", "Hammerfall" },
-            { "CarPart_Gun_Shotgun_Frontal", "Spitfire" },
-            { "CarPart_Gun_Shotgun_Frontal_Preepic", "Leech" },
-            { "CarPart_Gun_Shotgun_Corner", "Rupture" },
-            { "CarPart_Gun_Shotgun_Fixed_Rare", "Goblin" },
-            { "CarPart_Gun_Shotgun_Preepic", "Mace" },
-            { "CarPart_Gun_Shotgun_epic", "Thunderbolt" },
-            { "CarPart_Gun_Shotgun_Garbage", "Junkbow" },
-            { "CarPart_Gun_Shotgun_Garbage_epic", "Fafnir" },
-            { "CarPart_Gun_BigCannon_Free_rare", "Little Boy 6LB" },
-            { "CarPart_Gun_BigCannon_Free_Preepic", "SZ-33 Hulk" },
-            { "CarPart_Gun_BigCannon_Free_epic", "SZ-34 Fatman" },
-        };
+        private static readonly Dictionary<string, string> defaultAssets = new Dictionary<string, string>();
 
-        private static readonly Dictionary<string, string> defaultStripes = new Dictionary<string, string>()
-        {
+        private static readonly Dictionary<string, string> defaultStripes = new Dictionary<string, string>();
 
-        };
-
-        private static readonly Dictionary<string, string> defaultMaps = new Dictionary<string, string>()
-        {
-            { "powerplant", "Powerplant"},
-            { "sand_crater", "Crater"},
-            { "cityruin", "Old Town"},
-            { "bridge", "Bridge"},
-            { "factory", "Factory"},
-            { "sand_valley", "Desert Valley" },
-            { "rockcity_2bases", "Founders Canyon"},
-            { "tower", "Nameless tower" },
-            { "abandoned_ship", "Sand gulf" },
-            { "riverport", "Ship graveyard" },
-            { "iron_way_center", "\"Control-17\" station" },
-            { "geopp", "Naukograd" },
-            { "chemical_plant", "Chemical plant" },
-            { "castle", "Fortress" },
-            { "conflagration", "Ashen ring" },
-            { "arizona_silo", "Broken arrow" },
-            { "rockcity", "Rock City" },
-            { "building_yard3", "Sector EX" },
-            { "arizona_castle", "Wrath of Khan" },
-            { "miners_way", "Cursed mines" },
-            { "cemetery_highway", "Dead Highway" },
-            { "iron_way", "Eastern Array" },
-            { "lost_coast", "Lost coast" },
-            { "port", "Terminal-45" },
-            { "red_rocks_territory", "Blood Rocks" }
-        };
+        private static readonly Dictionary<string, string> defaultMaps = new Dictionary<string, string>();
 
         private static readonly string[] assetNamePrefixes =
         {
@@ -175,14 +73,14 @@ namespace CrossoutLogView.Database.Data
 
         private static bool ReadDictionary(ref Dictionary<string, string> dictionary, string name)
         {
-            var filePath = Path.Combine(Strings.DataBaseRootPath, name + ".json");
+            var filePath = Path.Combine(Strings.ConfigPath, name + ".json");
             if (File.Exists(filePath) && (dictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(filePath))) != null) return true;
             return false;
         }
 
         private static void WriteDictionary(Dictionary<string, string> dictionary, string name)
         {
-            using var sw = File.CreateText(Path.Combine(Strings.DataBaseRootPath, name + ".json"));
+            using var sw = File.CreateText(Path.Combine(Strings.ConfigPath, name + ".json"));
             sw.WriteLine(JsonConvert.SerializeObject(dictionary, Formatting.Indented));
             sw.Flush();
         }

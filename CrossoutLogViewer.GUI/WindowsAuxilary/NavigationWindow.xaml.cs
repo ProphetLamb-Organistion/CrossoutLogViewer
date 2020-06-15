@@ -49,7 +49,7 @@ namespace CrossoutLogView.GUI.WindowsAuxilary
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
             if (viewModel is UserModel um) frame.Navigate(new UserPage(this, um));
-            else if (viewModel is GameModel gm) frame.Navigate(new GamePage(this , gm));
+            else if (viewModel is GameModel gm) frame.Navigate(new GamePage(this, gm));
             else if (viewModel is PlayerModel pm) frame.Navigate(new PlayerPage(this, pm));
             else if (viewModel is UserListModel ul) frame.Navigate(new UserListPage(this, ul));
             else throw new InvalidOperationException(App.GetSharedResource("Excp_UnupportedVM"));

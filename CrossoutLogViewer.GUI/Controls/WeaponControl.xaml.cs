@@ -1,12 +1,14 @@
 ﻿using CrossoutLogView.Database.Data;
 using CrossoutLogView.GUI.Core;
 using CrossoutLogView.GUI.Events;
+using CrossoutLogView.GUI.Helpers;
 using CrossoutLogView.GUI.Models;
 
 using JetBrains.Annotations;
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -25,7 +27,7 @@ namespace CrossoutLogView.GUI.Controls
     /// <summary>
     /// Interaction logic for WeaponDataGrid.xaml
     /// </summary>
-    public partial class WeaponControl
+    public partial class WeaponControl : ILogging
     {
         public event OpenModelViewerEventHandler OpenViewModel;
         public event SelectionChangedEventHandler SelectionChanged;
@@ -76,33 +78,36 @@ namespace CrossoutLogView.GUI.Controls
         public static readonly DependencyProperty WeaponNameFilterProperty = DependencyProperty.Register(nameof(WeaponNameFilter), typeof(string), typeof(WeaponControl),
             new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
-        public IEnumerable<WeaponGlobalModel> ItemsSource
+        public ObservableCollection<WeaponGlobalModel> ItemsSource
         {
-            get => DataGridWeapons.ItemsSource as IEnumerable<WeaponGlobalModel>;
-            set
-            {
-                if (value == null)
-                    DataGridWeapons.ItemsSource = value;
-                else
-                {
-                    DataGridWeapons.ItemsSource = value;
-                    var view = (CollectionView)CollectionViewSource.GetDefaultView(DataGridWeapons.ItemsSource);
-                    view.Filter = WeaponFilter.Filter;
-                    view.Refresh();
-                }
-            }
+            get => GetValue(ItemsSourceProperty) as ObservableCollection<WeaponGlobalModel>;
+            set => SetValue(ItemsSourceProperty, value);
         }
+        public static readonly DependencyProperty ItemsSourceProperty = DependencyProperty.Register(nameof(ItemsSource), typeof(ObservableCollection<WeaponGlobalModel>), typeof(WeaponControl), new PropertyMetadata(OnItemsSourcePropertyChanged));
 
         public WeaponGlobalModel SelectedItem
         {
-            get => DataGridWeapons.SelectedItem as WeaponGlobalModel;
-            set
+            get => GetValue(SelectedItemProperty) as WeaponGlobalModel;
+            set => SetValue(SelectedItemProperty, value);
+        }
+        public static readonly DependencyProperty SelectedItemProperty = DependencyProperty.Register(nameof(SelectedItem), typeof(WeaponGlobalModel), typeof(WeaponControl), new PropertyMetadata(OnSelectedItemPropertyChanged));
+
+        private static void OnItemsSourcePropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        {
+            if (obj is WeaponControl cntr && e.NewValue is ObservableCollection<WeaponGlobalModel> newValue)
             {
-                if (DataProvider.CompleteWeapon(value.Object))
-                    value.UpdateCollections();
-                GroupBoxOverview.DataContext = value;
-                GroupBoxUsers.DataContext = value;
-                DataGridWeapons.SelectedItem = value;
+                var view = (CollectionView)CollectionViewSource.GetDefaultView(newValue);
+                view.Filter = cntr.WeaponFilter.Filter;
+                view.Refresh();
+            }
+        }
+
+        private static void OnSelectedItemPropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        {
+            if (obj is WeaponControl cntr && e.NewValue is WeaponGlobalModel newValue)
+            {
+                if (DataProvider.CompleteWeapon(newValue.Weapon))
+                    newValue.UpdateCollectionsSafe();
             }
         }
 
@@ -130,5 +135,10 @@ namespace CrossoutLogView.GUI.Controls
                 e.Handled = true;
             }
         }
+
+        #region ILogging support
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        NLog.Logger ILogging.Logger { get; } = logger;
+        #endregion
     }
 }

@@ -1,212 +1,96 @@
 ﻿using CrossoutLogView.Common;
+using CrossoutLogView.Database.Events;
 using CrossoutLogView.Log;
 
 using Newtonsoft.Json;
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
+using System.Runtime.CompilerServices;
 
 namespace CrossoutLogView.Database.Data
 {
     public class Settings
     {
+        #region Instance members
         private string _myName;
-        public string MyName
-        {
-            get => _myName;
-            set
-            {
-                _myName = value;
-                if (!lockWrite) WriteInstance();
-            }
-        }
+        public string MyName { get => _myName; set => Set(ref _myName, value); }
 
         private int _myUserID;
-        public int MyUserID
-        {
-            get => _myUserID;
-            set
-            {
-                _myUserID = value;
-                if (!lockWrite) WriteInstance();
-            }
-        }
+        public int MyUserID { get => _myUserID; set => Set(ref _myUserID, value); }
 
         private string _logRootPath;
-        public string LogRootPath
-        {
-            get => _logRootPath;
-            set
-            {
-                _logRootPath = value;
-                if (!lockWrite) WriteInstance();
-            }
-        }
+        public string LogRootPath { get => _logRootPath; set => Set(ref _logRootPath, value); }
 
         private LogConfig _logConfiguration;
-        public LogConfig LogConfiguration
-        {
-            get => _logConfiguration;
-            set
-            {
-                _logConfiguration = value;
-                if (!lockWrite) WriteInstance();
-            }
-        }
+        public LogConfig LogConfiguration { get => _logConfiguration; set => Set(ref _logConfiguration, value); }
 
         private long _statitisticsParseDate;
-        public long StatisticsParseDateTime
-        {
-            get => _statitisticsParseDate;
-            set
-            {
-                _statitisticsParseDate = value;
-                if (!lockWrite) WriteInstance();
-            }
-        }
+        public long StatisticsParseDateTime { get => _statitisticsParseDate; set => Set(ref _statitisticsParseDate, value); }
 
-        private string _baseColorScheme;
-        public string BaseColorScheme
-        {
-            get => _baseColorScheme;
-            set
-            {
-                _baseColorScheme = value;
-                if (!lockWrite) WriteInstance();
-            }
-        }
+        private string _baseColorScheme = "Dark";
+        public string BaseColorScheme { get => _baseColorScheme; set => Set(ref _baseColorScheme, value); }
 
-        private string _colorScheme;
-        public string ColorScheme
-        {
-            get => _colorScheme;
-            set
-            {
-                _colorScheme = value;
-                if (!lockWrite) WriteInstance();
-            }
-        }
+        private string _colorScheme = "Cobalt";
+        public string ColorScheme { get => _colorScheme; set => Set(ref _colorScheme, value); }
 
-        private bool _colorWindowTitlebar;
-        public bool ColorWindowTitlebar
-        {
-            get => _colorWindowTitlebar;
-            set
-            {
-                _colorWindowTitlebar = value;
-                if (!lockWrite) WriteInstance();
-            }
-        }
+        private bool _colorWindowTitlebar = true;
+        public bool ColorWindowTitlebar { get => _colorWindowTitlebar; set => Set(ref _colorWindowTitlebar, value); }
 
         private string _teamWonColor = "Green";
-        public string TeamWon
-        {
-            get => _teamWonColor;
-            set
-            {
-                _teamWonColor = value;
-                if (!lockWrite) WriteInstance();
-            }
-        }
+        public string TeamWon { get => _teamWonColor; set => Set(ref _teamWonColor, value); }
 
         private string _teamLostColor = "Red";
-        public string TeamLost
-        {
-            get => _teamLostColor;
-            set
-            {
-                _teamLostColor = value;
-                if (!lockWrite) WriteInstance();
-            }
-        }
+        public string TeamLost { get => _teamLostColor; set => Set(ref _teamLostColor, value); }
 
         private string _totalDamageColor = "Red";
-        public string TotalDamage
-        {
-            get => _totalDamageColor;
-            set
-            {
-                _totalDamageColor = value;
-                if (!lockWrite) WriteInstance();
-            }
-        }
+        public string TotalDamage { get => _totalDamageColor; set => Set(ref _totalDamageColor, value); }
 
         private string _criticalDamageColor = "Orange";
-        public string CriticalDamage
-        {
-            get => _criticalDamageColor;
-            set
-            {
-                _criticalDamageColor = value;
-                if (!lockWrite) WriteInstance();
-            }
-        }
+        public string CriticalDamage { get => _criticalDamageColor; set => Set(ref _criticalDamageColor, value); }
 
         private string _armorDamageColor = "DodgerBlue";
-        public string ArmorDamage
-        {
-            get => _armorDamageColor;
-            set
-            {
-                _armorDamageColor = value;
-                if (!lockWrite) WriteInstance();
-            }
-        }
+        public string ArmorDamage { get => _armorDamageColor; set => Set(ref _armorDamageColor, value); }
 
         private string _suicideColor = "Red";
-        public string Suicide
-        {
-            get => _suicideColor;
-            set
-            {
-                _suicideColor = value;
-                if (!lockWrite) WriteInstance();
-            }
-        }
+        public string Suicide { get => _suicideColor; set => Set(ref _suicideColor, value); }
 
         private string _despawnColor = "Brown";
-        public string Despawn
-        {
-            get => _despawnColor;
-            set
-            {
-                _despawnColor = value;
-                if (!lockWrite) WriteInstance();
-            }
-        }
+        public string Despawn { get => _despawnColor; set => Set(ref _despawnColor, value); }
 
         private int _dimensions = 7;
-        public int Dimensions
+        public int Dimensions { get => _dimensions; set => Set(ref _dimensions, value); }
+
+        private string _locale = "en-US";
+        public string Locale { get => _locale; set => Set(ref _locale, value); }
+
+        private bool _startupMaximized = false;
+        public bool StartupMaximized { get => _startupMaximized; set => Set(ref _startupMaximized, value); }
+
+        private void Set<T>(ref T field, T value, [CallerMemberName] string name = "") where T : IEquatable<T>
         {
-            get => _dimensions;
-            set
+            if (value != null && value.Equals(field))
+                return;
+            var oldValue = field;
+            field = value;
+            if (!lockWrite)
             {
-                _dimensions = value;
-                if (!lockWrite) WriteInstance();
+                WriteInstance();
+                SettingsPropertyChanged?.Invoke(this, new SettingsChangedEventArgs(name, oldValue, field));
             }
         }
+        #endregion
 
+        #region Static members
         private static bool lockWrite = false;
+
+        public static event SettingsChangedEventHandler SettingsPropertyChanged;
 
         public static Settings Current { get; private set; } = default;
 
-        public static Settings Default { get; } = new Settings
-        {
-            _myName = String.Empty,
-            _myUserID = -1,
-            _baseColorScheme = "Light",
-            _colorScheme = "Cobalt",
-            _colorWindowTitlebar = true,
-            _teamWonColor = "Green",
-            _teamLostColor = "Red",
-            _totalDamageColor = "Red",
-            _criticalDamageColor = "Orange",
-            _armorDamageColor = "DodgerBlue",
-            _suicideColor = "Red",
-            _despawnColor = "Brown",
-            _dimensions = 7
-        };
+        public static Settings Default { get; } = new Settings();
 
         public static Settings ReadInstance()
         {
@@ -220,7 +104,7 @@ namespace CrossoutLogView.Database.Data
         public static void WriteInstance()
         {
             lockWrite = true;
-            if (!Directory.Exists(Strings.DataBaseRootPath)) Directory.CreateDirectory(Strings.DataBaseRootPath);
+            if (!Directory.Exists(Strings.DataBasePath)) Directory.CreateDirectory(Strings.DataBasePath);
             File.WriteAllText(Strings.DataBaseCurrentSettingsPath, JsonConvert.SerializeObject(Current, Formatting.Indented));
             lockWrite = false;
         }
@@ -246,6 +130,7 @@ namespace CrossoutLogView.Database.Data
                 Current = Default;
                 Current.LogRootPath = PathUtility.NormalizePath(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"/My Games/Crossout/logs");
                 Current.LogConfiguration = default;
+                Current.Locale = CultureInfo.CurrentCulture.Name;
                 GetMyInfo(out var name, out var uid);
                 Current.MyName = name;
                 Current.MyUserID = uid;
@@ -295,10 +180,8 @@ namespace CrossoutLogView.Database.Data
                     break;
                 }
             }
-            catch (FileNotFoundException ex)
-            {
-                Logging.WriteLine<Settings>(ex);
-            }
+            catch (FileNotFoundException) { }
         }
+        #endregion
     }
 }

@@ -6,12 +6,15 @@ using CrossoutLogView.Statistics;
 
 using System;
 using System.Collections.Generic;
+using System.Data.SQLite;
 using System.Linq;
 
 namespace CrossoutLogView.Database.Collection
 {
     public class StatisticsUploader : IDisposable
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private List<ILogEntry> gameLog = new List<ILogEntry>();
         private List<Game> games = new List<Game>();
         private bool yield = false;
@@ -35,7 +38,6 @@ namespace CrossoutLogView.Database.Collection
             using (var logCon = new LogConnection())
             {
                 delta = logCon.RequestAll(LogEntryTimeStampLowerLimit);
-                logCon.Close();
             }
             if (delta.Count == 0) return;
             delta.Sort(new LogEntryTimeStampAscendingComparer());
@@ -50,25 +52,29 @@ namespace CrossoutLogView.Database.Collection
 
         private void InternalCommit(IEnumerable<ILogEntry> delta)
         {
-            LogEntryTimeStampLowerLimit = delta.Last().TimeStamp + 1; //move begin to after latest logentry
+            if (delta == null) return;
 
             bool hasFinish = false;
-            foreach (var l in delta)
+            using (var en = delta.GetEnumerator())
             {
-                if (l is LevelLoad ll)
+                while (en.MoveNext())
                 {
+                    if (en.Current.TimeStamp > LogEntryTimeStampLowerLimit) LogEntryTimeStampLowerLimit = en.Current.TimeStamp;
+                    if (en.Current is LevelLoad ll)
+                    {
+                        if (yield)
+                        {
+                            if (!hasFinish) gameLog.Add(DummyGameFinish(gameLog[gameLog.Count - 1].TimeStamp + 1));
+                            FinalizeGameLog();
+                        }
+                        yield = !IgnoreLevel(ll);
+                        hasFinish = false;
+                    }
                     if (yield)
                     {
-                        if (!hasFinish) gameLog.Add(DummyGameFinish(gameLog[gameLog.Count - 1].TimeStamp + 1));
-                        FinalizeGameLog();
+                        gameLog.Add(en.Current);
+                        if (en.Current is GameFinish) hasFinish = true;
                     }
-                    yield = !IgnoreLevel(ll);
-                    hasFinish = false;
-                }
-                if (yield)
-                {
-                    gameLog.Add(l);
-                    if (l is GameFinish) hasFinish = true;
                 }
             }
             if (games.Count != 0) //games were finished in the added logs
@@ -84,21 +90,20 @@ namespace CrossoutLogView.Database.Collection
                     }
                     using (var trans = statCon.BeginTransaction())
                     {
-                        foreach (var u in users)
+                        for (int i = 0; i < users.Count; i++)
                         {
-                            statCon.UpdateUser(u);
+                            statCon.UpdateUser(users[i]);
                         }
                         trans.Commit();
                     }
                     using (var trans = statCon.BeginTransaction())
                     {
-                        foreach (var w in weapons)
+                        for (int i = 0; i < weapons.Count; i++)
                         {
-                            statCon.UpdateWeaponGlobal(w);
+                            statCon.UpdateWeaponGlobal(weapons[i]);
                         }
                         trans.Commit();
                     }
-                    statCon.Close();
                 }
                 if (OperatingMode == UploaderOperatingMode.Incremental)
                 {
@@ -106,7 +111,7 @@ namespace CrossoutLogView.Database.Collection
                     var weaponNames = weapons.Select(x => x.Name);
                     var maps = games.Select(x => x.Map.Name).Distinct();
                     //send event invalidating changed data
-                    Logging.WriteLine<StatisticsUploader>(String.Concat("Invalidate existing data. ", maps.Count(), " different maps played. ", userIDs.Count(), " user changed. ", weapons.Count(), " weapons changed."));
+                    logger.Info("Invalidate existing data. {0} different maps played. {1} user changed. {2} weapons changed.", maps.Count(), userIDs.Count(), weapons.Count());
                     InvalidateCachedData?.Invoke(this, new InvalidateCachedDataEventArgs(userIDs, weaponNames, maps));
                 }
                 games.Clear();
@@ -143,18 +148,9 @@ namespace CrossoutLogView.Database.Collection
             {
                 games.Add(Game.Parse(gameLog));
             }
-            catch (PlayerNotFoundException ex)
-            {
-                Logging.WriteLine<StatisticsUploader>(ex);
-            }
-            catch (MatchingLogEntryNotFoundException ex)
-            {
-                Logging.WriteLine<StatisticsUploader>(ex);
-            }
-            catch (ArgumentNullException ex)
-            {
-                Logging.WriteLine<StatisticsUploader>(ex);
-            }
+            catch (PlayerNotFoundException) { }
+            catch (MatchingLogEntryNotFoundException) { }
+            catch (ArgumentNullException) { }
             finally
             {
                 gameLog.Clear();

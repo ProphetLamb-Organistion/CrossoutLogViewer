@@ -24,10 +24,17 @@ namespace CrossoutLogView.Common
 
         public static Type GetEnumerableBaseType(Type type)
         {
-            var elementType = type.GetGenericArguments()[0];
-            return elementType.IsGenericType && elementType.GetGenericTypeDefinition() == typeof(Nullable<>)
-                ? elementType.GetGenericArguments()[0]
-                : elementType;
+            Type baseType = null;
+            try
+            {
+                var elementType = type.GetGenericArguments()[0];
+                baseType = elementType.IsGenericType && elementType.GetGenericTypeDefinition() == typeof(Nullable<>)
+                    ? elementType.GetGenericArguments()[0]
+                    : elementType;
+            }
+            catch (NotSupportedException) { }
+            catch (InvalidOperationException) { }
+            return baseType;
         }
     }
 }

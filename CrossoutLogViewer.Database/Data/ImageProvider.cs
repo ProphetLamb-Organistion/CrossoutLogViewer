@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace CrossoutLogView.Database.Data
 {
@@ -13,8 +14,9 @@ namespace CrossoutLogView.Database.Data
 
         public static Uri GetMapImageUri(string mapName, FormatSize size = FormatSize.Medium_256)
         {
+            if (String.IsNullOrEmpty(mapName)) return null;
             string filename = mapName.Trim();
-            switch(size)
+            switch (size)
             {
                 case FormatSize.Small_128:
                     filename += "_128x128";
@@ -26,7 +28,8 @@ namespace CrossoutLogView.Database.Data
                 case FormatSize.Original_992:
                     break;
             }
-            return new Uri(Environment.CurrentDirectory + "//images//" + filename + ".jpg", UriKind.Absolute);
+            var uri = new Uri(Environment.CurrentDirectory + "//images//" + filename + ".jpg", UriKind.Absolute);
+            return File.Exists(uri.AbsolutePath) ? uri : null;
         }
     }
 }

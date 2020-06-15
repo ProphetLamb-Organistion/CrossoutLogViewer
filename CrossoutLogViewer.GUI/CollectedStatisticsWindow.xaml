@@ -8,18 +8,21 @@
                       xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                       xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                       xmlns:local="clr-namespace:CrossoutLogView.GUI"
+                      xmlns:services="clr-namespace:CrossoutLogView.GUI.Services"
                       Style="{DynamicResource MetroWindowTitlebarColorStyle}"
                       Title="Crossout Log Viewer: Collected Statistics"
+                      Icon="App.ico"
                       Height="600"
                       Width="850"
                       MinHeight="500"
                       MinWidth="600"
                       ShowDialogsOverTitleBar="False"
-                      GlowBrush="{DynamicResource MahApps.Brushes.AccentBase}"
+                      GlowBrush="{DynamicResource MahApps.Brushes.Accent2}"
                       BorderThickness="1"
                       ResizeMode="CanResizeWithGrip"
                       WindowStartupLocation="CenterScreen"
-                      Loaded="OnLoaded">
+                      StateChanged="Window_StateChanged"
+                      x:Name="_CollectedStatisticsWindow">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -113,13 +116,13 @@
                         <Setter Property="LightMaxButtonStyle"
                                 Value="{StaticResource CustomLightMetroWindowButtonStyle}" />
                         <Setter Property="LightCloseButtonStyle"
-                                Value="{StaticResource CustomLightMetroWindowButtonStyle}" />
+                                Value="{StaticResource CustomLightMetroWindowCloseButtonStyle}" />
                         <Setter Property="DarkMinButtonStyle"
                                 Value="{StaticResource CustomDarkMetroWindowButtonStyle}" />
                         <Setter Property="DarkMaxButtonStyle"
                                 Value="{StaticResource CustomDarkMetroWindowButtonStyle}" />
                         <Setter Property="DarkCloseButtonStyle"
-                                Value="{StaticResource CustomDarkMetroWindowButtonStyle}" />
+                                Value="{StaticResource CustomDarkMetroWindowCloseButtonStyle}" />
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
@@ -140,7 +143,6 @@
             </Style>
         </ResourceDictionary>
     </Window.Resources>
-
     <Controls:HamburgerMenu x:Name="HamburgerMenuControl"
                             HamburgerVisibility="Visible"
                             HamburgerWidth="48"
@@ -167,7 +169,7 @@
         </Controls:HamburgerMenu.ItemsSource>
         <Controls:HamburgerMenu.OptionsItemsSource>
             <Controls:HamburgerMenuItemCollection>
-                <Controls:HamburgerMenuGlyphItem Label="Settings">
+                <Controls:HamburgerMenuGlyphItem x:Name="MenuGlyphItemSettings" Label="Settings">
                     <Controls:HamburgerMenuGlyphItem.Tag>
                         <IconPacks:PackIconModern Width="22"
                                                   Height="22"
@@ -192,20 +194,26 @@
                 <!--=================================================== Games ====================================================-->
                 <Controls:MetroTabItem Header="Games">
                     <UserControls:UserGamesControl x:Name="UserGamesViewGames"
-                                                   Grid.Row="2" />
+                                                   User="{Binding ElementName=_CollectedStatisticsWindow, Path=DataContext.MeUser}"
+                                                   OpenViewModel="UserGamesViewGames_OpenViewModel" />
                 </Controls:MetroTabItem>
                 <!--=================================================== Users ====================================================-->
                 <Controls:MetroTabItem Header="Users">
-                    <UserControls:UsersListControl x:Name="UsersListControl" />
+                    <UserControls:UsersListControl x:Name="UsersListControl"
+                                                   ItemsSource="{Binding ElementName=_CollectedStatisticsWindow, Path=DataContext.UserModels}"
+                                                   OpenViewModel="UserOpenUser" />
                 </Controls:MetroTabItem>
                 <!--=================================================== Weapons ==================================================-->
                 <Controls:MetroTabItem Header="Weapons">
                     <UserControls:WeaponControl x:Name="WeaponListViewWeapons"
-                                                OpenViewModel="WeaponOpenUserDoubleClick" />
+                                                ItemsSource="{Binding ElementName=_CollectedStatisticsWindow, Path=DataContext.WeaponModels}"
+                                                OpenViewModel="WeaponOpenUser" />
                 </Controls:MetroTabItem>
                 <!--=================================================== Maps =====================================================-->
                 <Controls:MetroTabItem Header="Maps">
-                    <UserControls:MapsControl x:Name="MapsView" />
+                    <UserControls:MapsControl x:Name="MapsView"
+                                              Maps="{Binding ElementName=_CollectedStatisticsWindow, Path=DataContext.Maps}"
+                                              OpenViewModel="GamesOpenGame"/>
                 </Controls:MetroTabItem>
             </Controls:MetroTabControl>
         </Controls:HamburgerMenu.Content>

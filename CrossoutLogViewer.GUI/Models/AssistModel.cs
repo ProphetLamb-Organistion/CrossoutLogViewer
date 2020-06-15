@@ -14,50 +14,48 @@ namespace CrossoutLogView.GUI.Models
     {
         public AssistModel()
         {
-            Parent = null;
-            Object = new Assist();
+            Kill = null;
+            Assist = new Assist();
         }
-        public AssistModel(KillModel parent, Assist obj)
+        public AssistModel(KillModel kill, Assist assist)
         {
-            Parent = parent;
-            Object = obj;
+            Kill = kill ?? throw new ArgumentNullException(nameof(kill));
+            Assist = assist ?? throw new ArgumentNullException(nameof(assist));
         }
 
-        public override void UpdateCollections() { }
+        public KillModel Kill { get; }
 
-        public KillModel Parent { get; }
-
-        public Assist Object { get; }
+        public Assist Assist { get; }
 
 
         private bool _isExpanded = false;
         public bool IsExpanded { get => _isExpanded; set => Set(ref _isExpanded, value); }
 
-        public Brush DamageForeground => App.Current.Resources[Object.IsCriticalDamage ? "CriticalDamage" : "ArmorDamage"] as SolidColorBrush;
+        public Brush DamageForeground => App.Current.Resources[Assist.IsCriticalDamage ? "CriticalDamage" : "ArmorDamage"] as SolidColorBrush;
 
-        public string DamageWithString => Object.IsCriticalDamage ? " criticaldamage with " : " damage with ";
+        public string DamageWithString => Assist.IsCriticalDamage ? " criticaldamage with " : " damage with ";
 
         public string ListItemStringElapsed
         {
             get
             {
-                if (Object.Elapsed == 0.0) return String.Empty;
-                return String.Concat(Strings.CenterDotSeparator, Math.Round(Object.Elapsed), " sec ago");
+                if (Assist.Elapsed == 0.0) return String.Empty;
+                return String.Concat(Strings.CenterDotSeparator, Math.Round(Assist.Elapsed), " sec ago");
             }
         }
 
-        public string WeaponName => DisplayStringFactory.AssetName(Object.Weapon.Name);
+        public string WeaponName => DisplayStringFactory.AssetName(Assist.Weapon.Name);
 
-        public string Assistant => Object.Assistant;
+        public string Assistant => Assist.Assistant;
 
-        public Weapon Weapon => Object.Weapon;
+        public Weapon Weapon => Assist.Weapon;
 
-        public double Elapsed => Object.Elapsed;
+        public double Elapsed => Assist.Elapsed;
 
-        public double Damage => Object.TotalDamage;
+        public double Damage => Assist.TotalDamage;
 
-        public DamageFlag DamageFlags => Object.DamageFlags;
+        public DamageFlag DamageFlags => Assist.DamageFlags;
 
-        public bool IsCriticalDamage => Object.IsCriticalDamage;
+        public bool IsCriticalDamage => Assist.IsCriticalDamage;
     }
 }

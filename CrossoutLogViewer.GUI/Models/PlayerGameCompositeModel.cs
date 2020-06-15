@@ -9,7 +9,7 @@ using System.Windows.Media;
 
 namespace CrossoutLogView.GUI.Models
 {
-    public sealed class PlayerGameCompositeModel : ViewModelBase
+    public sealed class PlayerGameCompositeModel : CollectionViewModel
     {
         public PlayerGameCompositeModel()
         {
@@ -20,60 +20,60 @@ namespace CrossoutLogView.GUI.Models
 
         public PlayerGameCompositeModel(GameModel game, PlayerModel player)
         {
-            Game = game;
-            Player = player;
-            Map = DisplayStringFactory.MapName(Game.Object.Map.Name);
+            Game = game ?? throw new ArgumentNullException(nameof(game));
+            Player = player ?? throw new ArgumentNullException(nameof(player));
+            Map = DisplayStringFactory.MapName(Game.Game.Map.Name);
         }
 
-        public override void UpdateCollections()
+        protected override void UpdateCollections()
         {
-            Game.UpdateCollections();
-            Player.UpdateCollections();
+            Game.UpdateCollectionsSafe();
+            Player.UpdateCollectionsSafe();
         }
 
         public GameModel Game { get; }
 
         public PlayerModel Player { get; }
 
-        public bool Unfinished => Game.Object.MVP == -1;
+        public bool Unfinished => Game.Game.MVP == -1;
 
-        public bool Won => Game.Object.WinningTeam == Player.Object.Team;
+        public bool Won => Game.Game.WinningTeam == Player.Player.Team;
 
-        public DateTime StartTime => Game.Object.Start;
+        public DateTime StartTime => Game.Game.Start;
 
         public string Map { get; }
 
-        public GameMode Mode => Game.Object.Mode;
+        public GameMode Mode => Game.Game.Mode;
 
-        public int Score => (int)Math.Round(Player.Object.Score);
+        public int Score => (int)Math.Round(Player.Player.Score);
 
-        public int Kills => Player.Object.Kills;
+        public int Kills => Player.Player.Kills;
 
-        public int Assists => Player.Object.Assists;
+        public int Assists => Player.Player.Assists;
 
-        public int Deaths => Player.Object.Deaths;
+        public int Deaths => Player.Player.Deaths;
 
-        public double ArmorDamageDealt => Player.Object.ArmorDamageDealt;
+        public double ArmorDamageDealt => Player.Player.ArmorDamageDealt;
 
-        public double CriticalDamageDealt => Player.Object.CriticalDamageDealt;
+        public double CriticalDamageDealt => Player.Player.CriticalDamageDealt;
 
-        public double ArmorDamageTaken => Player.Object.ArmorDamageTaken;
+        public double ArmorDamageTaken => Player.Player.ArmorDamageTaken;
 
-        public double CriticalDamageTaken => Player.Object.CriticalDamageTaken;
+        public double CriticalDamageTaken => Player.Player.CriticalDamageTaken;
 
-        public double TotalDamageDealt => Player.Object.ArmorDamageDealt + Player.Object.CriticalDamageDealt;
+        public double TotalDamageDealt => Player.Player.ArmorDamageDealt + Player.Player.CriticalDamageDealt;
 
-        public double TotalDamageTaken => Player.Object.ArmorDamageTaken + Player.Object.CriticalDamageTaken;
+        public double TotalDamageTaken => Player.Player.ArmorDamageTaken + Player.Player.CriticalDamageTaken;
 
         public Brush Background => Won ? App.Current.Resources["TeamWon"] as Brush : !Unfinished ? App.Current.Resources["TeamLost"] as Brush : default;
     }
 
-    public class PlayerGameCompositeModelScoreDescending : IComparer<PlayerGameCompositeModel>
+    public sealed class PlayerGameCompositeModelScoreDescending : IComparer<PlayerGameCompositeModel>
     {
         int IComparer<PlayerGameCompositeModel>.Compare(PlayerGameCompositeModel x, PlayerGameCompositeModel y) => y.Score.CompareTo(x.Score);
     }
 
-    public class PlayerGameCompositeModelStartTimeDescending : IComparer<PlayerGameCompositeModel>
+    public sealed class PlayerGameCompositeModelStartTimeDescending : IComparer<PlayerGameCompositeModel>
     {
         int IComparer<PlayerGameCompositeModel>.Compare(PlayerGameCompositeModel x, PlayerGameCompositeModel y) => y.StartTime.CompareTo(x.StartTime);
     }

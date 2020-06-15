@@ -7,9 +7,11 @@
              mc:Ignorable="d"
              BorderThickness="0"
              d:DesignHeight="450"
-             d:DesignWidth="800">
+             d:DesignWidth="800"
+             x:Name="_WeaponControl">
     <Grid>
         <GroupBox x:Name="GroupBoxOverview"
+                  DataContext="{Binding ElementName=_WeaponControl, Path=SelectedItem}"
                   Header="{Binding DisplayName}"
                   Style="{DynamicResource GroupBox.TitleBar}"
                   Grid.ColumnSpan="3">
@@ -46,6 +48,7 @@
         <GroupBox x:Name="GroupBoxUsers"
                   Header="Users"
                   Style="{DynamicResource GroupBox.Border}"
+                  DataContext="{Binding ElementName=_WeaponControl, Path=SelectedItem}"
                   Grid.Row="1"
                   Grid.Column="2">
             <ListBox Background="Transparent"
@@ -108,6 +111,8 @@
                 </StackPanel>
                 <DataGrid x:Name="DataGridWeapons"
                           Style="{DynamicResource MahApps.Styles.DataGrid.Azure}"
+                          ItemsSource="{Binding ElementName=_WeaponControl, Path=ItemsSource}"
+                          SelectedItem="{Binding ElementName=_WeaponControl, Path=SelectedItem, Mode=TwoWay}"
                           Background="Transparent"
                           AutoGenerateColumns="False"
                           SelectionMode="Single"

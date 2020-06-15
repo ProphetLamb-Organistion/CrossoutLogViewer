@@ -12,34 +12,34 @@ namespace CrossoutLogView.GUI.Models
 {
     public enum DisplayMode { Average, Total }
 
-    public sealed class UserModel : ViewModelBase
+    public sealed class UserModel : CollectionViewModel
     {
         private DisplayMode _statDisplayMode = DisplayMode.Average;
 
         public UserModel()
         {
-            Object = new User();
+            User = new User();
             Participations = new ObservableCollection<PlayerGameCompositeModel>();
             Weapons = new List<WeaponModel>();
             Stripes = new List<StripeModel>();
         }
         public UserModel(User obj)
         {
-            Object = obj;
-            var participations = new PlayerGameCompositeModel[Object.Participations.Count];
+            User = obj ?? throw new ArgumentNullException(nameof(obj));
+            var participations = new PlayerGameCompositeModel[User.Participations.Count];
             for (int i = 0; i < participations.Length; i++)
             {
-                var gv = new GameModel(Object.Participations[i]);
-                var pv = new PlayerModel(gv, Object.Participations[i].Players.First(x => x.UserID == Object.UserID));
+                var gv = new GameModel(User.Participations[i]);
+                var pv = new PlayerModel(gv, User.Participations[i].Players.FirstOrDefault(x => x.UserID == User.UserID));
                 participations[i] = new PlayerGameCompositeModel(gv, pv);
             }
             Participations = new ObservableCollection<PlayerGameCompositeModel>(participations);
             ParticipationsFiltered = new ObservableCollection<PlayerGameCompositeModel>(participations);
-            UpdateCollections();
+            UpdateCollectionsSafe();
             UpdateProperties();
         }
 
-        public User Object { get; }
+        public User User { get; }
 
         private GameFilter _filterParticipations = new GameFilter(GameMode.All);
         public GameFilter FilterParticipations
@@ -53,7 +53,7 @@ namespace CrossoutLogView.GUI.Models
             }
         }
 
-        public string Title => String.Concat(Object.Name, " (", Object.UserID, ")");
+        public string Title => String.Concat(User.Name, " (", User.UserID, ")");
 
         public DisplayMode StatDisplayMode
         {
@@ -77,15 +77,15 @@ namespace CrossoutLogView.GUI.Models
         private List<StripeModel> _stripes;
         public List<StripeModel> Stripes { get => _stripes; private set => Set(ref _stripes, value); }
 
-        public int ParticipationCount => Object.Participations.Count;
+        public int ParticipationCount => User.Participations.Count;
 
-        public string Name => Object.Name;
+        public string Name => User.Name;
 
         public string GeneralGroup => StatDisplayMode == DisplayMode.Average ? "General (per battle)" : "General";
 
         public string DamageGroup => StatDisplayMode == DisplayMode.Average ? "Damage Dealt (per battle)" : "Damage Dealt";
 
-        public int UserID { get => Object.UserID; }
+        public int UserID { get => User.UserID; }
 
         private int _gamesWon;
         public int GamesWon { get => _gamesWon; set => Set(ref _gamesWon, value); }
@@ -127,13 +127,13 @@ namespace CrossoutLogView.GUI.Models
 
         public double TotalDamageTaken { get => _armorDamageTaken + _criticalDamageTaken; }
 
-        public override void UpdateCollections()
+        protected override void UpdateCollections()
         {
             OnPropertyChanged(nameof(Participations));
-            Object.Weapons.Sort((x, y) => (y.ArmorDamage + y.CriticalDamage).CompareTo(x.ArmorDamage + x.CriticalDamage));
-            Weapons = Object.Weapons.Select(x => new WeaponModel(this, x)).ToList();
-            Object.Stripes.Sort((x, y) => y.Ammount.CompareTo(x.Ammount));
-            Stripes = Object.Stripes.Select(x => new StripeModel(this, x)).ToList();
+            User.Weapons.Sort((x, y) => (y.ArmorDamage + y.CriticalDamage).CompareTo(x.ArmorDamage + x.CriticalDamage));
+            Weapons = User.Weapons.Select(x => new WeaponModel(this, x)).ToList();
+            User.Stripes.Sort((x, y) => y.Ammount.CompareTo(x.Ammount));
+            Stripes = User.Stripes.Select(x => new StripeModel(this, x)).ToList();
         }
 
         public void UpdateProperties()
@@ -159,7 +159,7 @@ namespace CrossoutLogView.GUI.Models
         }
     }
 
-    public class UserModelParticipationCountDescending : IComparer<UserModel>
+    public sealed class UserModelParticipationCountDescending : IComparer<UserModel>
     {
         int IComparer<UserModel>.Compare(UserModel x, UserModel y) => y.ParticipationCount.CompareTo(x.ParticipationCount);
     }

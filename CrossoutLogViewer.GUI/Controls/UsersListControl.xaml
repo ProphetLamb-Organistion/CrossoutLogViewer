@@ -24,6 +24,7 @@
                     VerticalAlignment="Center"
                     Grid.Row="2">
             <TextBlock Text="Name"
+                       Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                        Margin="0,0,4,0"
                        VerticalAlignment="Center" />
             <TextBox Text="{Binding FilterUserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"

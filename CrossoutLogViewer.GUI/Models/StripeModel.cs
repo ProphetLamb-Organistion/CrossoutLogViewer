@@ -13,27 +13,25 @@ namespace CrossoutLogView.GUI.Models
         public StripeModel()
         {
             Parent = null;
-            Object = new Stripe();
+            Stripe = new Stripe();
             Name = String.Empty;
         }
 
         public StripeModel(object parent, Stripe obj)
         {
-            Parent = parent;
-            Object = obj;
-            Name = DisplayStringFactory.StripeName(Object.Name);
+            Parent = parent ?? throw new ArgumentNullException(nameof(parent));
+            Stripe = obj ?? throw new ArgumentNullException(nameof(obj));
+            Name = DisplayStringFactory.StripeName(Stripe.Name);
         }
 
-        public override void UpdateCollections() { }
-
-        public Stripe Object { get; }
+        public Stripe Stripe { get; }
 
         public object Parent { get; } //either playerview or userview
 
-        public string ListItemString => String.Concat(Object.Ammount, CenterDotSeparator, Object.Name);
+        public string ListItemString => String.Concat(Stripe.Ammount, CenterDotSeparator, Stripe.Name);
 
         public string Name { get; }
 
-        public int Ammount => Object.Ammount;
+        public int Ammount => Stripe.Ammount;
     }
 }

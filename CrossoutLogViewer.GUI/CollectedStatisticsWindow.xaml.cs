@@ -1,7 +1,4 @@
 ﻿using CrossoutLogView.Common;
-using CrossoutLogView.Database;
-using CrossoutLogView.Database.Collection;
-using CrossoutLogView.Database.Connection;
 using CrossoutLogView.Database.Data;
 using CrossoutLogView.Database.Events;
 using CrossoutLogView.GUI.Controls;
@@ -9,7 +6,6 @@ using CrossoutLogView.GUI.Core;
 using CrossoutLogView.GUI.Events;
 using CrossoutLogView.GUI.Models;
 using CrossoutLogView.GUI.WindowsAuxilary;
-using CrossoutLogView.Statistics;
 
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
@@ -17,8 +13,6 @@ using MahApps.Metro.Controls.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -26,57 +20,69 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Navigation;
-
-using NavigationWindow = CrossoutLogView.GUI.WindowsAuxilary.NavigationWindow;
 
 namespace CrossoutLogView.GUI
 {
     /// <summary>
     /// Interaction logic for CollectedStatisticsWindow.xaml
     /// </summary>
-    public partial class CollectedStatisticsWindow
+    public partial class CollectedStatisticsWindow : MetroWindow, ILogging
     {
-        private CollectedStatisticsWindowViewModel viewModel;
-
+        private LoadingWindow loadingWindow;
         private bool forceClose = false;
 
-        public CollectedStatisticsWindow() : this(false) { }
-        public CollectedStatisticsWindow(bool directLaunch)
+        private CollectedStatisticsWindowViewModel viewModel;
+
+        public CollectedStatisticsWindow()
         {
-            if (directLaunch)
+            if (Settings.Current.StartupMaximized)
+                WindowState = WindowState.Maximized;
+            loadingWindow = new LoadingWindow
             {
-                App.InitializeSession();
-            }
-            Logging.WriteLine<CollectedStatisticsWindow>("Loading CollectedStatisticsWindow", true);
-            MyTaskFactory = new TaskFactory(TaskScheduler.FromCurrentSynchronizationContext());
+                IsIndeterminate = true,
+                Title = App.GetSharedResource("Loading"),
+                Header = App.GetWindowResource("Stat_LoadingHeader"),
+                Message = App.GetWindowResource("Stat_LoadingMessage")
+            };
+            loadingWindow.Show();
+
+            CallbackTask.Run(App.InitializeSession, InitializedSession);
+            logger.TraceResource("WinInit");
             InitializeComponent();
-            Logging.WriteLine<CollectedStatisticsWindow>("Initialized Component.");
+            logger.TraceResource("WinInitD");
         }
 
-        private TaskFactory MyTaskFactory { get; }
+        private TaskFactory SyncedFactory { get; } = new TaskFactory(TaskScheduler.FromCurrentSynchronizationContext());
 
-        private void OnLoaded(object sender, RoutedEventArgs e)
+        private void InitializedSession()
         {
-            DataContext = viewModel = new CollectedStatisticsWindowViewModel(this.Dispatcher);
+            this.Invoke(delegate
+            {
+                logger.TraceResource("ViewModelInit");
+                DataContext = viewModel = new CollectedStatisticsWindowViewModel(Dispatcher);
+                viewModel.Initialized += ApplyViewModel;
+            });
+        }
 
-            UserGamesViewGames.User = viewModel.MeUser;
-            UserGamesViewGames.DataGridGames.OpenViewModel += GamesOpenGameDoubleClick;
+        private void UserGamesViewGames_OpenViewModel(object sender, OpenModelViewerEventArgs e)
+        {
+            new NavigationWindow(e.ViewModel).ShowDialog();
+        }
 
-            UsersListControl.ItemsSource = viewModel.UserModels;
-            UsersListControl.SelectedItem = UsersListControl.ItemsSource[0];
+        private void ApplyViewModel(object sender, EventArgs e)
+        {
+            UserGamesViewGames.DataGridGames.OpenViewModel += GamesOpenGame;
 
-            WeaponListViewWeapons.ItemsSource = viewModel.WeaponModels;
-
-            MapsView.Maps = viewModel.Maps;
-            MapsView.PlayerGamesDataGrid.OpenViewModel += GamesOpenGameDoubleClick;
+            if (UsersListControl.ItemsSource != null && UsersListControl.ItemsSource.Count > 0)
+                UsersListControl.SelectedItem = UsersListControl.ItemsSource[0];
 
             CollectedStatisticsWindowViewModel.InvalidatedCachedData += OnInvalidateCachedData;
 
-            Title = String.Concat(Title, " (", viewModel.MeUser.Object.Name, ")");
+            Title = String.Concat(App.GetWindowResource("Stat_Title"), " (", viewModel.MeUser.User.Name, ")");
             HamburgerMenuControl.Focus();
 
-            Logging.WriteLine<CollectedStatisticsWindow>("Loaded in {TP}");
+            loadingWindow.Close();
+            logger.TraceResource("ViewModelInitD");
         }
 
         private void OnInvalidateCachedData(object sender, InvalidateCachedDataEventArgs e)
@@ -127,10 +133,10 @@ namespace CrossoutLogView.GUI
             switch (result)
             {
                 case MessageDialogResult.Affirmative:
-                    await MyTaskFactory.StartNew(delegate
+                    await Dispatcher.BeginInvoke(new Action(delegate
                     {
                         new LauncherWindow().Show();
-                    });
+                    }));
                     forceClose = true;
                     break;
                 case MessageDialogResult.FirstAuxiliary:
@@ -146,12 +152,9 @@ namespace CrossoutLogView.GUI
 
         private void HamburgerMenuControl_ItemInvoked(object sender, HamburgerMenuItemInvokedEventArgs args)
         {
-            if (args.InvokedItem is HamburgerMenuItem hmi && hmi.Label == "Settings")
+            if (args.InvokedItem == MenuGlyphItemSettings)
             {
-                MyTaskFactory.StartNew(delegate
-                {
-                    new SettingsWindow().ShowDialog();
-                });
+                SyncedFactory.StartNew(new SettingsWindow().ShowDialog);
                 HamburgerMenuControl.SelectedIndex = ContentTabControl.SelectedIndex;
                 args.Handled = true;
             }
@@ -167,36 +170,43 @@ namespace CrossoutLogView.GUI
             HamburgerMenuControl.IsPaneOpen = false;
         }
 
-        private void GamesOpenGameDoubleClick(object sender, OpenModelViewerEventArgs e)
+        private void GamesOpenGame(object sender, OpenModelViewerEventArgs e)
         {
             if (e.ViewModel is PlayerGameCompositeModel pgc)
             {
-                Logging.WriteLine<CollectedStatisticsWindow>("Open game view.");
                 new NavigationWindow(pgc.Game).ShowDialog();
             }
             else if (e.ViewModel is UserListModel ul)
             {
-                Logging.WriteLine<CollectedStatisticsWindow>("Open user list.");
                 new NavigationWindow(ul).ShowDialog();
             }
         }
 
-        private void UserOpenUserDoubleClick(object sender, OpenModelViewerEventArgs e)
+        private void UserOpenUser(object sender, OpenModelViewerEventArgs e)
         {
             if (e.ViewModel is UserModel user)
             {
-                Logging.WriteLine<CollectedStatisticsWindow>("Open user view.");
-                new NavigationWindow(new UserModel(user.Object)).ShowDialog();
+                new NavigationWindow(new UserModel(user.User)).ShowDialog();
             }
         }
 
-        private void WeaponOpenUserDoubleClick(object sender, OpenModelViewerEventArgs e)
+        private void WeaponOpenUser(object sender, OpenModelViewerEventArgs e)
         {
             if (e.ViewModel is UserModel weapon)
             {
-                Logging.WriteLine<CollectedStatisticsWindow>("Open user view.");
                 new NavigationWindow(weapon).ShowDialog();
             }
         }
+
+        private void Window_StateChanged(object sender, EventArgs e)
+        {
+            if (IsLoaded)
+                Settings.Current.StartupMaximized = WindowState == WindowState.Maximized;
+        }
+
+        #region ILogging support
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        NLog.Logger ILogging.Logger { get; } = logger;
+        #endregion
     }
 }

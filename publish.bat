@@ -1,0 +1,4 @@
+rmdir /S /Q "publish"
+md "publish"
+xcopy /E /Y /C /Q ".\resources" ".\publish"
+dotnet publish "CrossoutLogViewer.GUI\CrossoutLogViewer.GUI.csproj" -c Release -o "publish" /p:Platform=x64 -r win-x64 --no-self-contained

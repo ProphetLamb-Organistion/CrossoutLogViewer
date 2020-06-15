@@ -113,6 +113,8 @@
                                 Value="{DynamicResource MahApps.Brushes.ThemeBackground}" />
                     </DataTrigger>
                 </Style.Triggers>
+                <Setter Property="NonActiveWindowTitleBrush"
+                        Value="{DynamicResource MahApps.Brushes.ThemeBackground}" />
             </Style>
 
             <Style x:Key="ListBoxHideSelection"
@@ -138,17 +140,17 @@
                         Value="{DynamicResource MahApps.Brushes.ThemeForeground}" />
             </Style>
 
-            <Style x:Key="Button.Borderless"
+            <Style x:Key="Button.Outline"
                    BasedOn="{StaticResource MahApps.Styles.Button.Flat}"
                    TargetType="{x:Type Button}">
                 <Setter Property="Background"
-                        Value="{DynamicResource MahApps.Brushes.SystemControlHighlightAltBaseLow}" />
+                        Value="Transparent" />
                 <Setter Property="BorderBrush"
-                        Value="{DynamicResource MahApps.Brushes.Accent3}" />
+                        Value="{DynamicResource MahApps.Brushes.Gray4}" />
                 <Setter Property="Foreground"
                         Value="{DynamicResource MahApps.Brushes.ThemeForeground}" />
                 <Setter Property="BorderThickness"
-                        Value="0" />
+                        Value="1" />
                 <Setter Property="Controls:ControlsHelper.CornerRadius"
                         Value="3" />
             </Style>
@@ -157,7 +159,7 @@
                    BasedOn="{StaticResource MahApps.Styles.Button.Flat}"
                    TargetType="{x:Type Button}">
                 <Setter Property="Background"
-                        Value="{DynamicResource MahApps.Brushes.ThemeBackground}" />
+                        Value="Transparent" />
                 <Setter Property="BorderThickness"
                         Value="0" />
                 <Setter Property="Controls:ControlsHelper.CornerRadius"
@@ -217,6 +219,57 @@
                    BasedOn="{StaticResource MahApps.Styles.Button.MetroWindow.Light}">
                 <Setter Property="Foreground"
                         Value="{DynamicResource MahApps.Brushes.ThemeForeground}" />
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver"
+                             Value="True">
+                        <Setter Property="Background"
+                                Value="{DynamicResource MahApps.Brushes.Gray6}"/>
+                    </Trigger>
+                    <Trigger Property="IsMouseCaptured"
+                             Value="True">
+                        <Setter Property="Background"
+                                Value="{DynamicResource MahApps.Brushes.Gray3}" />
+                    </Trigger>
+                    <MultiTrigger>
+                        <MultiTrigger.Conditions>
+                            <Condition Property="IsMouseOver"
+                                       Value="True" />
+                            <Condition Property="IsMouseCaptured"
+                                       Value="False" />
+                        </MultiTrigger.Conditions>
+                        <Setter Property="Background"
+                                Value="{DynamicResource MahApps.Brushes.Gray6}" />
+                    </MultiTrigger>
+                </Style.Triggers>
+            </Style>
+            
+            <Style x:Key="CustomLightMetroWindowCloseButtonStyle"
+                   TargetType="{x:Type Button}"
+                   BasedOn="{StaticResource MahApps.Styles.Button.MetroWindow.Light}">
+                <Setter Property="Foreground"
+                        Value="{DynamicResource MahApps.Brushes.ThemeForeground}" />
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver"
+                             Value="True">
+                        <Setter Property="Background"
+                                Value="{DynamicResource MahApps.Brushes.Gray6}" />
+                    </Trigger>
+                    <Trigger Property="IsMouseCaptured"
+                             Value="True">
+                        <Setter Property="Background"
+                                Value="{DynamicResource MahApps.Brushes.Accent}" />
+                    </Trigger>
+                    <MultiTrigger>
+                        <MultiTrigger.Conditions>
+                            <Condition Property="IsMouseOver"
+                                       Value="True" />
+                            <Condition Property="IsMouseCaptured"
+                                       Value="False" />
+                        </MultiTrigger.Conditions>
+                        <Setter Property="Background"
+                                Value="{DynamicResource MahApps.Brushes.Gray6}" />
+                    </MultiTrigger>
+                </Style.Triggers>
             </Style>
 
             <Style x:Key="CustomDarkMetroWindowButtonStyle"
@@ -224,6 +277,57 @@
                    BasedOn="{StaticResource MahApps.Styles.Button.MetroWindow.Dark}">
                 <Setter Property="Foreground"
                         Value="{DynamicResource MahApps.Brushes.ThemeForeground}" />
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver"
+                             Value="True">
+                        <Setter Property="Background"
+                                Value="{DynamicResource MahApps.Brushes.Gray10}" />
+                    </Trigger>
+                    <Trigger Property="IsMouseCaptured"
+                             Value="True">
+                        <Setter Property="Background"
+                                Value="{DynamicResource MahApps.Brushes.Gray8}" />
+                    </Trigger>
+                    <MultiTrigger>
+                        <MultiTrigger.Conditions>
+                            <Condition Property="IsMouseOver"
+                                       Value="True" />
+                            <Condition Property="IsMouseCaptured"
+                                       Value="False" />
+                        </MultiTrigger.Conditions>
+                        <Setter Property="Background"
+                                Value="{DynamicResource MahApps.Brushes.Gray10}" />
+                    </MultiTrigger>
+                </Style.Triggers>
+            </Style>
+            
+            <Style x:Key="CustomDarkMetroWindowCloseButtonStyle"
+                   TargetType="{x:Type Button}"
+                   BasedOn="{StaticResource MahApps.Styles.Button.MetroWindow.Dark}">
+                <Setter Property="Foreground"
+                        Value="{DynamicResource MahApps.Brushes.ThemeForeground}" />
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver"
+                             Value="True">
+                        <Setter Property="Background"
+                                Value="{DynamicResource MahApps.Brushes.Gray10}" />
+                    </Trigger>
+                    <Trigger Property="IsMouseCaptured"
+                             Value="True">
+                        <Setter Property="Background"
+                                Value="{DynamicResource MahApps.Brushes.Accent2}" />
+                    </Trigger>
+                    <MultiTrigger>
+                        <MultiTrigger.Conditions>
+                            <Condition Property="IsMouseOver"
+                                       Value="True" />
+                            <Condition Property="IsMouseCaptured"
+                                       Value="False" />
+                        </MultiTrigger.Conditions>
+                        <Setter Property="Background"
+                                Value="{DynamicResource MahApps.Brushes.Gray10}" />
+                    </MultiTrigger>
+                </Style.Triggers>
             </Style>
 
             <LinearGradientBrush x:Key="HeaderGradient">

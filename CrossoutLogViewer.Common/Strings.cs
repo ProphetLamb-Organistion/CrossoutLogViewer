@@ -1,14 +1,17 @@
 ﻿using System;
+using System.Globalization;
 
 namespace CrossoutLogView.Common
 {
     public static class Strings
     {
-        public const string DataBaseRootPath = @".\data";
-        public const string DataBaseLogPath = DataBaseRootPath + @"\logentries.db";
-        public const string DataBaseStatisticsPath = DataBaseRootPath + @"\statistics.db";
-        public const string DataBaseCurrentSettingsPath = DataBaseRootPath + @"\settings.json";
-        public const string DataBaseEventLogPath = DataBaseRootPath + @"\event.log";
+        public const string DataBasePath = @".\data";
+        public const string ConfigPath = @".\config";
+        public const string ScriptFolderPermissions = @".\fix_folder_permissions.bat";
+        public const string DataBaseLogPath = DataBasePath + @"\logentries.db";
+        public const string DataBaseStatisticsPath = DataBasePath + @"\statistics.db";
+        public const string DataBaseCurrentSettingsPath = ConfigPath + @"\settings.json";
+        public const string LocalizationPath = ConfigPath + @"\localization";
         public const string ComatLogName = "combat.log";
         public const string GameLogName = "game.log";
         public const string LogDamageFlagsCriticalDamage = "HUD_IMPORTANT";
@@ -34,6 +37,21 @@ namespace CrossoutLogView.Common
                     return name.Slice(0, i);
             }
             return name;
+        }
+
+        public static string TimeSpanStringFactory(double seconds, string format = @"mm\:ss")
+        {
+            return TimeSpanStringFactory(TimeSpan.FromSeconds(seconds), format);
+        }
+
+        public static string TimeSpanStringFactory(TimeSpan span, string format = @"mm\:ss")
+        {
+            return span.ToString(format, CultureInfo.CurrentUICulture.DateTimeFormat);
+        }
+
+        public static string DateTimeStringFactory(DateTime dateTime, string format = "g")
+        {
+            return dateTime.ToString(format, CultureInfo.CurrentUICulture.DateTimeFormat);
         }
     }
 }

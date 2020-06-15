@@ -79,7 +79,7 @@ namespace CrossoutLogView.Database.Connection
             foreach (var type in DatabaseTableTypes)
             {
                 var command = String.Format(format, type.Name);
-                using var cmd = new SQLiteCommand(command, connection);
+                using var cmd = new SQLiteCommand(command, Connection);
                 using var reader = cmd.ExecuteReader();
                 if (!reader.Read()) continue;
                 var newest = reader.GetInt64(0);
@@ -107,7 +107,7 @@ namespace CrossoutLogView.Database.Connection
 
         public void Delete<T>(DateTime start, DateTime end) where T : ILogEntry, new()
         {
-            InvokeNonQuery(String.Format(FormatDelete, nameof(T), start.Ticks, end.Ticks), connection);
+            InvokeNonQuery(String.Format(FormatDelete, nameof(T), start.Ticks, end.Ticks), Connection);
         }
 
         private string GetDateTimeRangeRequest(Type type, long start, long end)
@@ -121,14 +121,14 @@ namespace CrossoutLogView.Database.Connection
 
         public override void InitializeDataStructure()
         {
-            if (!Directory.Exists(Strings.DataBaseRootPath)) Directory.CreateDirectory(Strings.DataBaseRootPath);
+            if (!Directory.Exists(Strings.DataBasePath)) Directory.CreateDirectory(Strings.DataBasePath);
             if (!File.Exists(Strings.DataBaseLogPath)) SQLiteConnection.CreateFile(Strings.DataBaseLogPath);
-            connection = new SQLiteConnection("Data Source = " + Strings.DataBaseLogPath);
-            connection.Open();
-            CreateDataTable(typeof(LogMetadata), connection);
+            Connection = new SQLiteConnection("Data Source = " + Strings.DataBaseLogPath);
+            Connection.Open();
+            CreateDataTable(typeof(LogMetadata), Connection);
             foreach (var t in ILogEntry.Implementations)
             {
-                CreateDataTable(t, connection);
+                CreateDataTable(t, Connection);
             }
         }
     }

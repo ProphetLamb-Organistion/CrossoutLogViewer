@@ -2,11 +2,15 @@
 using CrossoutLogView.Database.Data;
 using CrossoutLogView.Database.Reflection;
 using CrossoutLogView.GUI.Core;
+
 using LiveCharts;
+using LiveCharts.Configurations;
 using LiveCharts.Definitions.Series;
 using LiveCharts.Wpf;
 using LiveCharts.Wpf.Charts.Base;
+
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -17,29 +21,20 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
 
+using static CrossoutLogView.Common.Strings;
+
 namespace CrossoutLogView.GUI.Models
 {
-    public class PlayerGamesChartModel : ViewModelBase
+    public class PlayerGamesChartModel : CollectionViewModel
     {
+        private ObservableCollection<PlayerGameCompositeModel> _source;
+        private Dimensions _seriesDimensions;
+        private SeriesCollection _series;
+        private AxesCollection _axisYCollection;
+        private double _axisXMinValue, _axisXMaxValue, _axisXLowerValue, _axisXUpperValue;
+        private AxesCollection _axisXCollection;
         private static readonly VariableInfo[] chartValues;
         private static readonly VariableInfo[] playerGameModelVariables;
-
-        private ChartValues<double> _score = new ChartValues<double>();
-        private ChartValues<int> _kills = new ChartValues<int>();
-        private ChartValues<int> _assists = new ChartValues<int>();
-        private ChartValues<int> _deaths = new ChartValues<int>();
-        private ChartValues<double> _armorDamageDealt = new ChartValues<double>();
-        private ChartValues<double> _criticalDamageDealt = new ChartValues<double>();
-        private ChartValues<double> _armorDamageTaken = new ChartValues<double>();
-        private ChartValues<double> _criticalDamageTaken = new ChartValues<double>();
-        private ChartValues<double> _totalDamageDealt = new ChartValues<double>();
-        private ChartValues<double> _totalDamageTaken = new ChartValues<double>();
-        private Dimensions _seriesDimensions;
-        private ObservableCollection<PlayerGameCompositeModel> _source;
-        private SeriesCollection _series = new SeriesCollection();
-        private AxesCollection _axisYCollection = new AxesCollection();
-        private string[] _labels;
-        private double _axisXMinValue, _axisXMaxValue, _axisXLowerValue, _axisXUpperValue;
 
         static PlayerGamesChartModel()
         {
@@ -48,26 +43,26 @@ namespace CrossoutLogView.GUI.Models
             playerGameModelVariables = VariableInfo.FromType(typeof(PlayerGameCompositeModel), true);
         }
 
-        public PlayerGamesChartModel()
+        public PlayerGamesChartModel(Chart chart)
         {
-            for (int i = 0; i < chartValues.Length; i++)
-            {
-                var axis = new Axis();
-                axis.Separator.IsEnabled = false;
-                axis.IsMerged = false;
-                axis.ShowLabels = false;
-                AxisYCollection.Add(axis);
-            }
+            Chart = chart ?? throw new ArgumentNullException(nameof(chart));
         }
 
-        public SeriesCollection Series { get => _series; private set => Set(ref _series, value); }
+        public Chart Chart { get; }
 
-        public string[] Labels { get => _labels; protected set => Set(ref _labels, value); }
-
-        public double AxisXMinValue { get => _axisXMinValue; protected set => Set(ref _axisXMinValue, value); }
-        public double AxisXMaxValue { get => _axisXMaxValue; protected set => Set(ref _axisXMaxValue, value); }
-        public double AxisXLowerValue { get => _axisXLowerValue; set => Set(ref _axisXLowerValue, value); }
-        public double AxisXUpperValue { get => _axisXUpperValue; set => Set(ref _axisXUpperValue, value); }
+        public ObservableCollection<PlayerGameCompositeModel> Source
+        {
+            get => _source;
+            set
+            {
+                if (_source != null)
+                    _source.CollectionChanged -= Source_CollectionChanged;
+                Set(ref _source, value);
+                if (_source != null)
+                    _source.CollectionChanged += Source_CollectionChanged;
+                UpdateCollectionsSafe();
+            }
+        }
 
         public Dimensions SeriesDimensions
         {
@@ -78,77 +73,96 @@ namespace CrossoutLogView.GUI.Models
                 UpdateSeriesDimensions();
             }
         }
-        public ObservableCollection<PlayerGameCompositeModel> Source
-        {
-            get => _source;
-            set
-            {
-                Set(ref _source, value);
-                UpdateCollections();
-            }
-        }
+
+        public SeriesCollection Series { get => _series; private set => Set(ref _series, value); }
+
         public AxesCollection AxisYCollection { get => _axisYCollection; private set => Set(ref _axisYCollection, value); }
+        public AxesCollection AxisXCollection { get => _axisXCollection; private set => Set(ref _axisXCollection, value); }
 
-        public ChartValues<double> Score { get => _score; private set => Set(ref _score, value); }
-        public ChartValues<int> Kills { get => _kills; private set => Set(ref _kills, value); }
-        public ChartValues<int> Assists { get => _assists; private set => Set(ref _assists, value); }
-        public ChartValues<int> Deaths { get => _deaths; private set => Set(ref _deaths, value); }
-        public ChartValues<double> ArmorDamageDealt { get => _armorDamageDealt; private set => Set(ref _armorDamageDealt, value); }
-        public ChartValues<double> CriticalDamageDealt { get => _criticalDamageDealt; private set => Set(ref _criticalDamageDealt, value); }
-        public ChartValues<double> ArmorDamageTaken { get => _armorDamageTaken; private set => Set(ref _armorDamageTaken, value); }
-        public ChartValues<double> CriticalDamageTaken { get => _criticalDamageTaken; private set => Set(ref _criticalDamageTaken, value); }
-        public ChartValues<double> TotalDamageDealt { get => _totalDamageDealt; private set => Set(ref _totalDamageDealt, value); }
-        public ChartValues<double> TotalDamageTaken { get => _totalDamageTaken; private set => Set(ref _totalDamageTaken, value); }
+        public double AxisXMinValue { get => _axisXMinValue; protected set => Set(ref _axisXMinValue, value); }
+        public double AxisXMaxValue { get => _axisXMaxValue; protected set => Set(ref _axisXMaxValue, value); }
+        public double AxisXLowerValue { get => _axisXLowerValue; set => Set(ref _axisXLowerValue, value); }
+        public double AxisXUpperValue { get => _axisXUpperValue; set => Set(ref _axisXUpperValue, value); }
 
-        public override void UpdateCollections()
+        public ChartValues<int> Score { get; protected set; } = new ChartValues<int>();
+        public ChartValues<int> Kills { get; protected set; } = new ChartValues<int>();
+        public ChartValues<int> Assists { get; protected set; } = new ChartValues<int>();
+        public ChartValues<int> Deaths { get; protected set; } = new ChartValues<int>();
+        public ChartValues<double> ArmorDamageDealt { get; protected set; } = new ChartValues<double>();
+        public ChartValues<double> CriticalDamageDealt { get; protected set; } = new ChartValues<double>();
+        public ChartValues<double> ArmorDamageTaken { get; protected set; } = new ChartValues<double>();
+        public ChartValues<double> CriticalDamageTaken { get; protected set; } = new ChartValues<double>();
+        public ChartValues<double> TotalDamageDealt { get; protected set; } = new ChartValues<double>();
+        public ChartValues<double> TotalDamageTaken { get; protected set; } = new ChartValues<double>();
+
+        private void InitializeSeries()
+        {
+            //series & yaxis
+            Series = new SeriesCollection();
+            AxisYCollection = new AxesCollection();
+            var series = new LineSeries[chartValues.Length];
+            var yAxes = new Axis[chartValues.Length];
+            for (int i = 0; i < chartValues.Length; i++)
+            {
+                series[i] = SeriesViewFactory(chartValues[i].GetValue(this) as IChartValues, chartValues[i].Name, i);
+                yAxes[i] = new Axis { ShowLabels = false };
+            }
+            Series.AddRange(series);
+            AxisYCollection.AddRange(yAxes);
+            //label formatter
+            var xAxis = new Axis
+            {
+                LabelsRotation = 1,
+                LabelFormatter = delegate (double x)
+                {
+                    var index = (int)Math.Round(x);
+                    if (index < 0 || index >= Source.Count)
+                        return String.Empty;
+                    return DateTimeStringFactory(Source[index].StartTime);
+                }
+            };
+            //bind x axis scale
+            xAxis.SetBinding(Axis.MaxValueProperty, new Binding("AxisXUpperValue") { Mode = BindingMode.OneWay });
+            xAxis.SetBinding(Axis.MinValueProperty, new Binding("AxisXLowerValue") { Mode = BindingMode.OneWay });
+            AxisXCollection = new AxesCollection { xAxis };
+
+            Chart.SetBinding(Chart.AxisXProperty, new Binding("AxisXCollection") { Mode = BindingMode.OneWay });
+            Chart.SetBinding(Chart.AxisYProperty, new Binding("AxisYCollection") { Mode = BindingMode.OneWay });
+        }
+
+        protected override void UpdateCollections()
         {
             if (Source == null)
                 return;
-            //series
-            using var em = Source.GetEnumerator();
+            //x axis bounderies
+            AxisXMinValue = AxisXLowerValue = -1;
+            AxisXMaxValue = AxisXUpperValue = Source.Count - 1;
+            if (Series == null)
+                InitializeSeries();
             for (int i = 0; i < chartValues.Length; i++)
             {
-                var target = chartValues[i].GetValue(this); // instance of ChartValues property of the ViewModel
-                chartValues[i].VariableType.GetMethod("Clear").Invoke(target, null); //clear method of target. Invoked
-                var add = chartValues[i].VariableType.GetMethod("Add"); //add method of target
-                var src = playerGameModelVariables.First(x => x.Name == chartValues[i].Name); //property in source corrosponding to property target
-                //double min = Double.MaxValue, max = Double.MinValue;
-                while (em.MoveNext())
+                var target = chartValues[i].GetValue(this); // Instance of ChartValues property of the ViewModel
+                chartValues[i].VariableType.GetMethod("Clear").Invoke(target, null); // Clear method of target. Invoked
+                var src = playerGameModelVariables.FirstOrDefault(x => x.Name == chartValues[i].Name); // Property in source corrosponding to property target
+                var add = chartValues[i].VariableType.GetMethod("Add"); // Add method of target
+                for (int j = 0; j < Source.Count; j++)
                 {
-                    add.Invoke(target, new object[] { src.GetValue(em.Current) }); //add to target value of source
-                    //var value = Convert.ToDouble(src.GetValue(em.Current));
-                    //if (value < min) min = value;
-                    //if (value > max) max = value;
+                    add.Invoke(target, new object[] { src.GetValue(Source[j]) });
                 }
-                em.Reset();
             }
-            //labels
-            Labels = Source.Select(x => x.StartTime.ToString()).ToArray();
-            AxisXMinValue = AxisXLowerValue = -1;
-            AxisXMaxValue = AxisXUpperValue = Source.Count;
-            //dims
             UpdateSeriesDimensions();
         }
 
         private void UpdateSeriesDimensions()
         {
+            if (Source == null)
+                return;
             for (int i = 0; i < chartValues.Length; i++)
             {
-                var enumValue = (Dimensions)Enum.Parse(typeof(Dimensions), chartValues[i].Name, true); //enum value assiciated with property of ViewModel
-                var index = Series.FindIndex(x => x is ISeriesView sv && sv.Title == chartValues[i].Name); //index of seriesview corrosponding to the chartvalue property, otherwise -1
-                var values = chartValues[i].GetValue(this) as IChartValues;
-                if (index == -1) //add missing seriesview
-                {
-                    index = Series.Count;
-                    Series.Add(SeriesViewFactory(values, chartValues[i].Name, i));
-                }
-                else //update values of seriesview
-                {
-                    Series[index].Values = values;
-                }
+                var enumValue = (Dimensions)Enum.Parse(typeof(Dimensions), chartValues[i].Name, true); // Enum value associated with chartvalues[i]
                 var visibility = (SeriesDimensions & enumValue) == enumValue ? Visibility.Visible : Visibility.Hidden;
-                (Series[index] as Series).Visibility = visibility;
-                AxisYCollection[index].Visibility = visibility;
+                (Series[i] as Series).Visibility = visibility;
+                AxisYCollection[i].Visibility = visibility;
             }
         }
 
@@ -156,6 +170,7 @@ namespace CrossoutLogView.GUI.Models
         {
             var series = new LineSeries()
             {
+                LineSmoothness = 0.5,
                 Values = values,
                 Title = name,
                 ScalesYAt = scaleIndex,
@@ -163,6 +178,11 @@ namespace CrossoutLogView.GUI.Models
                 PointGeometrySize = 12,
             };
             return series;
+        }
+
+        private void Source_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            UpdateCollectionsSafe();
         }
     }
 }

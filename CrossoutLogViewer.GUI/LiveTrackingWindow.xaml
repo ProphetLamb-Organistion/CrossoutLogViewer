@@ -7,19 +7,21 @@
                       xmlns:UserControls="clr-namespace:CrossoutLogView.GUI.Controls"
                       xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                       xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                      xmlns:helpers="clr-namespace:CrossoutLogView.GUI.Helpers"
                       xmlns:local="clr-namespace:CrossoutLogView.GUI"
                       Style="{DynamicResource MetroWindowTitlebarColorStyle}"
                       Title="Crossout Log Viewer: LiveTracking"
+                      Icon="App.ico"
                       Height="600"
                       Width="850"
                       MinHeight="600"
                       MinWidth="850"
                       ShowDialogsOverTitleBar="False"
-                      GlowBrush="{DynamicResource MahApps.Brushes.AccentBase}"
+                      GlowBrush="{DynamicResource MahApps.Brushes.Accent2}"
                       BorderThickness="1"
                       ResizeMode="CanResizeWithGrip"
                       WindowStartupLocation="CenterScreen"
-                      Loaded="OnLoaded">
+                      StateChanged="Window_StateChanged">
     <Controls:MetroWindow.Resources>
         <Style TargetType="{x:Type Controls:WindowButtonCommands}"
                BasedOn="{StaticResource {x:Type Controls:WindowButtonCommands}}">
@@ -31,32 +33,21 @@
                     <Setter Property="LightMaxButtonStyle"
                             Value="{StaticResource CustomLightMetroWindowButtonStyle}" />
                     <Setter Property="LightCloseButtonStyle"
-                            Value="{StaticResource CustomLightMetroWindowButtonStyle}" />
+                            Value="{StaticResource CustomLightMetroWindowCloseButtonStyle}" />
                     <Setter Property="DarkMinButtonStyle"
                             Value="{StaticResource CustomDarkMetroWindowButtonStyle}" />
                     <Setter Property="DarkMaxButtonStyle"
                             Value="{StaticResource CustomDarkMetroWindowButtonStyle}" />
                     <Setter Property="DarkCloseButtonStyle"
-                            Value="{StaticResource CustomDarkMetroWindowButtonStyle}" />
+                            Value="{StaticResource CustomDarkMetroWindowCloseButtonStyle}" />
                 </DataTrigger>
             </Style.Triggers>
         </Style>
+        <helpers:LocalisationHelper x:Key="res" DefaultManager="SharedResources" />
     </Controls:MetroWindow.Resources>
     <Grid>
-        <Image x:Name="MapImage"
-               Stretch="Uniform"
-               RenderOptions.BitmapScalingMode="NearestNeighbor"
-               RenderOptions.EdgeMode="Aliased"
-               MouseUp="OpenMapImageClick"
-               Grid.Row="1"
-               Grid.Column="1"/>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="5*" />
-            <ColumnDefinition Width="3*" />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="{Binding ElementName=MapImage, Path=ActualWidth}" />
-        </Grid.RowDefinitions>
+        <TextBlock Text="{Binding Source={StaticResource res}, Path=.[UnderConstr]}"
+                   Style="{DynamicResource Header}" 
+                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
     </Grid>
 </Controls:MetroWindow>

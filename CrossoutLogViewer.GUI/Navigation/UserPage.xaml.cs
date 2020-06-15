@@ -3,6 +3,7 @@ using CrossoutLogView.Database.Data;
 using CrossoutLogView.GUI.Core;
 using CrossoutLogView.GUI.Events;
 using CrossoutLogView.GUI.Models;
+using CrossoutLogView.GUI.WindowsAuxilary;
 using CrossoutLogView.Statistics;
 
 using MahApps.Metro.Controls;
@@ -21,34 +22,39 @@ namespace CrossoutLogView.GUI.Navigation
     /// </summary>
     public partial class UserPage
     {
-        private readonly Frame frame;
+        private readonly NavigationWindow nav;
         private readonly UserModel model;
-        public UserPage(Frame frame, UserModel userViewModel)
+        public UserPage(NavigationWindow nav, UserModel userViewModel)
         {
-            this.frame = frame;
-            DataProvider.CompleteUser(userViewModel.Object);
+            if (userViewModel is null)
+                throw new ArgumentNullException(nameof(userViewModel));
+            this.nav = nav ?? throw new ArgumentNullException(nameof(nav));
+            DataProvider.CompleteUser(userViewModel.User);
             model = userViewModel;
             InitializeComponent();
             UserGamesViewGames.DataGridGames.OpenViewModel += OpenViewModelClick;
+            UserGamesViewGames.OpenViewModel += OpenViewModelClick;
         }
 
         private void OpenViewModelClick(object sender, OpenModelViewerEventArgs e)
         {
             if (e.ViewModel is PlayerGameCompositeModel pgc)
             {
-                Logging.WriteLine<UserPage>("Navigate to game");
-                frame.Navigate(new GamePage(frame, pgc.Game));
+                nav.Navigate(new GamePage(nav, pgc.Game));
             }
             else if (e.ViewModel is UserListModel ul)
             {
-                Logging.WriteLine<UserPage>("Navigate to userlist");
-                frame.Navigate(new UserListPage(frame, ul));
+                nav.Navigate(new UserListPage(nav, ul));
+            }
+            else if (e.ViewModel is GameModel gm)
+            {
+                nav.Navigate(new GamePage(nav, gm));
             }
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            model.UpdateCollections();
+            model.UpdateCollectionsSafe();
             DataContext = UserGamesViewGames.User = model;
             ListBoxWeapons.ItemsSource = model.Weapons;
             ListBoxStripes.ItemsSource = model.Stripes;

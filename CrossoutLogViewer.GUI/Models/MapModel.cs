@@ -9,12 +9,12 @@ using System.Text;
 
 namespace CrossoutLogView.GUI.Models
 {
-    public class MapModel : ViewModelBase
+    public class MapModel : CollectionViewModel
     {
         public MapModel(GameMap map)
         {
-            Object = map;
-            UpdateCollections();
+            GameMap = map ?? throw new ArgumentNullException(nameof(map));
+            UpdateCollectionsSafe();
             UpdateProperties();
             Name = DisplayStringFactory.MapName(map.Map.Name);
         }
@@ -34,7 +34,7 @@ namespace CrossoutLogView.GUI.Models
 
         public string DamageGroup => StatDisplayMode == DisplayMode.Average ? "Damage Dealt (per battle)" : "Damage Dealt";
 
-        public GameMap Object { get; }
+        public GameMap GameMap { get; }
 
         public string Name { get; }
 
@@ -86,13 +86,15 @@ namespace CrossoutLogView.GUI.Models
 
         public double TotalDamageTaken { get => _armorDamageTaken + _criticalDamageTaken; }
 
-        public override void UpdateCollections()
+        protected override void UpdateCollections()
         {
             var games = new List<PlayerGameCompositeModel>();
-            foreach (var g in Object.Games)
+            foreach (var g in GameMap.Games)
             {
                 var game = new GameModel(g);
-                games.Add(new PlayerGameCompositeModel(game, game.Players.First(x => x.Object.UserID == Settings.Current.MyUserID)));
+                var player = game.Players.FirstOrDefault(x => x.Player.UserID == Settings.Current.MyUserID);
+                if (player != null)
+                    games.Add(new PlayerGameCompositeModel(game, player));
             }
             Games = games;
         }
@@ -117,7 +119,7 @@ namespace CrossoutLogView.GUI.Models
             OnPropertyChanged(nameof(TotalDamageTaken));
         }
     }
-    public class MapModelGamesPlayedDecending : IComparer<MapModel>
+    public sealed class MapModelGamesPlayedDecending : IComparer<MapModel>
     {
         int IComparer<MapModel>.Compare(MapModel x, MapModel y) => y.GamesPlayed.CompareTo(x.GamesPlayed);
     }

@@ -3,6 +3,8 @@ using CrossoutLogView.Database.Collection;
 using CrossoutLogView.Database.Connection;
 using CrossoutLogView.Database.Data;
 
+using NLog.Config;
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,6 +17,7 @@ namespace CrossoutLogView.Database
 {
     public class ControlService : ServiceBase
     {
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         private readonly FileSystemWatcher fsWatcher;
         private readonly Timer logChangeTrackTimer;
         private readonly StatisticsUploader uploader;
@@ -22,7 +25,8 @@ namespace CrossoutLogView.Database
 
         public ControlService()
         {
-            Logging.WriteLine<ControlService>("Initialize ControlService.", true);
+            System.Threading.Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
+            logger.Trace("Initialize ControlService.");
             Settings.Update();
 
             //enure existence of all databases
@@ -49,7 +53,7 @@ namespace CrossoutLogView.Database
 
             uploader = new StatisticsUploader(Settings.Current.StatisticsParseDateTime);
 
-            Logging.WriteLine<ControlService>("Initialized ControlService ({TP})");
+            logger.Trace("Initialized ControlService.");
         }
 
         public void Start() => OnStart(null);
@@ -58,8 +62,12 @@ namespace CrossoutLogView.Database
         {
             fsWatcher.EnableRaisingEvents = false;
             uploader.Dispose();
-            File.Delete(Strings.DataBaseLogPath);
-            File.Delete(Strings.DataBaseStatisticsPath);
+            try
+            {
+                File.Delete(Strings.DataBaseLogPath);
+                File.Delete(Strings.DataBaseStatisticsPath);
+            }
+            catch (IOException) { }
             Settings.Current.StatisticsParseDateTime = 0;
             Settings.Current.LogConfiguration = current = default;
             Settings.Current.MyName = Settings.Default.MyName;
@@ -114,7 +122,7 @@ namespace CrossoutLogView.Database
                 var updated = Settings.GetLatestLog();
                 if (!PathUtility.Equals(updated.Path, current.Path))
                 {
-                    Logging.WriteLine<ControlService>("New log found. Path: \"" + updated.Path + "\"");
+                    logger.Info("New log found. Path: \"" + updated.Path + "\"");
                     AddLogMetadata(updated);
                     if (!current.Equals(default)) //finish previous log
                     {
@@ -127,15 +135,13 @@ namespace CrossoutLogView.Database
                     Settings.Current.StatisticsParseDateTime = uploader.LogEntryTimeStampLowerLimit;
                 }
             }
-            catch (FileNotFoundException ex)
-            {
-                Logging.WriteLine<ControlService>(ex);
-            }
+            catch (FileNotFoundException) { }
             logChangeTrackTimer.Start();
         }
 
         private void FileChangedElapsed(object sender, ElapsedEventArgs e)
         {
+            if (current.Path is null) return;
             var newSize = PathUtility.GetFileSize(Path.Combine(current.Path, Strings.ComatLogName));
             if (current.FileSize < newSize) //the size of the combat.log increased
             {
@@ -160,25 +166,28 @@ namespace CrossoutLogView.Database
 
         private void ParseUnprocessedLogs()
         {
-            Logging.WriteLine<ControlService>("Detect unprocessed logs.", true);
+            logger.Trace("Detect unprocessed logs.");
             var unprocessedLogs = GetUnprocessedLogPaths();
             if (unprocessedLogs.Count != 0)
             {
-                Logging.WriteLine<ControlService>("Upload logs");
+                logger.Info("Upload logs");
                 Parallel.ForEach(unprocessedLogs, new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount * 2 },
                     delegate (string dir)
                 {
-                    using var logUploader = new LogUploader(dir, UploaderOperatingMode.Unchecked);
-                    using var statUploader = new StatisticsUploader(-1, UploaderOperatingMode.Unchecked);
-                    logUploader.Parse();
-                    logUploader.Upload();
-                    statUploader.Commit(logUploader.Combined);
+                    try
+                    {
+                        using var logUploader = new LogUploader(dir, UploaderOperatingMode.Unchecked);
+                        using var statUploader = new StatisticsUploader(-1, UploaderOperatingMode.Unchecked);
+                        logUploader.Parse();
+                        logUploader.Upload();
+                        statUploader.Commit(logUploader.Combined);
+                    }
+                    catch (FileNotFoundException) { }
                 });
                 using var logCon = new LogConnection();
                 uploader.LogEntryTimeStampLowerLimit = logCon.RequestNewestLogEntryTimeStamp();
             }
-            else Logging.WriteLine<ControlService>("Found none.");
-            Logging.WriteLine<ControlService>("Finished in {TP}");
+            else logger.Info("Found none.");
             Settings.WriteInstance();
         }
 
@@ -187,18 +196,18 @@ namespace CrossoutLogView.Database
             var unprocessedLogs = new List<string>();
             using (var con = new LogConnection())
             {
-                //compare logs in database to logs in directory, missing logs are unprocessed logs
+                //compare logs in database to logs in directory, missing logs that contain a combat.log are unprocessed logs 
                 var logsInDB = con.RequestMetadata().Select(x => x.Path);
                 var logsInDir = Directory.GetDirectories(Settings.Current.LogRootPath);
-                foreach (var dir in logsInDir)
+                for (int i = 0; i < logsInDir.Length; i++)
                 {
-                    if (!logsInDB.Any(x => PathUtility.Equals(x, dir)))
+                    var dir = Path.Combine(logsInDir[i], Strings.ComatLogName);
+                    if (File.Exists(dir) && !logsInDB.Any(x => PathUtility.Equals(x, dir)))
                     {
                         unprocessedLogs.Add(dir);
                         con.InsertMetadata(LogMetadata.Parse(dir));
                     }
                 }
-                con.Close();
             }
             return unprocessedLogs;
         }

@@ -7,6 +7,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,30 +18,31 @@ namespace CrossoutLogView.Database.Connection
 {
     public abstract class ConnectionBase : IDisposable
     {
-        protected SQLiteConnection connection;
-        protected Type[] DatabaseTableTypes;
-
         /// <summary>
-        /// Returns the state of the SQLite connection.
+        /// Returns the state of the SQLite Connection.
         /// </summary>
-        public ConnectionState State => connection.State;
+        public ConnectionState State => Connection.State;
 
-        public void Open() => connection.Open();
+        public void Open() => Connection.Open();
 
-        public void Close() => connection.Close();
+        public void Close() => Connection.Close();
 
-        public long LastInsertRowId => connection.LastInsertRowId;
+        public long LastInsertRowId => Connection.LastInsertRowId;
 
         public ConcurrentBag<long> RequestRowIds { get; } = new ConcurrentBag<long>();
 
+        protected SQLiteConnection Connection { get; set; }
+
+        public Type[] DatabaseTableTypes { get; protected set; }
+
         public SQLiteTransaction BeginTransaction()
         {
-            return connection.BeginTransaction();
+            return Connection.BeginTransaction();
         }
 
         public async ValueTask<IDbTransaction> BeginTransactionAsync()
         {
-            return await connection.BeginTransactionAsync();
+            return await Connection.BeginTransactionAsync();
         }
 
         /// <summary>
@@ -49,7 +51,7 @@ namespace CrossoutLogView.Database.Connection
         public abstract void InitializeDataStructure();
 
         /// <summary>
-        /// Invokes any SQLite command via the provided connection.
+        /// Invokes any SQLite command via the provided Connection.
         /// </summary>
         /// <param name="command">The command sent to the <see cref="SQLiteConnection"/>.</param>
         /// <param name="con"></param>
@@ -60,10 +62,7 @@ namespace CrossoutLogView.Database.Connection
                 using var cmd = new SQLiteCommand(command, con);
                 cmd.ExecuteNonQuery();
             }
-            catch (SQLiteException ex)
-            {
-                Logging.WriteLine(ex, faultCommand: command);
-            }
+            catch (SQLiteException) { }
         }
 
         /// <summary>
@@ -73,6 +72,7 @@ namespace CrossoutLogView.Database.Connection
         /// <param name="con"></param>
         protected static void CreateDataTable(Type type, SQLiteConnection con)
         {
+            if (type is null || con is null) return;
             var varInfos = VariableInfo.FromType(type);
             var definition = new string[varInfos.Length];
             int i = 0;
@@ -94,6 +94,7 @@ namespace CrossoutLogView.Database.Connection
         /// <param name="con"></param>
         protected static void CreateDataTable(Type type, string primaryKey, SQLiteConnection con)
         {
+            if (type is null || primaryKey is null || con is null) return;
             var varInfos = VariableInfo.FromType(type);
             var definition = new string[varInfos.Length];
             int i = 0;
@@ -120,14 +121,21 @@ namespace CrossoutLogView.Database.Connection
         protected List<T> ExecuteRequest<T>(string requestCommand, TableRepresentation filterTableRepresentation = TableRepresentation.All) where T : new()
         {
             var type = typeof(T);
-            var varInfos = VariableInfo.FromType(type);
             var result = new List<T>();
-            using var cmd = new SQLiteCommand(requestCommand, connection);
-            using var reader = cmd.ExecuteReader();
-            while (reader.Read())
+            try
             {
-                result.Add((T)ReadCurrentObject(() => new T(), varInfos, reader, filterTableRepresentation));
+                var varInfos = VariableInfo.FromType(type);
+                using var cmd = new SQLiteCommand(requestCommand, Connection);
+                using var reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    var obj = (T)ReadCurrentObject(() => new T(), varInfos, reader, filterTableRepresentation);
+                    if (obj != null) result.Add(obj);
+                }
             }
+            catch (InvalidOperationException) { }
+            catch (ArgumentException) { }
+            catch (SQLiteException) { }
             return result;
         }
 
@@ -142,12 +150,19 @@ namespace CrossoutLogView.Database.Connection
         {
             var varInfos = VariableInfo.FromType(type);
             var result = new List<object>();
-            using var cmd = new SQLiteCommand(requestCommand, connection);
-            using var reader = cmd.ExecuteReader();
-            while (reader.Read())
+            try
             {
-                result.Add(ReadCurrentObject(() => Activator.CreateInstance(type), varInfos, reader, filterTableRepresentation));
+                using var cmd = new SQLiteCommand(requestCommand, Connection);
+                using var reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    var obj = ReadCurrentObject(() => Activator.CreateInstance(type), varInfos, reader, filterTableRepresentation);
+                    if (obj != null) result.Add(obj);
+                }
             }
+            catch (InvalidOperationException) { }
+            catch (ArgumentException) { }
+            catch (SQLiteException) { }
             return result;
         }
 
@@ -162,10 +177,19 @@ namespace CrossoutLogView.Database.Connection
         {
             var type = typeof(T);
             var varInfos = VariableInfo.FromType(type);
-            using var cmd = new SQLiteCommand(requestCommand, connection);
-            using var reader = cmd.ExecuteReader();
-            return !reader.Read() ? default
-                : (T)ReadCurrentObject(() => new T(), varInfos, reader, filterTableRepresentation);
+            T result = default;
+            try
+            {
+                using var cmd = new SQLiteCommand(requestCommand, Connection);
+                using var reader = cmd.ExecuteReader();
+                result = reader.Read()
+                    ? (T)ReadCurrentObject(() => new T(), varInfos, reader, filterTableRepresentation)
+                    : default;
+            }
+            catch (InvalidOperationException) { }
+            catch (ArgumentException) { }
+            catch (SQLiteException) { }
+            return result;
         }
 
         /// <summary>
@@ -179,10 +203,19 @@ namespace CrossoutLogView.Database.Connection
         protected object ExecuteRequestSingleObject(Type type, string requestCommand, TableRepresentation filterTableRepresentation = TableRepresentation.All)
         {
             var varInfos = VariableInfo.FromType(type);
-            using var cmd = new SQLiteCommand(requestCommand, connection);
-            using var reader = cmd.ExecuteReader();
-            return !reader.Read() ? null
-                : ReadCurrentObject(() => Activator.CreateInstance(type), varInfos, reader, filterTableRepresentation);
+            object result = null;
+            try
+            {
+                using var cmd = new SQLiteCommand(requestCommand, Connection);
+                using var reader = cmd.ExecuteReader();
+                result = reader.Read()
+                    ? ReadCurrentObject(() => Activator.CreateInstance(type), varInfos, reader, filterTableRepresentation)
+                    : null;
+            }
+            catch (InvalidOperationException) { }
+            catch (ArgumentException) { }
+            catch (SQLiteException) { }
+            return result;
         }
 
         /// <summary>
@@ -194,60 +227,102 @@ namespace CrossoutLogView.Database.Connection
         /// <returns>The double array of rowid references by the field name. Null if the field is not found or the table representation is invalid.</returns>
         protected long[] RequestReferences(string condition, Type type, string variableName)
         {
+            if (condition is null || type is null || variableName is null) return Array.Empty<long>();
             var request = String.Format(FormatRequestWhere, variableName.ToLowerInvariant(), type.Name, condition);
-            using var cmd = new SQLiteCommand(request, connection);
-            using var reader = cmd.ExecuteReader();
-            if (!reader.Read()) return Array.Empty<long>();
-            var vi = VariableInfo.FromType(type).FirstOrDefault(x => x.Name.Equals(variableName, StringComparison.InvariantCultureIgnoreCase));
-            if (vi == null) return Array.Empty<long>();
-            return (GetTableRepresentation(vi.VariableType, DatabaseTableTypes)) switch
+            long[] refs = null;
+            try
             {
-                TableRepresentation.Reference => new long[] { reader.GetInt64(0) },
-                TableRepresentation.ReferenceArray => ParseSerializedArray(reader.GetString(0), Base85.DecodeInt64),
-                _ => Array.Empty<long>()
-            };
+                using var cmd = new SQLiteCommand(request, Connection);
+                using var reader = cmd.ExecuteReader();
+                if (!reader.Read()) return Array.Empty<long>();
+                var vi = VariableInfo.FromType(type).FirstOrDefault(x => x.Name.Equals(variableName, StringComparison.InvariantCultureIgnoreCase));
+                if (vi == null) return Array.Empty<long>();
+                refs = (GetTableRepresentation(vi.VariableType, DatabaseTableTypes)) switch
+                {
+                    TableRepresentation.Reference => new long[] { reader.GetInt64(0) },
+                    TableRepresentation.ReferenceArray => ParseSerializedArray(reader.GetString(0), Base85.DecodeInt64),
+                    _ => null
+                };
+            }
+            catch (InvalidOperationException) { }
+            catch (ArgumentException) { }
+            catch (SQLiteException) { }
+            return refs ?? Array.Empty<long>();
         }
 
-        protected T[] RequestStoredArray<T>(string condition, Type type, string variableName)
+        protected T[] RequestStoredArray<T>(string condition, Type type, string variableName) where T : IEquatable<T>
         {
+            if (condition is null || type is null || variableName is null) return Array.Empty<T>();
             var request = String.Format(FormatRequestWhere, variableName.ToLowerInvariant(), type.Name, condition);
-            using var cmd = new SQLiteCommand(request, connection);
-            using var reader = cmd.ExecuteReader();
-            if (!reader.Read()) return Array.Empty<T>();
-            return ParseSerializedArray(reader.GetString(0), GetDeserializer<T>());
+            T[] result = null;
+            try
+            {
+                using var cmd = new SQLiteCommand(request, Connection);
+                using var reader = cmd.ExecuteReader();
+                if (!reader.Read()) return Array.Empty<T>();
+                result = ParseSerializedArray(reader.GetString(0), GetDeserializer<T>());
+            }
+            catch (InvalidOperationException) { }
+            catch (ArgumentException) { }
+            catch (SQLiteException) { }
+            return result ?? Array.Empty<T>();
         }
 
         protected static object ReadField(VariableInfo variableInfo, SQLiteDataReader reader)
         {
+            if (variableInfo is null || reader is null) return default;
             var type = variableInfo.VariableType;
-            var col = reader.GetOrdinal(variableInfo.Name.ToLowerInvariant());
-            return type == typeof(byte) ? reader.GetByte(col)
-                : type == typeof(short) ? reader.GetInt16(col)
-                : type == typeof(int) ? reader.GetInt32(col)
-                : type == typeof(long) ? reader.GetInt64(col)
-                : type == typeof(string) ? reader.GetString(col)
-                : type == typeof(DateTime) ? new DateTime(reader.GetInt64(col))
-                : type.IsEnum ? Enum.Parse(type, reader.GetInt32(col).ToString())
-                : Convert.ChangeType(reader.GetValue(col), type);
+            object value = null;
+            try
+            {
+                var col = reader.GetOrdinal(variableInfo.Name.ToLowerInvariant());
+                if (col != -1)
+                {
+                    value = type == typeof(byte) ? reader.GetByte(col)
+                        : type == typeof(short) ? reader.GetInt16(col)
+                        : type == typeof(int) ? reader.GetInt32(col)
+                        : type == typeof(long) ? reader.GetInt64(col)
+                        : type == typeof(string) ? reader.GetString(col)
+                        : type == typeof(DateTime) ? new DateTime(reader.GetInt64(col))
+                        : type.IsEnum ? Enum.Parse(type, reader.GetInt32(col).ToString(CultureInfo.InvariantCulture))
+                        : Convert.ChangeType(reader.GetValue(col), type, CultureInfo.InvariantCulture);
+                }
+            }
+            catch (InvalidOperationException) { }
+            catch (ArgumentException) { }
+            catch (InvalidCastException) { }
+            return value;
         }
 
         protected static T ReadField<T>(string name, SQLiteDataReader reader)
         {
+            if (name is null || reader is null) return default;
             var type = typeof(T);
-            var col = reader.GetOrdinal(name.ToLowerInvariant());
-            if (col == -1) return default;
-            return Types.CastObject<T>(type == typeof(byte) ? reader.GetByte(col)
-                : type == typeof(short) ? reader.GetInt16(col)
-                : type == typeof(int) ? reader.GetInt32(col)
-                : type == typeof(long) ? reader.GetInt64(col)
-                : type == typeof(string) ? reader.GetString(col)
-                : type == typeof(DateTime) ? new DateTime(reader.GetInt64(col))
-                : type.IsEnum ? Enum.Parse(type, reader.GetString(col))
-                : Convert.ChangeType(reader.GetValue(col), type));
+            T value = default;
+            try
+            {
+                var col = reader.GetOrdinal(name.ToLowerInvariant());
+                if (col != -1)
+                {
+                    value = Types.CastObject<T>(type == typeof(byte) ? reader.GetByte(col)
+                    : type == typeof(short) ? reader.GetInt16(col)
+                    : type == typeof(int) ? reader.GetInt32(col)
+                    : type == typeof(long) ? reader.GetInt64(col)
+                    : type == typeof(string) ? reader.GetString(col)
+                    : type == typeof(DateTime) ? new DateTime(reader.GetInt64(col))
+                    : type.IsEnum ? Enum.Parse(type, reader.GetString(col))
+                    : Convert.ChangeType(reader.GetValue(col), type, CultureInfo.InvariantCulture));
+                }
+            }
+            catch (InvalidOperationException) { }
+            catch (ArgumentException) { }
+            catch (InvalidCastException) { }
+            return value;
         }
 
         protected object ReadCurrentObject(Func<object> constructor, VariableInfo[] fields, SQLiteDataReader reader, TableRepresentation filterTableRepresentations)
         {
+            if (constructor is null || fields is null || reader is null) return null;
             var obj = constructor();
             int rowIdIndex = reader.GetOrdinal(RowIdName);
             if (rowIdIndex != -1)
@@ -256,13 +331,12 @@ namespace CrossoutLogView.Database.Connection
             }
             foreach (var vi in fields)
             {
-                if (reader.GetOrdinal(vi.Name.ToLowerInvariant()) == -1) //field not requested
-                {
+                if (reader.GetOrdinal(vi.Name.ToLowerInvariant()) == -1) //field not requested; skip
                     continue;
-                }
                 var varType = vi.VariableType;
                 var varTableRepresentation = GetTableRepresentation(varType, DatabaseTableTypes);
-                if (!MaskFilter(varTableRepresentation, filterTableRepresentations)) continue; //fitler doesnt allows variable
+                if (!MaskFilter(varTableRepresentation, filterTableRepresentations))  //fitler doesnt allows variable; skip
+                    continue;
                 switch (varTableRepresentation)
                 {
                     case TableRepresentation.Store:
@@ -276,6 +350,8 @@ namespace CrossoutLogView.Database.Connection
                         break;
                     case TableRepresentation.StoreArray:
                         var baseType = Types.GetEnumerableBaseType(varType);
+                        if (baseType == null)
+                            continue;
                         object[] values = ParseSerializedArray(ReadField<string>(vi.Name, reader), GetDeserializer(baseType));
                         vi.SetValue(obj, Generics.CastEnumerable(varType, baseType, values));
                         break;
@@ -283,6 +359,8 @@ namespace CrossoutLogView.Database.Connection
                     case TableRepresentation.ReferenceArray:
                         //obtain rowid references from database
                         baseType = Types.GetEnumerableBaseType(varType);
+                        if (baseType == null)
+                            continue;
                         long[] refs = ParseSerializedArray(ReadField<string>(vi.Name, reader), Base85.DecodeInt64);
                         //request & store each item referenced
                         var items = new object[refs.Length];
@@ -309,6 +387,7 @@ namespace CrossoutLogView.Database.Connection
         /// <returns>The SQlite REQUEST string for a given type.</returns>
         protected string GetRequestString(Type type, bool includeRowId = false, TableRepresentation includedTableRepresentation = TableRepresentation.All)
         {
+            if (type is null) return null;
             if (!requestVariableInfos.TryGetValue((type.GUID, includedTableRepresentation), out var varInfoString))
             {
                 varInfoString = String.Join(", ", includedTableRepresentation == TableRepresentation.All
@@ -329,6 +408,7 @@ namespace CrossoutLogView.Database.Connection
         /// <returns>The SQlite REQUEST string for a given type, with rowid conditions.</returns>
         protected string GetRowIdRequestString(Type type, long[] rowIds, TableRepresentation includedTableRepresentation = TableRepresentation.All)
         {
+            if (type is null || rowIds is null) return null;
             var conditions = new string[rowIds.Length];
             var reqTemplate = RowIdName + " == {0}";
             for (int i = 0; i < rowIds.Length; i++)
@@ -366,7 +446,7 @@ namespace CrossoutLogView.Database.Connection
                 type.Name,
                 membData.Header,
                 GenerateInsertValuesString(obj, membData.VariableInfos, filterTableRepresentation)),
-                connection);
+                Connection);
         }
         /// <summary>
         /// INSERTs a provided object of the <typeparamref name="type"/> into the database using the <see cref="SQLiteConnection"/>.
@@ -376,12 +456,13 @@ namespace CrossoutLogView.Database.Connection
         /// <param name="filterTableRepresentation">Masks the <see cref="TableRepresentation"/> of each variable.</param>
         protected void Insert(object obj, Type type, TableRepresentation filterTableRepresentation = TableRepresentation.All)
         {
+            if (obj is null || type is null) return;
             var membData = MemberDefinitionData.FromType(type);
             InvokeNonQuery(String.Format(FormatInsert,
                 type.Name,
                 membData.Header,
                 GenerateInsertValuesString(obj, membData.VariableInfos, filterTableRepresentation)),
-                connection);
+                Connection);
         }
         /// <summary>
         /// INSERTs provided objects of the type <typeparamref name="T"/> into the database using the <see cref="SQLiteConnection"/>.
@@ -392,6 +473,7 @@ namespace CrossoutLogView.Database.Connection
         /// <returns>The number of insertions.</returns>
         protected int InsertMany<T>(IEnumerable<T> objects, TableRepresentation filterTableRepresentation = TableRepresentation.All)
         {
+            if (objects is null) return 0;
             var type = typeof(T);
             var membData = MemberDefinitionData.FromType(type);
             var values = new List<string>();
@@ -406,7 +488,7 @@ namespace CrossoutLogView.Database.Connection
                 type.Name,
                 membData.Header,
                 String.Join(", ", values)),
-                connection);
+                Connection);
             return count;
         }
         /// <summary>
@@ -418,6 +500,7 @@ namespace CrossoutLogView.Database.Connection
         /// <returns>The number of insertions.</returns>
         protected int InsertMany(IEnumerable objects, Type type, TableRepresentation filterTableRepresentation = TableRepresentation.All)
         {
+            if (objects is null || type is null) return 0;
             var membData = MemberDefinitionData.FromType(type);
             var values = new List<string>();
             var count = 0;
@@ -431,7 +514,7 @@ namespace CrossoutLogView.Database.Connection
                 type.Name,
                 membData.Header,
                 String.Join(", ", values)),
-                connection);
+                Connection);
             return count;
         }
 
@@ -439,6 +522,8 @@ namespace CrossoutLogView.Database.Connection
         {
             var refs = new List<long>();
             var baseType = Types.GetEnumerableBaseType(type);
+            if (baseType == null)
+                return null;
             //insert each item in enumerable & populate reference list
             foreach (var item in objects)
             {
@@ -483,7 +568,7 @@ namespace CrossoutLogView.Database.Connection
                             break;
                         case TableRepresentation.Reference:
                             Insert(vi.GetValue(obj), type);
-                            current = connection.LastInsertRowId;
+                            current = Connection.LastInsertRowId;
                             break;
                         case TableRepresentation.StoreArray:
                             current = SerializeArray(vi.GetValue(obj) as IEnumerable, GetSerializer(Types.GetEnumerableBaseType(vi.VariableType)));
@@ -491,8 +576,6 @@ namespace CrossoutLogView.Database.Connection
                         case TableRepresentation.ReferenceArray:
                             current = ReferenceFromInsertEnumerable(vi.GetValue(obj) as IEnumerable, type);
                             break;
-                        default:
-                            throw new InvalidOperationException();
                     }
                 values[i++] = SQLiteVariable(current);
             }
@@ -503,6 +586,7 @@ namespace CrossoutLogView.Database.Connection
         #region UPDATE
         protected void UpdateValues(object obj, VariableInfo[] variableInfos, string tableName, string whereCondition)
         {
+            if (obj is null || variableInfos is null || tableName is null || whereCondition is null) return;
             var sets = new string[variableInfos.Length];
             for (int i = 0; i < variableInfos.Length; i++)
             {
@@ -521,7 +605,7 @@ namespace CrossoutLogView.Database.Connection
                 sets[i] = variableInfos[i].Name.ToLowerInvariant() + " = " + SQLiteVariable(value);
             }
             var update = String.Format(FormatUpdate, tableName, String.Join(", ", sets), whereCondition);
-            InvokeNonQuery(update, connection);
+            InvokeNonQuery(update, Connection);
         }
         #endregion UPDATE
 
@@ -533,7 +617,8 @@ namespace CrossoutLogView.Database.Connection
             {
                 if (disposing)
                 {
-                    connection.Dispose();
+                    Connection.Close();
+                    Connection.Dispose();
                 }
 
                 disposedValue = true;

@@ -4,6 +4,7 @@ using CrossoutLogView.Statistics;
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Windows.Media;
@@ -16,26 +17,21 @@ namespace CrossoutLogView.GUI.Models
     {
         public RoundModel()
         {
-            Object = new Round();
-            Parent = null;
+            Round = new Round();
+            Game = null;
             Kills = new List<KillModel>();
         }
         public RoundModel(GameModel parent, Round obj)
         {
-            Parent = parent;
-            Object = obj;
+            Game = parent ?? throw new ArgumentNullException(nameof(parent));
+            Round = obj ?? throw new ArgumentNullException(nameof(obj));
             obj.Kills.Sort((x, y) => x.Time.CompareTo(y.Time));
             Kills = obj.Kills.Select(x => new KillModel(this, x));
         }
 
-        public override void UpdateCollections()
-        {
-            OnPropertyChanged(nameof(Kills));
-        }
+        public GameModel Game { get; }
 
-        public GameModel Parent { get; }
-
-        public Round Object { get; }
+        public Round Round { get; }
 
         public IEnumerable<KillModel> Kills { get; }
 
@@ -51,28 +47,28 @@ namespace CrossoutLogView.GUI.Models
                 sb.Append(RoundNumber);
                 sb.Append(CenterDotSeparator);
                 sb.Append("from ");
-                sb.Append((Object.Start - Parent.Start).ToString(@"mm\:ss"));
+                sb.Append(TimeSpanStringFactory(Round.Start - Game.Start));
                 sb.Append(" to ");
-                sb.Append((Object.End - Parent.Start).ToString(@"mm\:ss"));
+                sb.Append(TimeSpanStringFactory(Round.End - Game.Start));
                 sb.Append(CenterDotSeparator);
                 sb.Append("duration ");
-                sb.Append((Object.End - Object.Start).ToString(@"mm\:ss"));
+                sb.Append(TimeSpanStringFactory(Round.End - Round.Start));
                 sb.Append(CenterDotSeparator);
-                sb.Append(Object.Kills.Count);
+                sb.Append(Round.Kills.Count);
                 sb.Append(" kills");
                 return sb.ToString();
             }
         }
 
-        public int RoundNumber => Parent == null || Parent.Rounds == null ? 1 : Parent.Rounds.FindIndex(x => x.Start == Object.Start) + 1;
+        public int RoundNumber => Game == null || Game.Rounds == null ? 1 : Game.Rounds.FindIndex(x => x.Start == Round.Start) + 1;
 
-        public DateTime Start => Object.Start;
+        public DateTime Start => Round.Start;
 
-        public DateTime End => Object.End;
+        public DateTime End => Round.End;
 
-        public byte Winner => Object.Winner;
+        public byte Winner => Round.Winner;
 
-        public bool Won => Object.Winner == Parent.Players.First(x => x.UserID == Settings.Current.MyUserID).Team;
+        public bool Won => Round.Winner == Game.Players.FirstOrDefault(x => x.UserID == Settings.Current.MyUserID).Team;
 
         public Brush Background => App.Current.Resources[Won ? "TeamWon" : "TeamLost"] as Brush;
     }
