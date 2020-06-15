@@ -100,6 +100,7 @@ namespace CrossoutLogView.Statistics
                 else if (logEntry is Decal decal)
                 {
                     var player = players.Find(x => x.PlayerIndex == decal.PlayerNumber);
+                    if (player is null) continue;
                     var stripe = player.Stripes.Find(x => NameEquals(decal.StripeName, x.Name));
                     if (stripe != null) stripe.Ammount++;
                     else if (player != null) player.Stripes.Add(new Stripe(decal.StripeName, decal.AwardAmmount));
