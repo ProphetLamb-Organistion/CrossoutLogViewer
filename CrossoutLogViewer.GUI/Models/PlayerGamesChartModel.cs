@@ -113,13 +113,7 @@ namespace CrossoutLogView.GUI.Models
             var xAxis = new Axis
             {
                 LabelsRotation = 1,
-                LabelFormatter = delegate (double x)
-                {
-                    var index = (int)Math.Round(x);
-                    if (index < 0 || index >= Source.Count)
-                        return String.Empty;
-                    return DateTimeStringFactory(Source[index].StartTime);
-                }
+                LabelFormatter = Formatter
             };
             //bind x axis scale
             xAxis.SetBinding(Axis.MaxValueProperty, new Binding("AxisXUpperValue") { Mode = BindingMode.OneWay });
@@ -130,13 +124,21 @@ namespace CrossoutLogView.GUI.Models
             Chart.SetBinding(Chart.AxisYProperty, new Binding("AxisYCollection") { Mode = BindingMode.OneWay });
         }
 
+        public string Formatter(double x)
+        {
+            var index = (int)Math.Round(x); // Convert x axis value to index
+            if (index < 0 || index >= Source.Count) // Check for argument out of range
+                return String.Empty;
+            return DateTimeStringFactory(Source[index].StartTime); 
+        }
+
         protected override void UpdateCollections()
         {
             if (Source == null)
                 return;
-            //x axis bounderies
-            AxisXMinValue = AxisXLowerValue = -1;
-            AxisXMaxValue = AxisXUpperValue = Source.Count - 1;
+            // X axis Bounderies cannot have a negative range
+            AxisXMinValue = AxisXLowerValue = 0;
+            AxisXMaxValue = AxisXUpperValue = Source.Count == 0 ? 0 : Source.Count - 1;
             if (Series == null)
                 InitializeSeries();
             for (int i = 0; i < chartValues.Length; i++)
