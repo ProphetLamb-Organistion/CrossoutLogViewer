@@ -174,11 +174,11 @@ namespace CrossoutLogView.GUI
         {
             if (e.ViewModel is PlayerGameCompositeModel pgc)
             {
-                new NavigationWindow(pgc.Game).ShowDialog();
+                new NavigationWindow(pgc.Game).Show();
             }
             else if (e.ViewModel is UserListModel ul)
             {
-                new NavigationWindow(ul).ShowDialog();
+                new NavigationWindow(ul).Show();
             }
         }
 
@@ -186,7 +186,7 @@ namespace CrossoutLogView.GUI
         {
             if (e.ViewModel is UserModel user)
             {
-                new NavigationWindow(new UserModel(user.User)).ShowDialog();
+                new NavigationWindow(new UserModel(user.User)).Show();
             }
         }
 
@@ -194,7 +194,7 @@ namespace CrossoutLogView.GUI
         {
             if (e.ViewModel is UserModel weapon)
             {
-                new NavigationWindow(weapon).ShowDialog();
+                new NavigationWindow(weapon).Show();
             }
         }
 
