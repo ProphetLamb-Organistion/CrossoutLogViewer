@@ -1,6 +1,8 @@
 ﻿using CrossoutLogView.Common;
+using CrossoutLogView.GUI.Core;
 using CrossoutLogView.GUI.Events;
 using CrossoutLogView.GUI.Models;
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -21,7 +23,7 @@ namespace CrossoutLogView.GUI.Controls
     /// <summary>
     /// Interaction logic for UsersListControl.xaml
     /// </summary>
-    public partial class UsersListControl : UserControl
+    public partial class UsersListControl : ILogging
     {
         public event OpenModelViewerEventHandler OpenViewModel;
         private UsersListControlModel viewModel;
@@ -38,7 +40,7 @@ namespace CrossoutLogView.GUI.Controls
 
         public UserModel SelectedItem { get => GetValue(SelectedItemProperty) as UserModel; set => SetValue(SelectedItemProperty, value); }
         public static readonly DependencyProperty SelectedItemProperty = DependencyProperty.Register(nameof(SelectedItem), typeof(UserModel), typeof(UsersListControl), new PropertyMetadata(OnSelectedItemPropertyChanged));
-        
+
         public string FilterUserName { get => viewModel.FilterUserName; set => viewModel.FilterUserName = value; }
 
         private static void OnItemsSourcePropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
@@ -98,9 +100,14 @@ namespace CrossoutLogView.GUI.Controls
             if (!(obj is UserModel ul)) return false;
             foreach (var part in viewModel.FilterUserName.TrimEnd().Split(' ', '-', '_'))
             {
-                if (!ul.Object.Name.Contains(part, StringComparison.InvariantCultureIgnoreCase)) return false;
+                if (!ul.User.Name.Contains(part, StringComparison.InvariantCultureIgnoreCase)) return false;
             }
             return true;
         }
+
+        #region ILogging support
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        NLog.Logger ILogging.Logger { get; } = logger;
+        #endregion
     }
 }

@@ -25,20 +25,17 @@ namespace CrossoutLogView.GUI.WindowsAuxilary
     /// <summary>
     /// Interaction logic for LauncherWindow.xaml
     /// </summary>
-    public partial class LauncherWindow
+    public partial class LauncherWindow : MetroWindow, ILogging
     {
-        private TaskFactory tf;
-
+        private LoadingWindow loadingWindow;
         public LauncherWindow()
         {
-            Logging.WriteLine<LauncherWindow>("Loading LauncherWindow", true);
-            tf = new TaskFactory(TaskScheduler.FromCurrentSynchronizationContext());
+            logger.TraceResource("WinInit");
             InitializeComponent();
-            Settings.Update();
             if (!String.IsNullOrEmpty(Settings.Current.BaseColorScheme) && !String.IsNullOrEmpty(Settings.Current.ColorScheme))
                 App.Theme = ThemeManager.Current.ChangeTheme(App.Current, Settings.Current.BaseColorScheme, Settings.Current.ColorScheme);
-            DataContext = new WindowViewModel();
-            Logging.WriteLine<LauncherWindow>("LauncherWindow loaded in {TP}");
+            DataContext = new WindowViewModelBase();
+            logger.TraceResource("WinInitD");
         }
 
         private void CollectedStatisticsClick(object sender, RoutedEventArgs e)
@@ -54,26 +51,31 @@ namespace CrossoutLogView.GUI.WindowsAuxilary
         }
         private void SettingsClick(object sender, RoutedEventArgs e)
         {
-            tf.StartNew(delegate
+            Dispatcher.BeginInvoke(new Action(delegate
             {
                 new SettingsWindow().ShowDialog();
-            });
+            }));
         }
 
         private async void OnLoaded(object sender, RoutedEventArgs e)
         {
-            var controller = await this.ShowProgressAsync("Starting", "Initializing datastructure, collecting logs, evaluating statistics.\r\nPlease stand by.", settings: new MetroDialogSettings
+            loadingWindow = new LoadingWindow
             {
-                AnimateHide = false,
-                AnimateShow = false,
-                ColorScheme = MetroDialogOptions.ColorScheme
-            });
-            controller.SetIndeterminate();
+                Header = App.GetWindowResource("Lnch_LoadingHeader"),
+                Message = App.GetWindowResource("Lnch_LoadingMessage")
+            };
+            loadingWindow.IsIndeterminate = true;
+            loadingWindow.Show();
             await Task.Run(delegate
             {
                 App.InitializeSession();
             });
-            await controller.CloseAsync();
+            loadingWindow.Close();
         }
+
+        #region ILogging support
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        NLog.Logger ILogging.Logger { get; } = logger;
+        #endregion
     }
 }

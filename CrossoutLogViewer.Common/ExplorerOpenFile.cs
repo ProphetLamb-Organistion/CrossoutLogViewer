@@ -31,9 +31,8 @@ namespace CrossoutLogView.Common
                 opener.StartInfo.Arguments = "\"" + Path.GetFullPath(filePath) + "\"";
                 opener.Start();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Logging.WriteLine(ex);
                 return false;
             }
             return true;

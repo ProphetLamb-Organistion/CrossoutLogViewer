@@ -20,7 +20,7 @@ namespace CrossoutLogView.GUI.Controls
     /// <summary>
     /// Interaction logic for UserOverview.xaml
     /// </summary>
-    public partial class UserOverview
+    public partial class UserOverview : ILogging
     {
         public UserOverview()
         {
@@ -36,5 +36,10 @@ namespace CrossoutLogView.GUI.Controls
                 umNew.StatDisplayMode = umOld.StatDisplayMode;
             }
         }
+
+        #region ILogging support
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        NLog.Logger ILogging.Logger { get; } = logger;
+        #endregion
     }
 }

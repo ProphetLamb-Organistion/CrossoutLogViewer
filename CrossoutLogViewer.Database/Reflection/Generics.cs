@@ -11,13 +11,13 @@ namespace CrossoutLogView.Database.Reflection
         public static object CastEnumerable(Type type, Type itemType, IEnumerable items)
         {
             var ienumerable = GetEnumerableCast(itemType).Invoke(null, new object[] { items }); //items.Cast<itemType>
-            if (typeof(IList).IsAssignableFrom(type))
-            {
-                return GetGenericToList(itemType).Invoke(null, new[] { ienumerable }); //ienumerable.ToList<itemType>
-            }
             if (typeof(Array).IsAssignableFrom(type))
             {
                 return GetGenericToArray(itemType).Invoke(null, new[] { ienumerable });//ienumerable.ToArray<itemType>
+            }
+            if (typeof(IList).IsAssignableFrom(type))
+            {
+                return GetGenericToList(itemType).Invoke(null, new[] { ienumerable }); //ienumerable.ToList<itemType>
             }
             return ienumerable;
         }

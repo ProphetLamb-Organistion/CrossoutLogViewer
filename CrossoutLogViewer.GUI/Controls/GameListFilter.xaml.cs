@@ -1,4 +1,5 @@
 ﻿using CrossoutLogView.Common;
+using CrossoutLogView.GUI.Core;
 using CrossoutLogView.GUI.Events;
 using CrossoutLogView.Statistics;
 
@@ -23,7 +24,7 @@ namespace CrossoutLogView.GUI.Controls
     /// <summary>
     /// Interaction logic for GameListFilter.xaml
     /// </summary>
-    public partial class GameListFilter
+    public partial class GameListFilter : ILogging
     {
         public event GameFilterChangedEventHandler FilterChanged;
 
@@ -31,11 +32,16 @@ namespace CrossoutLogView.GUI.Controls
         {
             InitializeComponent();
             ComboBoxGameMode.ItemsSource = Enum.GetValues(typeof(GameMode)).Cast<GameMode>();
-            GameMode = GameMode.All;
+            Filter = DefaultFilter;
         }
 
         /// <summary>
-        /// Gets or sets the instance of <see cref="GameFilter"/> defining the setting of this <see cref="UserControl"/>.
+        /// Gets or sets the default value of <see cref="GameFilter"/> used when initializing a new instance of <see cref="GameListFilter"/>.
+        /// </summary>
+        public static GameFilter DefaultFilter { get; set; } = new GameFilter(GameMode.All, DateTime.Now.StartOfWeek(), DateTime.Now.StartOfWeek().AddDays(7.0).AddSeconds(-1.0));
+
+        /// <summary>
+        /// Gets or sets the instance of <see cref="GameFilter"/> defining the setting of <see cref="GameListFilter"/>.
         /// </summary>
         public GameFilter Filter
         {
@@ -76,13 +82,14 @@ namespace CrossoutLogView.GUI.Controls
 
         private static void OnFilterPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            if (sender is GameListFilter gl)
+            if (sender is GameListFilter cntr && e.NewValue is GameFilter newValue)
             {
                 var newGameFilter = ObjToGameFilter(e.NewValue);
-                gl.StartLimit = newGameFilter.StartLimit == default ? null : (newGameFilter.StartLimit as DateTime?);
-                gl.EndLimit = newGameFilter.EndLimit == default ? null : (newGameFilter.EndLimit as DateTime?);
-                gl.GameMode = newGameFilter.GameModes;
-                gl.FilterChanged?.Invoke(gl, new GameFilterChangedEventArgs(ObjToGameFilter(e.OldValue), newGameFilter));
+                cntr.StartLimit = newGameFilter.StartLimit == default ? null : (newGameFilter.StartLimit as DateTime?);
+                cntr.EndLimit = newGameFilter.EndLimit == default ? null : (newGameFilter.EndLimit as DateTime?);
+                cntr.GameMode = newGameFilter.GameModes;
+                cntr.FilterChanged?.Invoke(cntr, new GameFilterChangedEventArgs(ObjToGameFilter(e.OldValue), newGameFilter));
+                DefaultFilter = newValue;
             }
         }
 
@@ -143,7 +150,7 @@ namespace CrossoutLogView.GUI.Controls
         }
 
         private void SetFilterAfternoonClick(object sender, RoutedEventArgs e) => SetFilterAfternoon();
-        public void SetFilterAfternoon() 
+        public void SetFilterAfternoon()
         {
             if (StartLimit.HasValue)
             {
@@ -234,5 +241,10 @@ namespace CrossoutLogView.GUI.Controls
         {
             return (GameMode)(obj ?? GameMode.All);
         }
+
+        #region ILogging support
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        NLog.Logger ILogging.Logger { get; } = logger;
+        #endregion
     }
 }

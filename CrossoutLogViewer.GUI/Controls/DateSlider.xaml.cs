@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CrossoutLogView.GUI.Core;
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Timers;
@@ -17,7 +19,7 @@ namespace CrossoutLogView.GUI.Controls
     /// <summary>
     /// Interaction logic for DateSlider.xaml
     /// </summary>
-    public partial class DateSlider : UserControl
+    public partial class DateSlider : ILogging
     {
         private int _minimum = -7, _maximum = 7, value = 0;
         public event RoutedPropertyChangedEventHandler<int> ValueChanged;
@@ -146,24 +148,24 @@ namespace CrossoutLogView.GUI.Controls
         {
             if (!Validate(value))
             {
-                if (value < _minimum) 
+                if (value < _minimum)
                     value = _minimum;
-                else if (value > _maximum) 
+                else if (value > _maximum)
                     value = _maximum;
             }
             Middle = DisplayStringFromValue(value);
 
             int leftV = value - 1, rightv = value + 1;
-            if (Validate(leftV)) 
+            if (Validate(leftV))
                 Left = DisplayStringFromValue(leftV);
-            else 
+            else
                 Left = String.Empty;
             if (Validate(rightv))
                 Right = DisplayStringFromValue(rightv);
-            else 
+            else
                 Right = String.Empty;
         }
-        
+
         private void NavigateUp(object sender, MouseButtonEventArgs e)
         {
             if (!(sender is Label lb)) return;
@@ -192,5 +194,10 @@ namespace CrossoutLogView.GUI.Controls
         }
 
         private bool Validate(int? value) => value != null && _minimum <= value && value <= _maximum;
+
+        #region ILogging support
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        NLog.Logger ILogging.Logger { get; } = logger;
+        #endregion
     }
 }

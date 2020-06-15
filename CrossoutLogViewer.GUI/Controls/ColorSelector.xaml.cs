@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CrossoutLogView.GUI.Core;
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
@@ -17,7 +19,7 @@ namespace CrossoutLogView.GUI.Controls
     /// <summary>
     /// Interaction logic for ColorSelector.xaml
     /// </summary>
-    public partial class ColorSelector
+    public partial class ColorSelector : ILogging
     {
         public ColorSelector()
         {
@@ -89,5 +91,10 @@ namespace CrossoutLogView.GUI.Controls
                     colorSelector.ComboBoxColors.Width = newValue;
             }
         }
+
+        #region ILogging support
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        NLog.Logger ILogging.Logger { get; } = logger;
+        #endregion
     }
 }

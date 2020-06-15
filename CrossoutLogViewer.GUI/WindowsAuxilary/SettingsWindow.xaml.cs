@@ -1,10 +1,16 @@
-﻿using CrossoutLogView.Common;
+﻿using ControlzEx.Standard;
+
+using CrossoutLogView.Common;
+using CrossoutLogView.GUI.Core;
+using CrossoutLogView.GUI.Models;
 
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,15 +26,16 @@ namespace CrossoutLogView.GUI.WindowsAuxilary
     /// <summary>
     /// Interaction logic for SettingsWindow.xaml
     /// </summary>
-    public partial class SettingsWindow
+    public partial class SettingsWindow : MetroWindow, ILogging
     {
-        private static string deleteDatabaseConfirmation = String.Concat("This will delete all colleted data. We might not be able to completely restore the data, because Crossout deletes logs after a certain time period.", Environment.NewLine, "Afterwards this application will shutdown.  Are you sure that you wish to proceed?");
-        private SettingsWindowViewModel viewModel = new SettingsWindowViewModel();
+        private SettingsWindowViewModel viewModel;
 
         public SettingsWindow()
         {
+            logger.TraceResource("WinInit");
             InitializeComponent();
-            DataContext = viewModel;
+            DataContext = viewModel = new SettingsWindowViewModel();
+            logger.TraceResource("WinInitD");
         }
 
         private void ChangeThemeClick(object sender, RoutedEventArgs e)
@@ -36,6 +43,7 @@ namespace CrossoutLogView.GUI.WindowsAuxilary
             viewModel.AccentColor.ChangeAccentCommand.Execute(sender);
             viewModel.AppTheme.ChangeAccentCommand.Execute(sender);
             SettingsWindowViewModel.ApplyColors();
+            logger.TraceResource("Sett_ChangeTheme");
         }
 
         private void ResetColorsClick(object sender, RoutedEventArgs e)
@@ -50,7 +58,7 @@ namespace CrossoutLogView.GUI.WindowsAuxilary
 
         private void OpenEventLogClick(object sender, RoutedEventArgs e)
         {
-            ExplorerOpenFile.OpenFile(Strings.DataBaseEventLogPath);
+            ExplorerOpenFile.OpenFile(@".\event.log");
         }
 
         private async void DeleteDatabaseClick(object sender, RoutedEventArgs e)
@@ -61,18 +69,18 @@ namespace CrossoutLogView.GUI.WindowsAuxilary
                 AnimateShow = false,
                 AffirmativeButtonText = "Proceed",
                 NegativeButtonText = "Cancel",
-                MaximumBodyHeight = 150,
+                MaximumBodyHeight = 500,
                 ColorScheme = MetroDialogOptions.ColorScheme
             };
             MessageDialogResult result = await this.ShowMessageAsync(
-                "Delete database confirmation",
-                deleteDatabaseConfirmation,
+                App.GetWindowResource("Sett_DelDB_Header"),
+                App.GetWindowResource("Sett_DelDB_Message"),
                 MessageDialogStyle.AffirmativeAndNegative,
                 settings);
             if (result == MessageDialogResult.Affirmative)
             {
                 App.SessionControlService.DeleteDatabase();
-                Application.Current.Shutdown();
+                Environment.Exit(0);
             }
         }
 
@@ -80,6 +88,22 @@ namespace CrossoutLogView.GUI.WindowsAuxilary
         {
             if (e.GetPosition(this).Y <= TitleBarHeight) //prevent maximize
                 e.Handled = true;
+        }
+
+        #region ILogging support
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        NLog.Logger ILogging.Logger { get; } = logger;
+        #endregion
+
+        private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        {
+            try
+            {
+                Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri) { UseShellExecute = true });
+            }
+            catch (InvalidOperationException) { }
+            catch (Win32Exception) { }
+            e.Handled = true;
         }
     }
 }

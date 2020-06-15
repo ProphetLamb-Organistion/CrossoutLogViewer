@@ -1,5 +1,6 @@
 ﻿using CrossoutLogView.GUI.Core;
 using CrossoutLogView.GUI.Events;
+using CrossoutLogView.GUI.Helpers;
 using CrossoutLogView.GUI.Models;
 using CrossoutLogView.Statistics;
 
@@ -24,7 +25,7 @@ namespace CrossoutLogView.GUI.Controls
     /// <summary>
     /// Interaction logic for PlayerGamesDataGrid.xaml
     /// </summary>
-    public partial class PlayerGamesDataGrid
+    public partial class PlayerGamesDataGrid : ILogging
     {
         public event OpenModelViewerEventHandler OpenViewModel;
 
@@ -49,7 +50,7 @@ namespace CrossoutLogView.GUI.Controls
             if (SelectedItems == null || SelectedItems.Count == 0) return;
             var users = new ObservableCollection<UserModel>(User.ParseUsers(SelectedItems
                 .Cast<PlayerGameCompositeModel>()
-                .Select(x => x.Game.Object))
+                .Select(x => x.Game.Game))
                 .Select(x => new UserModel(x)));
             OpenViewModel?.Invoke(this, new OpenModelViewerEventArgs(new UserListModel(users)));
         }
@@ -60,7 +61,7 @@ namespace CrossoutLogView.GUI.Controls
             var games = new List<Game>();
             foreach (var item in CollectionViewSource.GetDefaultView(ItemsSource)) //items in collectionview respect filter
             {
-                if (item is PlayerGameCompositeModel pgm) games.Add(pgm.Game.Object);
+                if (item is PlayerGameCompositeModel pgm) games.Add(pgm.Game.Game);
             }
             var users = new ObservableCollection<UserModel>();
             foreach (var user in User.ParseUsers(games))
@@ -94,5 +95,10 @@ namespace CrossoutLogView.GUI.Controls
         {
             OpenSelectedGamesUsers();
         }
+
+        #region ILogging support
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        NLog.Logger ILogging.Logger { get; } = logger;
+        #endregion
     }
 }

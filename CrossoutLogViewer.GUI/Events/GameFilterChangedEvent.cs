@@ -37,8 +37,8 @@ namespace CrossoutLogView.GUI.Events
 
         public bool Filter(object obj)
         {
-            if (obj is PlayerGameCompositeModel pgcm) return Filter(pgcm.Game.Object);
-            if (obj is GameModel gm) return Filter(gm.Object);
+            if (obj is PlayerGameCompositeModel pgcm) return Filter(pgcm.Game.Game);
+            if (obj is GameModel gm) return Filter(gm.Game);
             if (obj is Game game)
             {
                 return (game.Mode & GameModes) == game.Mode

@@ -1,5 +1,6 @@
 ﻿using CrossoutLogView.GUI.Core;
 using CrossoutLogView.GUI.Events;
+using CrossoutLogView.GUI.Helpers;
 using CrossoutLogView.GUI.Models;
 
 using System;
@@ -21,7 +22,7 @@ namespace CrossoutLogView.GUI.Controls
     /// <summary>
     /// Interaction logic for UserListView.xaml
     /// </summary>
-    public partial class UserDataGrid : DataGrid
+    public partial class UserDataGrid : ILogging
     {
         public event OpenModelViewerEventHandler OpenViewModel;
 
@@ -52,5 +53,10 @@ namespace CrossoutLogView.GUI.Controls
                 e.Handled = true;
             }
         }
+
+        #region ILogging support
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        NLog.Logger ILogging.Logger { get; } = logger;
+        #endregion
     }
 }

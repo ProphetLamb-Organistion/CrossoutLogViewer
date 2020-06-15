@@ -114,7 +114,7 @@ namespace CrossoutLogView.Common
             if (collection == null) throw new ArgumentNullException(nameof(collection));
             if (match == null) throw new ArgumentNullException(nameof(match));
             var list = new List<T>();
-            for(int i = 0; i < collection.Count; i++)
+            for (int i = 0; i < collection.Count; i++)
             {
                 if (match(collection[i]))
                 {

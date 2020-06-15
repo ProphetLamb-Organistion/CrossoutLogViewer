@@ -14,15 +14,12 @@ namespace CrossoutLogView.GUI.Models
     {
         public UserListModel(ObservableCollection<UserModel> users)
         {
-            Users = users;
+            Users = users ?? throw new ArgumentNullException(nameof(users));
         }
 
         private string _filterUserName;
         public string FilterUserName { get => _filterUserName; set => Set(ref _filterUserName, value?.TrimStart()); }
 
         public ObservableCollection<UserModel> Users { get; }
-
-        public override void UpdateCollections() { }
-
     }
 }

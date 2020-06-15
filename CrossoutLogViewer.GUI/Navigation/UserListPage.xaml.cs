@@ -1,8 +1,10 @@
 ﻿using CrossoutLogView.Common;
 using CrossoutLogView.Database.Data;
 using CrossoutLogView.GUI.Controls;
+using CrossoutLogView.GUI.Core;
 using CrossoutLogView.GUI.Events;
 using CrossoutLogView.GUI.Models;
+using CrossoutLogView.GUI.WindowsAuxilary;
 using CrossoutLogView.Statistics;
 
 using System;
@@ -15,7 +17,6 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace CrossoutLogView.GUI.Navigation
@@ -23,17 +24,17 @@ namespace CrossoutLogView.GUI.Navigation
     /// <summary>
     /// Interaction logic for UserListPage.xaml
     /// </summary>
-    public partial class UserListPage
+    public partial class UserListPage : ILogging
     {
-        private readonly Frame frame;
+        private readonly NavigationWindow nav;
         private UserListModel userListViewModel;
 
-        public UserListPage(Frame frame, UserListModel userList)
+        public UserListPage(NavigationWindow nav, UserListModel userList)
         {
-            this.frame = frame;
+            this.nav = nav ?? throw new ArgumentNullException(nameof(nav));
             InitializeComponent();
             DataContext = userList;
-            userListViewModel = userList;
+            userListViewModel = userList ?? throw new ArgumentNullException(nameof(userList));
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
@@ -41,5 +42,10 @@ namespace CrossoutLogView.GUI.Navigation
             UsersListControl.ItemsSource = userListViewModel.Users;
             UsersListControl.FilterUserName = userListViewModel.FilterUserName;
         }
+
+        #region ILogging support
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        NLog.Logger ILogging.Logger { get; } = logger;
+        #endregion
     }
 }

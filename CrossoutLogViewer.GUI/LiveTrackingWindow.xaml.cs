@@ -2,9 +2,11 @@
 using CrossoutLogView.Database.Collection;
 using CrossoutLogView.Database.Data;
 using CrossoutLogView.Database.Events;
+using CrossoutLogView.GUI.Core;
 using CrossoutLogView.GUI.WindowsAuxilary;
 using CrossoutLogView.Log;
 using CrossoutLogView.Statistics;
+
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 
@@ -16,10 +18,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
 namespace CrossoutLogView.GUI
@@ -27,34 +27,55 @@ namespace CrossoutLogView.GUI
     /// <summary>
     /// Interaction logic for LiveTracking.xaml
     /// </summary>
-    public partial class LiveTrackingWindow
+    public partial class LiveTrackingWindow : MetroWindow, ILogging
     {
-        private readonly LiveTrackingWindowViewModel viewModel;
+        private LoadingWindow loadingWindow;
+        private bool forceClose = false;
+
+        private LiveTrackingWindowViewModel viewModel;
         private Game currentGame = new Game();
         private List<ILogEntry> gameLog;
 
-        private bool forceClose = false;
 
-        public LiveTrackingWindow() : this(false) { }
-        public LiveTrackingWindow(bool directLaunch)
+        public LiveTrackingWindow()
         {
-            if (directLaunch)
+            if (Settings.Current.StartupMaximized)
+                WindowState = WindowState.Maximized;
+            loadingWindow = new LoadingWindow
             {
-                App.InitializeSession();
-            }
-            Logging.WriteLine<LiveTrackingWindow>("Loading LiveTracking", true);
+                IsIndeterminate = true,
+                Title = App.GetSharedResource("Loading"),
+                Header = App.GetWindowResource("Live_LoadingHeader"),
+                Message = App.GetWindowResource("Live_LoadingMessage")
+            };
+            loadingWindow.Show();
+
+            CallbackTask.Run(App.InitializeSession, InitializedSession);
+
+            logger.TraceResource("WinInit");
             InitializeComponent();
-            DataContext = viewModel = new LiveTrackingWindowViewModel();
+            logger.TraceResource("WinInitD");
+
         }
 
-        private async void OnLoaded(object sender, RoutedEventArgs e)
+        private void InitializedSession()
         {
-            var uri = ImageProvider.GetMapImageUri("powerplant");
-            MapImage.Source = new BitmapImage(uri);
-
+            this.Invoke(delegate
+            {
+                //TODO: call initializer of WindowViewModel
+                //      subscribe to Initialized event
+                logger.TraceResource("ViewModelInit");
+                DataContext = viewModel = new LiveTrackingWindowViewModel(Dispatcher);
+                viewModel.Initialized += ApplyViewModel;
+            });
             LogUploader.LogUploadEvent += OnLogUpload;
+        }
 
-            Logging.WriteLine<LiveTrackingWindow>("LiveTracking loaded in {TP}");
+        private void ApplyViewModel(object sender, EventArgs e)
+        {
+            //TODO: apply data from viewmodel to window content
+            loadingWindow.Close();
+            logger.TraceResource("ViewModelInitD");
         }
 
         private void OnLogUpload(object sender, LogUploadEventArgs e)
@@ -62,10 +83,10 @@ namespace CrossoutLogView.GUI
 
         }
 
-        private void OpenMapImageClick(object sender, MouseButtonEventArgs e)
+        private void Window_StateChanged(object sender, EventArgs e)
         {
-            if (currentGame != null)
-                ExplorerOpenFile.OpenFile(ImageProvider.GetMapImageUri("powerplant"));
+            if (IsLoaded)
+                Settings.Current.StartupMaximized = WindowState == WindowState.Maximized;
         }
 
         #region Confim close
@@ -118,6 +139,11 @@ namespace CrossoutLogView.GUI
             }
             if (forceClose) Close();
         }
+        #endregion
+
+        #region ILogging support
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        NLog.Logger ILogging.Logger { get; } = logger;
         #endregion
     }
 }

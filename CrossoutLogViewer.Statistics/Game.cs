@@ -39,19 +39,12 @@ namespace CrossoutLogView.Statistics
         {
             if (gameLog == null) throw new ArgumentNullException(nameof(gameLog));
             var game = new Game();
-            GameStart start;
-            ActiveBattleStart battleStart;
-            GameFinish end;
-            try
-            {
-                start = gameLog.First(x => x is GameStart) as GameStart;
-                battleStart = gameLog.First(x => x is ActiveBattleStart) as ActiveBattleStart;
-                end = gameLog.First(x => x is GameFinish) as GameFinish;
-            }
-            catch (InvalidOperationException ex)
-            {
-                throw new MatchingLogEntryNotFoundException("Could not find start, battle start or finish of the game.", nameof(gameLog), ex);
-            }
+            if (!(gameLog.FirstOrDefault(x => x is GameStart) is GameStart start))
+                throw new MatchingLogEntryNotFoundException("Could not find 'finish' logentry in gameLog.", nameof(start));
+            if (!(gameLog.FirstOrDefault(x => x is ActiveBattleStart) is ActiveBattleStart battleStart))
+                throw new MatchingLogEntryNotFoundException("Could not find 'battle start' logentry in gameLog.", nameof(battleStart));
+            if (!(gameLog.FirstOrDefault(x => x is GameFinish) is GameFinish end))
+                throw new MatchingLogEntryNotFoundException("Could not find 'finish' logentry in gameLog.", nameof(end));
             game.Start = new DateTime(battleStart.TimeStamp);
             game.End = game.Start.AddSeconds(end.GameDuration);
             game.Mode = GetGameMode(start, out game.Mission);
@@ -68,7 +61,7 @@ namespace CrossoutLogView.Statistics
                 if (mvp != null && redMvp != null)
                 {
                     game.MVP = mvp.PlayerIndex;
-                    //only exisits if half or more of the MVPs score
+                    // Only exisits if half or more of the MVPs score
                     if (redMvp.Score * 2 >= mvp.Score) game.RedMVP = redMvp.PlayerIndex;
                     else game.RedMVP = -1;
                 }

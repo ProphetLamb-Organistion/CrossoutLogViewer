@@ -1,7 +1,9 @@
 ﻿using CrossoutLogView.Common;
 using CrossoutLogView.Database.Connection;
 using CrossoutLogView.Database.Data;
+using CrossoutLogView.GUI.Core;
 using CrossoutLogView.GUI.Models;
+using CrossoutLogView.GUI.WindowsAuxilary;
 
 using System.Windows;
 using System.Windows.Controls;
@@ -12,13 +14,13 @@ namespace CrossoutLogView.GUI.Navigation
     /// <summary>
     /// Interaction logic for PlayerPage.xaml
     /// </summary>
-    public partial class PlayerPage
+    public partial class PlayerPage : ILogging
     {
-        private readonly Frame frame;
+        private readonly NavigationWindow nav;
         private readonly PlayerModel playerModel;
-        public PlayerPage(Frame frame, PlayerModel playerViewModel)
+        public PlayerPage(NavigationWindow nav, PlayerModel playerViewModel)
         {
-            this.frame = frame;
+            this.nav = nav;
             InitializeComponent();
             DataContext = playerModel = playerViewModel;
             DataGridWeapons.ItemsSource = playerViewModel.Weapons;
@@ -32,9 +34,13 @@ namespace CrossoutLogView.GUI.Navigation
 
         private void OpenUser(object sender, MouseButtonEventArgs e)
         {
-            if (playerModel.Object.IsBot) return;
-            Logging.WriteLine<PlayerPage>("Navigate to user");
-            frame.Navigate(new UserPage(frame, new UserModel(DataProvider.GetUser(playerModel.Object.UserID))));
+            if (playerModel.Player.IsBot) return;
+            nav.Navigate(new UserPage(nav, new UserModel(DataProvider.GetUser(playerModel.Player.UserID))));
         }
+
+        #region ILogging support
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        NLog.Logger ILogging.Logger { get; } = logger;
+        #endregion
     }
 }

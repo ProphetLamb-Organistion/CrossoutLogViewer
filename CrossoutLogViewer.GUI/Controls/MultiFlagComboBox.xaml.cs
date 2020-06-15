@@ -1,4 +1,7 @@
-﻿using System;
+﻿using CrossoutLogView.Database.Data;
+using CrossoutLogView.GUI.Core;
+
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
@@ -14,15 +17,12 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-using CrossoutLogView.GUI.Core;
-using CrossoutLogView.Database.Data;
-
 namespace CrossoutLogView.GUI.Controls
 {
     /// <summary>
     /// Interaction logic for MultiFlagComboBox.xaml
     /// </summary>
-    public partial class MultiFlagComboBox : UserControl
+    public partial class MultiFlagComboBox : ILogging
     {
         private bool lockCheckedValueUpdate = false;
         public event RoutedPropertyChangedEventHandler<NamedEnum> SelectedValueChanged;
@@ -52,7 +52,7 @@ namespace CrossoutLogView.GUI.Controls
 
         public NamedEnum SelectedItem { get => GetValue(SelectedItemProperty) as NamedEnum; set => SetValue(SelectedItemProperty, value); }
         protected static readonly DependencyProperty SelectedItemProperty = DependencyProperty.Register(nameof(SelectedItem), typeof(NamedEnum), typeof(MultiFlagComboBox), new PropertyMetadata(SelectedValuePropertyChanged));
-        
+
         public object SelectedValue { get => SelectedItem.Value; set => SelectedItem = new NamedEnum(value, "Selected", true); }
 
         private void CheckValue(NamedEnum namedEnum)
@@ -103,7 +103,7 @@ namespace CrossoutLogView.GUI.Controls
         }
 
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
-        { 
+        {
             if (!lockCheckedValueUpdate && sender is FrameworkElement fe && fe.DataContext is NamedEnum ne)
             {
                 lockCheckedValueUpdate = true;
@@ -131,6 +131,11 @@ namespace CrossoutLogView.GUI.Controls
                 cmb.InvalidateSelectedValue();
             }
         }
+
+        #region ILogging support
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        NLog.Logger ILogging.Logger { get; } = logger;
+        #endregion
     }
 
     public class NamedEnum : ViewModelBase
@@ -162,7 +167,5 @@ namespace CrossoutLogView.GUI.Controls
             }
             return result;
         }
-
-        public override void UpdateCollections() => throw new InvalidOperationException();
     }
 }

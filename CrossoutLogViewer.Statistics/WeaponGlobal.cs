@@ -59,7 +59,7 @@ namespace CrossoutLogView.Statistics
                             weapon = new WeaponGlobal(w);
                             weapons.Add(weapon);
                         }
-                        var userIndex = weapon.Users.FindIndex(x => x.UserID == p.UserID);
+                        var userIndex = weapon.Users.FindIndex(x => Strings.NameEquals(x.Name, p.Name));
                         if (userIndex == -1)
                         {
                             weapon.Users.Add(new User(p.Name, p.UserID));

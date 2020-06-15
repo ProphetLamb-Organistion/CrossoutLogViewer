@@ -17,8 +17,8 @@ namespace CrossoutLogView.GUI.Models
 
         public WeaponUserListModel(User user, WeaponGlobal weapon)
         {
-            User = user;
-            Weapon = weapon;
+            User = user ?? throw new ArgumentNullException(nameof(user));
+            Weapon = weapon ?? throw new ArgumentNullException(nameof(weapon));
             foreach (var g in Weapon.Games) DataProvider.CompleteGame(g);
             UpdateDamageData();
         }
@@ -36,21 +36,24 @@ namespace CrossoutLogView.GUI.Models
 
         public double TotalDamage { get => _armorDamage + _critcalDamage; }
 
-        public override void UpdateCollections() => UpdateDamageData();
         private void UpdateDamageData()
         {
-            foreach (var weapon in Weapon.Games
-                .SelectMany(g => g.Players)
-                .Where(p => p.UserID == User.UserID)
-                .SelectMany(p => p.Weapons)
-                .Where(w => w.Name == Weapon.Name))
+            try
             {
-                _armorDamage += weapon.ArmorDamage;
-                _critcalDamage += weapon.CriticalDamage;
+                foreach (var weapon in Weapon.Games
+                    .SelectMany(g => g.Players)
+                    .Where(p => p.UserID == User.UserID)
+                    .SelectMany(p => p.Weapons)
+                    .Where(w => w.Name == Weapon.Name))
+                {
+                    _armorDamage += weapon.ArmorDamage;
+                    _critcalDamage += weapon.CriticalDamage;
+                }
+                OnPropertyChanged(nameof(ArmorDamage));
+                OnPropertyChanged(nameof(CriticalDamage));
+                OnPropertyChanged(nameof(TotalDamage));
             }
-            OnPropertyChanged(nameof(ArmorDamage));
-            OnPropertyChanged(nameof(CriticalDamage));
-            OnPropertyChanged(nameof(TotalDamage));
+            catch (InvalidOperationException) { } // Collection was modified exception
         }
     }
 }

@@ -12,7 +12,7 @@ namespace CrossoutLogView.Common
             dictionary.AddOrUpdate(key, value, (k, oldValue) => value);
         }
 
-        public static bool Remove<TKey, TValue>(this ConcurrentDictionary<TKey,TValue> dictionary, TKey key)
+        public static bool Remove<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> dictionary, TKey key)
         {
             return dictionary.TryRemove(key, out _);
         }

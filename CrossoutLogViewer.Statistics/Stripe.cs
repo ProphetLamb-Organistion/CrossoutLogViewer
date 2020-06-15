@@ -19,9 +19,9 @@ namespace CrossoutLogView.Statistics
             Ammount = ammount;
         }
 
-        public static Stripe Merge(Stripe stripe, Stripe other)
+        public Stripe Merge(Stripe other)
         {
-            return new Stripe(stripe.Name, stripe.Ammount + other.Ammount);
+            return new Stripe(Name, Ammount + other.Ammount);
         }
 
         public Stripe Clone() => new Stripe(Name, Ammount);
