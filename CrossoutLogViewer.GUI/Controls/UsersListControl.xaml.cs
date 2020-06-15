@@ -3,6 +3,8 @@ using CrossoutLogView.GUI.Core;
 using CrossoutLogView.GUI.Events;
 using CrossoutLogView.GUI.Models;
 
+using MahApps.Metro.Converters;
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -98,9 +100,19 @@ namespace CrossoutLogView.GUI.Controls
         {
             if (String.IsNullOrEmpty(viewModel.FilterUserName)) return true;
             if (!(obj is UserModel ul)) return false;
-            foreach (var part in viewModel.FilterUserName.TrimEnd().Split(' ', '-', '_'))
+            var values = ul.Name.TrimEnd().Split(' ', '-', '_');
+            for (int i = 0; i < viewModel.FiltersUserName.Length; i++)
             {
-                if (!ul.User.Name.Contains(part, StringComparison.InvariantCultureIgnoreCase)) return false;
+                if (UserListFilter(values, viewModel.FiltersUserName[i])) return true;
+            }
+            return false;
+        }
+
+        private static bool UserListFilter(string[] values, string match)
+        {
+            for (int i = 0; i < values.Length; i++)
+            {
+                if (!values[i].Contains(match, StringComparison.InvariantCultureIgnoreCase)) return false;
             }
             return true;
         }
