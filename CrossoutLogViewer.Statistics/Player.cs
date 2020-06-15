@@ -48,33 +48,31 @@ namespace CrossoutLogView.Statistics
                 {
                     var attacker = players.Find(x => NameEquals(dmg.Attacker, x.Name));
                     var victim = players.Find(x => NameEquals(dmg.Victim, x.Name));
-                    if (attacker != null && victim != null)
+                    if (attacker is null || victim is null) continue;
+                    double criticalDamage, armorDamage;
+                    if (dmg.IsCriticalDamage())
                     {
-                        double criticalDamage, armorDamage;
-                        if (dmg.IsCriticalDamage())
-                        {
-                            criticalDamage = dmg.DamageAmmount;
-                            armorDamage = 0.0;
-                        }
-                        else
-                        {
-                            criticalDamage = 0.0;
-                            armorDamage = dmg.DamageAmmount;
-                        }
-                        attacker.ArmorDamageDealt += armorDamage;
-                        attacker.CriticalDamageDealt += criticalDamage;
-
-                        var weaponName = TrimName(dmg.Weapon).ToString();
-                        var weapon = attacker.Weapons.Find(x => NameEquals(weaponName, x.Name));
-                        if (weapon == null) attacker.Weapons.Add(new Weapon(weaponName, criticalDamage, armorDamage));
-                        else
-                        {
-                            weapon.ArmorDamage += armorDamage;
-                            weapon.CriticalDamage += criticalDamage;
-                        }
-                        victim.ArmorDamageTaken += armorDamage;
-                        victim.CriticalDamageTaken += criticalDamage;
+                        criticalDamage = dmg.DamageAmmount;
+                        armorDamage = 0.0;
                     }
+                    else
+                    {
+                        criticalDamage = 0.0;
+                        armorDamage = dmg.DamageAmmount;
+                    }
+                    attacker.ArmorDamageDealt += armorDamage;
+                    attacker.CriticalDamageDealt += criticalDamage;
+
+                    var weaponName = TrimName(dmg.Weapon).ToString();
+                    var weapon = attacker.Weapons.Find(x => NameEquals(weaponName, x.Name));
+                    if (weapon == null) attacker.Weapons.Add(new Weapon(weaponName, criticalDamage, armorDamage));
+                    else
+                    {
+                        weapon.ArmorDamage += armorDamage;
+                        weapon.CriticalDamage += criticalDamage;
+                    }
+                    victim.ArmorDamageTaken += armorDamage;
+                    victim.CriticalDamageTaken += criticalDamage;
                 }
                 else if (logEntry is Score score)
                 {
