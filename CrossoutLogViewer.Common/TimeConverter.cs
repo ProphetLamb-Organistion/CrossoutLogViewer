@@ -14,10 +14,10 @@ namespace CrossoutLogView.Common
         public static long FromString(ReadOnlySpan<char> lineTimeStamp, DateTime logDate)
         {
             int hour, minute, second, millisecond;
-            hour = Int32.Parse(lineTimeStamp[0..2], NumberStyles.Integer, CultureInfo.InvariantCulture.NumberFormat);
-            minute = Int32.Parse(lineTimeStamp[3..5], NumberStyles.Integer, CultureInfo.InvariantCulture.NumberFormat);
-            second = Int32.Parse(lineTimeStamp[6..8], NumberStyles.Integer, CultureInfo.InvariantCulture.NumberFormat);
-            millisecond = Int32.Parse(lineTimeStamp[9..12], NumberStyles.Integer, CultureInfo.InvariantCulture.NumberFormat);
+            Int32.TryParse(lineTimeStamp[0..2], NumberStyles.Integer, CultureInfo.InvariantCulture.NumberFormat, out hour);
+            Int32.TryParse(lineTimeStamp[3..5], NumberStyles.Integer, CultureInfo.InvariantCulture.NumberFormat, out minute);
+            Int32.TryParse(lineTimeStamp[6..8], NumberStyles.Integer, CultureInfo.InvariantCulture.NumberFormat, out second);
+            Int32.TryParse(lineTimeStamp[9..12], NumberStyles.Integer, CultureInfo.InvariantCulture.NumberFormat, out millisecond);
             var dateTime = new DateTime(logDate.Year, logDate.Month, logDate.Day, hour, minute, second, millisecond);
             return dateTime.Ticks;
         }

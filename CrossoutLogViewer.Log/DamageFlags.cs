@@ -34,7 +34,8 @@ namespace CrossoutLogView.Log
             var result = DamageFlag.None;
             foreach (var flag in serialized.Split(Strings.EnumDelimiter))
             {
-                result |= (DamageFlag)Enum.Parse(typeof(DamageFlag), flag);
+                if (Enum.TryParse<DamageFlag>(flag, out var value))
+                    result |= value;
             }
             return result;
         }
