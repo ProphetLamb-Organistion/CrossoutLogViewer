@@ -112,9 +112,9 @@ namespace CrossoutLogView.GUI.Controls
         {
             for (int i = 0; i < values.Length; i++)
             {
-                if (!values[i].Contains(match, StringComparison.InvariantCultureIgnoreCase)) return false;
+                if (values[i].Contains(match, StringComparison.InvariantCultureIgnoreCase)) return true;
             }
-            return true;
+            return false;
         }
 
         #region ILogging support

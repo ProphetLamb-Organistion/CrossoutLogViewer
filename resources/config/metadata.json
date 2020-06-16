@@ -1,0 +1,22 @@
+[
+  {
+    "Sha": "735b769c44bec5cadb610299903e323a391d674c",
+    "Name": "assets.json",
+    "Size": 2
+  },
+  {
+    "Sha": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+    "Name": "maps.json",
+    "Size": 2
+  },
+  {
+    "Sha": "040582cc32f767b3e4abe60d95958c59116b59e8",
+    "Name": "NLog.config",
+    "Size": 2
+  },
+  {
+    "Sha": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+    "Name": "stripes.json",
+    "Size": 2
+  }
+]

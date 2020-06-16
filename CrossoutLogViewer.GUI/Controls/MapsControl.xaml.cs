@@ -76,7 +76,7 @@ namespace CrossoutLogView.GUI.Controls
                 PlayerGamesDataGrid.ItemsSource = map.Games;
                 RefreshGameFilter();
                 selectedItem = map;
-                var uri = ImageProvider.GetMapImageUri(map.GameMap.Map.Name);
+                var uri = ImageHelper.GetMapImageUri(map.GameMap.Map.Name);
                 if (uri != null)
                     MapBackgroundImage.Source = new BitmapImage(uri);
             }
