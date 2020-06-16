@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RootNamespace>CrossoutLogView.Database</RootNamespace>
-    <Platforms>AnyCPU</Platforms>
-    <Configurations>Debug;Release</Configurations>
+    <RootNamespace>CrossoutLogView.Updater</RootNamespace>
+    <StartupObject>CrossoutLogView.Updater.Program</StartupObject>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -17,13 +17,12 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.112.2" />
-    <PackageReference Include="System.ServiceProcess.ServiceController" Version="4.7.0" />
+    <PackageReference Include="Octokit" Version="0.48.0" />
+    <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\CrossoutLogViewer.Common\CrossoutLogViewer.Common.csproj" />
-    <ProjectReference Include="..\CrossoutLogViewer.Statistics\CrossoutLogViewer.Statistics.csproj" />
   </ItemGroup>
 
 </Project>
