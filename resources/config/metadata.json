@@ -1,22 +1,27 @@
 [
   {
-    "Sha": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+    "Sha": "ccbc4105c0d9270fb4f4633d466ffd942eb60dbb",
     "Name": "assets.json",
-    "Size": 3144
+    "Size": 3214
   },
   {
-    "Sha": "c45230ea9e62bc0edf407a13ddef8ff540de770a",
+    "Sha": "877822d3200c6f0c86bab214be56d1bb8a0c7dd0",
     "Name": "maps.json",
-    "Size": 796
+    "Size": 821
   },
   {
-    "Sha": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+    "Sha": "b8a8eb6c7ab23c67d78844b1dc5bbe04fee7fc1b",
+    "Name": "metadata.json",
+    "Size": 453
+  },
+  {
+    "Sha": "baa064e9092a00e3e76ce2f394d8cc3ced8ca616",
     "Name": "NLog.config",
-    "Size": 513
+    "Size": 528
   },
   {
-    "Sha": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+    "Sha": "64280b1e73156df899e36a4b1ee26b22352de40c",
     "Name": "stripes.json",
-    "Size": 145
+    "Size": 150
   }
 ]

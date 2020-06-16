@@ -1,346 +1,351 @@
 [
   {
-    "Sha": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+    "Sha": "20985bef528e7b45a63e16e29664bca9722e9139",
     "Name": "abandoned_ship.jpg",
     "Size": 552498
   },
   {
-    "Sha": "2bdc3aa1e7107fa697827560e7dc529448ca1b80",
+    "Sha": "bd216ea7051a8ebafc96e09bc2d71eadc20c45d9",
     "Name": "abandoned_ship_128x128.jpg",
     "Size": 8436
   },
   {
-    "Sha": "2060c279fe9e620f4a1731c94a0e2a9bb12b8f56",
+    "Sha": "8cd5a0ae2f554c5490c3c8904ea7979b121fdef2",
     "Name": "abandoned_ship_256x256.jpg",
     "Size": 26695
   },
   {
-    "Sha": "ab7e0080bcb7fcb15af68f03e544239cc7e37d4a",
+    "Sha": "7fc31a26cc337d95f84bbe4be3fbf4ec362c6524",
     "Name": "arizona_castle.jpg",
     "Size": 593275
   },
   {
-    "Sha": "9733f52578f076e4555bbd09e360e3472a7b08d0",
+    "Sha": "ddc50822852663a8db578c65d44d2c28519e5a97",
     "Name": "arizona_castle_128x128.jpg",
     "Size": 9699
   },
   {
-    "Sha": "7a34922236c3bd4d52ddfef809828815f3d800e9",
+    "Sha": "aa3d4da67eff0ef8cb08b75ebc40c98360f41274",
     "Name": "arizona_castle_256x256.jpg",
     "Size": 31698
   },
   {
-    "Sha": "4f0b6f9b20abeeb02449c3c610342d4a695628a4",
+    "Sha": "a8c3f4bc32ea27feaf6b36ba98ac4f1f7a2e0c2f",
     "Name": "arizona_silo.jpg",
     "Size": 475229
   },
   {
-    "Sha": "ee537fbd018eb7a830e3af4b5d7317a4fd9151d8",
+    "Sha": "67a7ecb81e098b6f8828817388adebb75b771ae1",
     "Name": "arizona_silo_128x128.jpg",
     "Size": 7564
   },
   {
-    "Sha": "d7069b802267cd589e6063310831375b26887a19",
+    "Sha": "2457811d67b91108803f55d3db0507307742a72a",
     "Name": "arizona_silo_256x256.jpg",
     "Size": 23580
   },
   {
-    "Sha": "fd09bbeb0eae966358147483c60d35e10ba6007a",
+    "Sha": "f99422a98a1529119ccc608118ff3f868f4be080",
     "Name": "bridge.jpg",
     "Size": 685333
   },
   {
-    "Sha": "98e3eed5946b51e782168c29c5d5c51a5dd9ed08",
+    "Sha": "2b1626f90404df2703f5e7795484718c4d33bfb2",
     "Name": "bridge_128x128.jpg",
     "Size": 9854
   },
   {
-    "Sha": "e2361554db15459b4820920cbec58b7135fef6b8",
+    "Sha": "19a11629c5d3eee37cdc4d60905f479f3899445e",
     "Name": "bridge_256x256.jpg",
     "Size": 32632
   },
   {
-    "Sha": "23c81f902d91a003b1a2ebe42d5271efb69fb632",
+    "Sha": "95b0ea23f4f91d87335def37ec9b9d4a74f38c7e",
     "Name": "building_yard3.jpg",
     "Size": 506471
   },
   {
-    "Sha": "48732040cc9aabcd54f5b66e8203c966fe0971d5",
+    "Sha": "7a9372b4e6102571c89726bddf9170ccf625bbb1",
     "Name": "building_yard3_128x128.jpg",
     "Size": 9263
   },
   {
-    "Sha": "2fc5ae79f820bf2a8af7298e2484ab7f204ef282",
+    "Sha": "5b12e01f1e7f1eae6f865901d745200b2618518b",
     "Name": "building_yard3_256x256.jpg",
     "Size": 28386
   },
   {
-    "Sha": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+    "Sha": "e6f97962f60340048346629bf6a8f31db49de97d",
     "Name": "castle.jpg",
     "Size": 643400
   },
   {
-    "Sha": "fbeff34357affb3907c64df357d21a0ce1d04dc6",
+    "Sha": "3158c8d4129851ac6bc8f9473855ee656461d70d",
     "Name": "castle_128x128.jpg",
     "Size": 9307
   },
   {
-    "Sha": "6cfeb1f86a8a57ea7cfd0d6782b8cfe1a2408602",
+    "Sha": "cccd4763a0f5c58a2e8a43d14bda3d663f546495",
     "Name": "castle_256x256.jpg",
     "Size": 31921
   },
   {
-    "Sha": "6e6aa64467bfdf8a49f58a29beecaa7977a8203f",
+    "Sha": "32934f8bda7a60ed619a1f509f1f3ebba4f797d1",
     "Name": "cemetery_highway.jpg",
     "Size": 681913
   },
   {
-    "Sha": "fb8476a7bcd9e66198896fd9a50daf01a28c6eb5",
+    "Sha": "7cb534f19eb8924e537112cbdb125e258bb9c3ad",
     "Name": "cemetery_highway_128x128.jpg",
     "Size": 8120
   },
   {
-    "Sha": "73e1e4b548f31539a9dda8e6610dc30ca7c18299",
+    "Sha": "dbdae40875092bd10b00dfb688cf7da65520dae9",
     "Name": "cemetery_highway_256x256.jpg",
     "Size": 30550
   },
   {
-    "Sha": "bb6fb8b3b602c0f587c4d95774f23125055cb997",
+    "Sha": "e8285c85649238dcb3ba8fc367ac11659208a578",
     "Name": "chemical_plant.jpg",
     "Size": 649113
   },
   {
-    "Sha": "ec9f9db123ae11f1495166b801419fd392b5cfd8",
+    "Sha": "11de753b7eb7d14ee532ba392dd032f20e11f824",
     "Name": "chemical_plant_128x128.jpg",
     "Size": 8743
   },
   {
-    "Sha": "bb9739930598dfbfe5cf8196b9f278a0e8c2458f",
+    "Sha": "18a6c02101a8d2e1b0ad768968e24f060b08e924",
     "Name": "chemical_plant_256x256.jpg",
     "Size": 30126
   },
   {
-    "Sha": "5491d1ad805c50901cea2b2fcfe6e74c920a5afc",
+    "Sha": "eff573e1c786a1791081e64de5d135d5ba5d5183",
     "Name": "cityruin.jpg",
     "Size": 664096
   },
   {
-    "Sha": "d3b9c5924b5be8a42682445b5c61b8bae65dc12c",
+    "Sha": "f97ed014b983853d53eb9d7c74981dddc6f4839a",
     "Name": "cityruin_128x128.jpg",
     "Size": 8271
   },
   {
-    "Sha": "c10e0ce6ab649fc3e89477dfd6854b1d431d934c",
+    "Sha": "9ce29dd5f646bf73ead566e7957a0e0908a3b004",
     "Name": "cityruin_256x256.jpg",
     "Size": 28957
   },
   {
-    "Sha": "7398fc73eca53fc7968842a16bc6f91c09a1f5b4",
+    "Sha": "d0e7ac5339f424da15bd61b12bea0c0282a8599f",
     "Name": "conflagration.jpg",
     "Size": 475421
   },
   {
-    "Sha": "a70b4061a60322f116dc7328d1db87fa5bf5a0da",
+    "Sha": "5742dbc52fd0d25819cc911b1f180c20a2483bb3",
     "Name": "conflagration_128x128.jpg",
     "Size": 7033
   },
   {
-    "Sha": "ca9fcc05f87adb7da48a7e8ee6d9f87c88c1414b",
+    "Sha": "6978dc2e3c16e9be6921dc8498ff44070937d290",
     "Name": "conflagration_256x256.jpg",
     "Size": 22239
   },
   {
-    "Sha": "32f03bcc63ac48a81249ee1ccd826c3e14b46843",
+    "Sha": "f540ab9ffe1a503a548fbebb8c8c7ae7138e721c",
     "Name": "factory.jpg",
     "Size": 637714
   },
   {
-    "Sha": "f7a289fc6f2485c56406e569106f454d18067d41",
+    "Sha": "f3b0c01d6debd576f6c4169a0fd37ef21aaac261",
     "Name": "factory_128x128.jpg",
     "Size": 9251
   },
   {
-    "Sha": "92e49c18ef05da4eedae496643cbfc452ed28595",
+    "Sha": "656298effa3735a94cb7e55b639eb8e81dde21a9",
     "Name": "factory_256x256.jpg",
     "Size": 30907
   },
   {
-    "Sha": "e97705d46f98b88cd2007fa71ccd79eb0fcb5427",
+    "Sha": "e2aae3afa45aef98b0cdef7fcb4b7cc6bd89b046",
     "Name": "geopp.jpg",
     "Size": 612183
   },
   {
-    "Sha": "65a9de15af73255c925b533a73ccae400655d75d",
+    "Sha": "95ce5fdd3bef914e559f39eb2d9f55669903fe59",
     "Name": "geopp_128x128.jpg",
     "Size": 8465
   },
   {
-    "Sha": "80417af4a0660db4cbd895b42532b911ab7ba0ca",
+    "Sha": "e7ad5777c36ca095c8b67009a2c556ffabc93749",
     "Name": "geopp_256x256.jpg",
     "Size": 28474
   },
   {
-    "Sha": "0f4df4222bdd6f7e044c358ede10619678f05c57",
+    "Sha": "07d5b5c8ed411a135bb185f0a911c66460290023",
     "Name": "iron_way.jpg",
     "Size": 642875
   },
   {
-    "Sha": "b4487983113ccbbed486f3487408a03a47411f9d",
+    "Sha": "cee4614f96ef3bc35177b7266676f0983b5d1ab7",
     "Name": "iron_way_128x128.jpg",
     "Size": 7254
   },
   {
-    "Sha": "c0e845c88c8a6c7865f5ba9192d1025ba8a71aae",
+    "Sha": "7108768264b9dc0ca6b9244eec468eb9bf432972",
     "Name": "iron_way_256x256.jpg",
     "Size": 27562
   },
   {
-    "Sha": "af58dc60488e624ba4376914b5ec47c63852720b",
+    "Sha": "af098a8ee31dd6ef3f2a55047049375fb5d8a51b",
     "Name": "iron_way_center.jpg",
     "Size": 555771
   },
   {
-    "Sha": "852c188a87c67a9df2cbcd8cc978422ec4d98e5f",
+    "Sha": "fa2a920111ddfa8a31a446cc2159cf84bd835934",
     "Name": "iron_way_center_128x128.jpg",
     "Size": 7813
   },
   {
-    "Sha": "262f7f85f45bca948f082ac6238538737f291699",
+    "Sha": "2c03994818b65a70ba7b1c5ca11cb2106e3eb3be",
     "Name": "iron_way_center_256x256.jpg",
     "Size": 26039
   },
   {
-    "Sha": "5be2ca77e67fc5f12c666478a491139ff1b6602a",
+    "Sha": "6a590485c57def687f0bd833b688bf3997f97194",
+    "Name": "metadata.json",
+    "Size": 8507
+  },
+  {
+    "Sha": "bd7bac7416d135d8fb49c75cd16000d880a0a1d3",
     "Name": "miners_way.jpg",
     "Size": 671430
   },
   {
-    "Sha": "307fa0718d546de7d156a257bdb35091df35e6a9",
+    "Sha": "b747d11a60660e92cefccb798b4c97dd5ecfe3a8",
     "Name": "miners_way_128x128.jpg",
     "Size": 8003
   },
   {
-    "Sha": "8a8dedd51071c9e0681c4246dad9b1b2999f8daf",
+    "Sha": "3c59e3af120a4297a12c61198954fc4d49d9bcb4",
     "Name": "miners_way_256x256.jpg",
     "Size": 28741
   },
   {
-    "Sha": "ec7c817a13dae43c54c7867867d71892d9000493",
+    "Sha": "a8096d53337cb74568b3fedca4530400b4cba550",
     "Name": "powerplant.jpg",
     "Size": 675398
   },
   {
-    "Sha": "da3303665c6283aa4a48865ff587ca79cc94a17e",
+    "Sha": "894cd4c88481753cbeffb8779b89d7ccfdb16fc8",
     "Name": "powerplant_128x128.jpg",
     "Size": 9182
   },
   {
-    "Sha": "9643400cb75a95b4b2b38e03d0b2c323c81ccb8d",
+    "Sha": "55439ba4b2f299563831a9db86ff23b91250209c",
     "Name": "powerplant_256x256.jpg",
     "Size": 31986
   },
   {
-    "Sha": "cdcb982e22903dfd4b64349e6b0ce490923781e7",
+    "Sha": "ef66ad570940d5e8a47bff82927bdd728eae3287",
     "Name": "red_rocks_territory.jpg",
     "Size": 715599
   },
   {
-    "Sha": "26ecf5cbc73558f8dbe605ed9fe058f0e3b3e530",
+    "Sha": "605c7260da5cf38ea0b13acae44119e06779a456",
     "Name": "red_rocks_territory_128x128.jpg",
     "Size": 9806
   },
   {
-    "Sha": "059f8184af4827bfa5074e8ea81a4471404e6775",
+    "Sha": "31e573500fd1777020768800fd8b3ae22e09a8fc",
     "Name": "red_rocks_territory_256x256.jpg",
     "Size": 34677
   },
   {
-    "Sha": "db7f67fbddd1707d126aa9793659c678203e67ef",
+    "Sha": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
     "Name": "riverport.jpg",
     "Size": 523714
   },
   {
-    "Sha": "8b1534103a8ec169c5c717a28e6a7b2653c23ff1",
+    "Sha": "fa6e3ba1044eb6e32fd4205815fc9d641fdbeec5",
     "Name": "riverport_128x128.jpg",
     "Size": 6970
   },
   {
-    "Sha": "7e23073cb8c8e31a2f5e6cd4963fe49d95845b3c",
+    "Sha": "d1a529976376d3c6da282e112394adab4734b5a8",
     "Name": "riverport_256x256.jpg",
     "Size": 23080
   },
   {
-    "Sha": "ad602c222f0b91a69f96b16ab424df54e6afa77e",
+    "Sha": "10e3be0815b103d1dec72d7dd5588f072a86bd1a",
     "Name": "rockcity.jpg",
     "Size": 603661
   },
   {
-    "Sha": "c3ac778b1e0d5cef71b06574ef6333ec4bc2bddb",
+    "Sha": "85143a8eb96fecfaa628fbce7c1287fa2dd47c64",
     "Name": "rockcity_128x128.jpg",
     "Size": 10272
   },
   {
-    "Sha": "97610cf95957452a76b425ae3b2c76a13f2a1e22",
+    "Sha": "9076ae60f89cee386c2c3b5f7411a20688e47a33",
     "Name": "rockcity_256x256.jpg",
     "Size": 32827
   },
   {
-    "Sha": "5fc93fa4af96fe46a4749832b20c8398a641fa16",
+    "Sha": "b3eccec7b55bc39c1829eb5e06435e253e91fa51",
     "Name": "rockcity_2bases.jpg",
     "Size": 634962
   },
   {
-    "Sha": "bfc68480c6470e4bda423d20f4ea9882b437cd91",
+    "Sha": "9c1eb6287d5cc60b7ee5c8a171da427ba4f6d189",
     "Name": "rockcity_2bases_128x128.jpg",
     "Size": 8781
   },
   {
-    "Sha": "abed38813f37262eb080ad16b3d6c67493e20bd2",
+    "Sha": "7d05b62708b584da6bfdafed54eef60d6a472e06",
     "Name": "rockcity_2bases_256x256.jpg",
     "Size": 29677
   },
   {
-    "Sha": "a06af5217bdf3be2bc89982f97724d4f326db0d6",
+    "Sha": "1fabe5c9b468864dc1e9e343ce643751cebc64f5",
     "Name": "sand_crater.jpg",
     "Size": 87702
   },
   {
-    "Sha": "430f2339b17b0bfbf6c4630b35df6513615faff5",
+    "Sha": "36a483ce3e3d63d3345da4615e2dfefedf5c5516",
     "Name": "sand_crater_128x128.jpg",
     "Size": 8483
   },
   {
-    "Sha": "cc644884312081502d5d1f8fc0c76ce7fb076df2",
+    "Sha": "6360dc57e22fe85b64d4d1f4ab989d2b9cd1920b",
     "Name": "sand_crater_256x256.jpg",
     "Size": 27335
   },
   {
-    "Sha": "91ee407eb83a4d7554b7c5ae961f00900fa4a64a",
+    "Sha": "10e098852372d878d3c9fb0bde83e4b51354e20e",
     "Name": "sand_valley.jpg",
     "Size": 616415
   },
   {
-    "Sha": "ba477056c8ddc4f3dd0ca3dacda3e92c2992015b",
+    "Sha": "275016e13e54b3a2b34dcce759369447fe18fb99",
     "Name": "sand_valley_128x128.jpg",
     "Size": 10173
   },
   {
-    "Sha": "57d774a3078af0481b48f782fed54cb13f005045",
+    "Sha": "8921185ae6449eb5771fbed7139a7614d94da5f1",
     "Name": "sand_valley_256x256.jpg",
     "Size": 33058
   },
   {
-    "Sha": "c7deaf39e5b7e6cc86d01c4d16cf4a1e29d2d535",
+    "Sha": "18df0b7d3b1b62e1775b6c54abe401ff7e4dc7c1",
     "Name": "tower.jpg",
     "Size": 705156
   },
   {
-    "Sha": "e8d2b014b6b6c61d23ae3bf9550a722eb87cc7ec",
+    "Sha": "ce47f73199f718024e4db7c60df95f3fc75751c1",
     "Name": "tower_128x128.jpg",
     "Size": 9802
   },
   {
-    "Sha": "0a2520bc56fd4d0b20ca7d9e09387e7eb9ada00b",
+    "Sha": "94a808461ca70981effe15fb632522e04a86f624",
     "Name": "tower_256x256.jpg",
     "Size": 34108
   }

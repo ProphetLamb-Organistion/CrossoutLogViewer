@@ -2,6 +2,7 @@
 
 using System;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace CrossoutLogView.Updater
@@ -36,7 +37,9 @@ namespace CrossoutLogView.Updater
             var metadata = new FileMetadata[filePaths.Length];
             await Task.Run(() => Parallel.For(0, filePaths.Length, delegate (int i)
             {
-                metadata[i] = new FileMetadata(hashFunction(File.ReadAllBytes(filePaths[i])), new FileInfo(filePaths[i]));
+                using var fs = new FileStream(filePaths[i], FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                using var sr = new StreamReader(fs);
+                metadata[i] = new FileMetadata(hashFunction(Encoding.ASCII.GetBytes(sr.ReadToEnd())), new FileInfo(filePaths[i]));
             }));
             return metadata;
         }
