@@ -5,20 +5,12 @@ using CrossoutLogView.Database.Data;
 using CrossoutLogView.GUI.Core;
 
 using MahApps.Metro.Controls;
-using MahApps.Metro.Controls.Dialogs;
 
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace CrossoutLogView.GUI.WindowsAuxilary
 {
@@ -61,15 +53,15 @@ namespace CrossoutLogView.GUI.WindowsAuxilary
         {
             loadingWindow = new LoadingWindow
             {
+                IsIndeterminate = true,
                 Header = App.GetWindowResource("Lnch_LoadingHeader"),
-                Message = App.GetWindowResource("Lnch_LoadingMessage")
+                Message = App.GetWindowResource("Lnch_LoadingMessage"),
+                ShowActivated = true
             };
-            loadingWindow.IsIndeterminate = true;
             loadingWindow.Show();
-            await Task.Run(delegate
-            {
-                App.InitializeSession();
-            });
+            IsEnabled = false;
+            await Task.Run(App.InitializeSession);
+            IsEnabled = true;
             loadingWindow.Close();
         }
 
