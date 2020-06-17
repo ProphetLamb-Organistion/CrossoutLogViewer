@@ -149,6 +149,11 @@
                                 Click="DeleteDatabaseClick"
                                 Margin="{StaticResource ContentMargin}"
                                 HorizontalAlignment="Left" />
+                        <Button Content="Update"
+                                Style="{DynamicResource Button.Outline}"
+                                Click="UpdateClick" 
+                                Margin="{StaticResource ContentMargin}"
+                                HorizontalAlignment="Left"/>
                         <TextBlock>
                             <Hyperlink NavigateUri="https://icons8.com/icons/set/rebalance-portfolio"
                                        RequestNavigate="Hyperlink_RequestNavigate">Chart icon</Hyperlink>

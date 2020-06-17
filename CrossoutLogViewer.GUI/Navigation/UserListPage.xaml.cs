@@ -47,7 +47,7 @@ namespace CrossoutLogView.GUI.Navigation
         {
             if (e.ViewModel is UserModel viewModel)
             {
-                nav.Navigate(viewModel);
+                nav.Navigate(new UserPage(nav, viewModel));
             }
         }
 

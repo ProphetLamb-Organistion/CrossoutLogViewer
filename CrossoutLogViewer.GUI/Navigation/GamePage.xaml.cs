@@ -34,9 +34,7 @@ namespace CrossoutLogView.GUI.Navigation
             gameViewModel.Players.Sort(new PlayerModelScoreDescending());
             ListBoxWon.ItemsSource = gameViewModel.Players.Where(x => gameViewModel.WinningTeam == x.Player.Team);
             ListBoxLost.ItemsSource = gameViewModel.Players.Where(x => gameViewModel.WinningTeam != x.Player.Team);
-            var uri = ImageHelper.GetMapImageUri(gameModel.Map.Name);
-            if (uri != null)
-                MapImage.Source = new BitmapImage(uri);
+            MapImage.Source = ImageHelper.GetMapImage(gameModel.Map.Name);
         }
 
         private void RoundKillEnter(object sender, MouseEventArgs e) => isRoundKillerOver = true;

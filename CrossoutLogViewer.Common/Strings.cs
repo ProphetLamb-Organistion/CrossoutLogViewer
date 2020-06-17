@@ -8,6 +8,9 @@ namespace CrossoutLogView.Common
         public const string DataBasePath = @".\data";
         public const string ConfigPath = @".\config";
         public const string ImagePath = @".\images";
+        public const string RemoteConfigPath = @"resources\config";
+        public const string RemoteImagePath = @"resources\images";
+        public const string MetadataFile = @"metadata.json";
         public const string ScriptFolderPermissions = @".\fix_folder_permissions.bat";
         public const string DataBaseLogPath = DataBasePath + @"\logentries.db";
         public const string DataBaseStatisticsPath = DataBasePath + @"\statistics.db";
@@ -26,6 +29,7 @@ namespace CrossoutLogView.Common
         public const string CenterDotSeparator = " • ";
         public const string RepositoryName = "CrossoutLogViewer";
         public const string RepositoryOwner = "ProphetLamb-Organistion";
+        public const string UpdaterFilePath = @".\CrossoutLogViewer.Updater.exe";
 
         public static bool NameEquals(string name, string other)
         {
