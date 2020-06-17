@@ -33,7 +33,7 @@ namespace CrossoutLogView.Updater
             // All files that need updating
             var metadata = ComputeMetadataDelta(local, await remote);
             // Iterate though files in metadata
-            var configEnu = GetDirectoryContent(Strings.RemoteConfigPath, ConfigConverter).GetAsyncEnumerator();
+            var configEnu = GetDirectoryContent(Strings.RemoteConfigPath, ConfigConverter, x => UpdateSelector(metadata, x)).GetAsyncEnumerator();
             while (await configEnu.MoveNextAsync())
             {
                 // Write file to the config folder
@@ -60,7 +60,7 @@ namespace CrossoutLogView.Updater
             {
                 if (disposing)
                 {
-                    HashAlgorithm.Dispose();
+
                 }
                 Client = null;
                 disposedValue = true;

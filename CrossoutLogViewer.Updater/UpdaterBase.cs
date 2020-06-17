@@ -130,7 +130,7 @@ namespace CrossoutLogView.Updater
         /// </summary>
         /// <param name="bytes">The byte[] to compute.</param>
         /// <returns>Returns a string representing the SHA1 hash of a byte[].</returns>
-        public string HashFunction(byte[] bytes)
+        public static string HashFunction(byte[] bytes)
         {
             if (bytes is null || bytes.Length == 0)
                 return String.Empty;
@@ -155,8 +155,8 @@ namespace CrossoutLogView.Updater
             if (content is null) return false;
             if (includedFiles is null) throw new ArgumentNullException(nameof(includedFiles));
             var index = Array.FindIndex(includedFiles, x => x.Name.Equals(content.Name, StringComparison.InvariantCulture));
-            return index == -1 // Content doesnt exist
-                || includedFiles[index].Sha == content.Sha; // Hash is differnet form the github files hash
+            return index == -1 // Content doesnt exist locally
+                || includedFiles[index].Sha != content.Sha; // Hash is differnet form the github files hash
         }
     }
 }
