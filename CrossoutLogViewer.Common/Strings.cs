@@ -29,6 +29,7 @@ namespace CrossoutLogView.Common
         public const string CenterDotSeparator = " • ";
         public const string RepositoryName = "CrossoutLogViewer";
         public const string RepositoryOwner = "ProphetLamb-Organistion";
+        public const string UpdaterFilePath = @".\CrossoutLogViewer.Updater.exe";
 
         public static bool NameEquals(string name, string other)
         {

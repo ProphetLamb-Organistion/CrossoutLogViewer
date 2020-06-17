@@ -20,7 +20,6 @@ namespace CrossoutLogView.Updater
                 Directory.CreateDirectory(Strings.ImagePath);
             Client = new GitHubClient(new ProductHeaderValue(Strings.RepositoryName));
             WebClient = new WebClient();
-            HashAlgorithm = SHA1.Create();
         }
 
         /// <summary>
@@ -33,7 +32,7 @@ namespace CrossoutLogView.Updater
             // Generate local file metadata
             var local = FileMetadata.FromPaths(HashFunction, Directory.GetFiles(Strings.ImagePath));
             // All files that need updating
-            var metadata = ComputeMetadataDelta(await local, await remote);
+            var metadata = ComputeMetadataDelta(local, await remote);
             // Iterate through images in metadata
             var imageEnu = GetDirectoryContent(Strings.RemoteImagePath, ImageConverter).GetAsyncEnumerator();
             while (await imageEnu.MoveNextAsync())
@@ -42,16 +41,6 @@ namespace CrossoutLogView.Updater
                 using var fs = new FileStream(Path.Combine(Strings.ImagePath, imageEnu.Current.Name), System.IO.FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
                 imageEnu.Current.Value.Save(fs, ImageFormat.Jpeg);
             }
-        }
-
-        /// <summary>
-        /// Generates the metadata file from local files.
-        /// </summary>
-        /// <returns></returns>
-        public async Task GenerateMetadata()
-        {
-            var local = FileMetadata.FromPaths(HashFunction, Directory.GetFiles(Strings.ImagePath));
-            await FileMetadataHelper.WriteJson(await local, Path.Combine(Strings.ImagePath, Strings.MetadataFile));
         }
 
         private Image ImageConverter(RepositoryContent content)
@@ -70,7 +59,6 @@ namespace CrossoutLogView.Updater
             {
                 if (disposing)
                 {
-                    HashAlgorithm.Dispose();
                 }
                 Client = null;
                 disposedValue = true;

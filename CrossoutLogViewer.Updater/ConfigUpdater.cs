@@ -19,7 +19,6 @@ namespace CrossoutLogView.Updater
                 Directory.CreateDirectory(Strings.ConfigPath);
             Client = new GitHubClient(new ProductHeaderValue(Strings.RepositoryName));
             WebClient = new WebClient();
-            HashAlgorithm = SHA1.Create();
         }
 
         /// <summary>
@@ -32,7 +31,7 @@ namespace CrossoutLogView.Updater
             // Generate local file metadata
             var local = FileMetadata.FromPaths(HashFunction, Directory.GetFiles(Strings.ConfigPath));
             // All files that need updating
-            var metadata = ComputeMetadataDelta(await local, await remote);
+            var metadata = ComputeMetadataDelta(local, await remote);
             // Iterate though files in metadata
             var configEnu = GetDirectoryContent(Strings.RemoteConfigPath, ConfigConverter).GetAsyncEnumerator();
             while (await configEnu.MoveNextAsync())
@@ -42,16 +41,6 @@ namespace CrossoutLogView.Updater
                 using var sw = new StreamWriter(fs);
                 await sw.WriteLineAsync(configEnu.Current.Value);
             }
-        }
-
-        /// <summary>
-        /// Generates the metadata file from local files.
-        /// </summary>
-        /// <returns></returns>
-        public async Task GenerateMetadata()
-        {
-            var local = FileMetadata.FromPaths(HashFunction, Directory.GetFiles(Strings.ConfigPath));
-            await FileMetadataHelper.WriteJson(await local, Path.Combine(Strings.ConfigPath, Strings.MetadataFile));
         }
 
         private string ConfigConverter(RepositoryContent content)

@@ -1,10 +1,14 @@
 ﻿using CrossoutLogView.Common;
+
 using Newtonsoft.Json;
 
 using Octokit;
 
 using System;
+using System.Buffers.Text;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
@@ -23,12 +27,6 @@ namespace CrossoutLogView.Updater
         /// Gets or sets the WebClient used to download the content.
         /// </summary>
         protected WebClient WebClient { get; set; }
-
-
-        /// <summary>
-        /// The <see cref="System.Security.Cryptography.HashAlgorithm"/> used to compare local to remote files.
-        /// </summary>
-        protected HashAlgorithm HashAlgorithm { get; set; }
 
         public abstract Task Update();
 
@@ -77,6 +75,7 @@ namespace CrossoutLogView.Updater
                 else if (!local[localIndex].Sha.Equals(remote[i].Sha, StringComparison.Ordinal))
                     delta.Add(remote[i]);
             }
+            Console.WriteLine("Updating files:" + Environment.NewLine + String.Join(Environment.NewLine, delta.Select(x => x.Name)));
             return delta.ToArray();
         }
 
@@ -97,28 +96,52 @@ namespace CrossoutLogView.Updater
             {
                 if (selector is null || selector(repositoryContents[i]))
                 {
-                    var img = converter(repositoryContents[i]);
-                    if (!(img is null) && !(repositoryContents[i] is null))
-                        yield return (repositoryContents[i].Name, img);
+                    Console.WriteLine("Downloading: " + repositoryContents[i].Name);
+                    T value = default;
+                    try
+                    {
+                        value = converter(repositoryContents[i]);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(String.Concat("Message: ", ex.Message, Environment.NewLine, "StackTrace: ", ex.StackTrace, Environment.NewLine, "Source: ", ex.Source));
+                    }
+                    if (!(value is null) && !(repositoryContents[i] is null))
+                        yield return (repositoryContents[i].Name, value);
                 }
             }
         }
 
         /// <summary>
-        /// Computes the hash of <see cref="byte[] "/> bytes using the predefined <see cref="HashAlgorithm"/>. 
+        /// Generates the metadata file from local files.
+        /// </summary>
+        /// <returns></returns>
+        public async Task GenerateMetadata(string path)
+        {
+            if (!Directory.Exists(path))
+                throw new DirectoryNotFoundException(path);
+            var local = FileMetadata.FromPaths(HashFunction, Directory.GetFiles(path));
+            await FileMetadataHelper.WriteJson(local, Path.Combine(path, Strings.MetadataFile));
+        }
+
+        /// <summary>
+        /// Computes the base64 encoded hash representation of <see cref="byte[] "/> <paramref name="bytes"/> using <see cref="SHA1"/>. 
         /// If <paramref name="bytes"/> is null or empty, returns an empty string. 
         /// </summary>
         /// <param name="bytes">The byte[] to compute.</param>
         /// <returns>Returns a string representing the SHA1 hash of a byte[].</returns>
-        protected string HashFunction(byte[] bytes)
+        public string HashFunction(byte[] bytes)
         {
             if (bytes is null || bytes.Length == 0)
                 return String.Empty;
-            var hash = HashAlgorithm.ComputeHash(bytes);
-            var sb = new StringBuilder(hash.Length * 2);
-            foreach (var b in hash)
-                sb.AppendFormat("{0:x2}", b);
-            return sb.ToString();
+            byte[] hash = null;
+            using (var sha = SHA1.Create())
+            {
+                hash = sha.ComputeHash(bytes);
+            }
+            if (hash is null || hash.Length == 0)
+                return String.Empty;
+            return Convert.ToBase64String(hash);
         }
 
         /// <summary>

@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using CrossoutLogView.Common;
+
+using Newtonsoft.Json;
 
 using System;
 using System.IO;
@@ -30,17 +32,17 @@ namespace CrossoutLogView.Updater
 
         public long Size { get; set; }
 
-        public static async Task<FileMetadata[]> FromPaths(Func<byte[], string> hashFunction, params string[] filePaths)
+        public static FileMetadata[] FromPaths(Func<byte[], string> hashFunction, params string[] filePaths)
         {
             if (hashFunction is null) throw new ArgumentNullException(nameof(hashFunction));
             if (filePaths is null) return Array.Empty<FileMetadata>();
             var metadata = new FileMetadata[filePaths.Length];
-            await Task.Run(() => Parallel.For(0, filePaths.Length, delegate (int i)
+            Parallel.For(0, filePaths.Length, delegate (int i)
             {
                 using var fs = new FileStream(filePaths[i], FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                using var sr = new StreamReader(fs);
-                metadata[i] = new FileMetadata(hashFunction(Encoding.ASCII.GetBytes(sr.ReadToEnd())), new FileInfo(filePaths[i]));
-            }));
+                using var br = new BinaryReader(fs);
+                metadata[i] = new FileMetadata(hashFunction(br.ReadAllBytes()), new FileInfo(filePaths[i]));
+            });
             return metadata;
         }
     }
@@ -53,7 +55,7 @@ namespace CrossoutLogView.Updater
                 throw new ArgumentNullException(nameof(metadata));
             if (String.IsNullOrEmpty(targetFilePath))
                 throw new ArgumentException("Value cannot be null or or empty.", nameof(targetFilePath));
-            using var fs = new FileStream(targetFilePath, System.IO.FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
+            using var fs = new FileStream(targetFilePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
             await metadata.WriteJson(fs);
             if (!(fs is null))
                 await fs.DisposeAsync();

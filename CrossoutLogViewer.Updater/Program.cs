@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CrossoutLogView.Common;
+
+using System;
 using System.Threading.Tasks;
 
 namespace CrossoutLogView.Updater
@@ -31,10 +33,10 @@ namespace CrossoutLogView.Updater
 
         private static void Metadata()
         {
-            using var cfg = new ImageUpdater();
-            var c = Task.Run(cfg.GenerateMetadata);
-            using var img = new ConfigUpdater();
-            var i = Task.Run(img.GenerateMetadata);
+            using var cfg = new ConfigUpdater();
+            var c = cfg.GenerateMetadata(Strings.ConfigPath);
+            using var img = new ImageUpdater();
+            var i = img.GenerateMetadata(Strings.ImagePath);
             Task.WaitAll(c, i);
         }
     }

@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -44,21 +45,25 @@ namespace CrossoutLogView.GUI.WindowsAuxilary
             viewModel.AppTheme.ChangeAccentCommand.Execute(sender);
             SettingsWindowViewModel.ApplyColors();
             logger.TraceResource("Sett_ChangeTheme");
+            e.Handled = true;
         }
 
         private void ResetColorsClick(object sender, RoutedEventArgs e)
         {
             viewModel.ResetColors();
+            e.Handled = true;
         }
 
         private void OpenSettingsFileClick(object sender, RoutedEventArgs e)
         {
             ExplorerOpenFile.OpenFile(Strings.DataBaseCurrentSettingsPath);
+            e.Handled = true;
         }
 
         private void OpenEventLogClick(object sender, RoutedEventArgs e)
         {
             ExplorerOpenFile.OpenFile(@".\event.log");
+            e.Handled = true;
         }
 
         private async void DeleteDatabaseClick(object sender, RoutedEventArgs e)
@@ -82,6 +87,7 @@ namespace CrossoutLogView.GUI.WindowsAuxilary
                 App.SessionControlService.DeleteDatabase();
                 Environment.Exit(0);
             }
+            e.Handled = true;
         }
 
         private void MetroWindow_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -89,12 +95,6 @@ namespace CrossoutLogView.GUI.WindowsAuxilary
             if (e.GetPosition(this).Y <= TitleBarHeight) //prevent maximize
                 e.Handled = true;
         }
-
-        #region ILogging support
-        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
-        NLog.Logger ILogging.Logger { get; } = logger;
-        #endregion
-
         private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
         {
             try
@@ -105,5 +105,25 @@ namespace CrossoutLogView.GUI.WindowsAuxilary
             catch (Win32Exception) { }
             e.Handled = true;
         }
+
+        private void UpdateClick(object sender, RoutedEventArgs e)
+        {
+            if (File.Exists(Strings.UpdaterFilePath))
+            {
+
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = Strings.UpdaterFilePath,
+                    Arguments = "UPDATE_LOCAL"
+                });
+            }
+            e.Handled = true;
+        }
+
+        #region ILogging support
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        NLog.Logger ILogging.Logger { get; } = logger;
+        #endregion
+
     }
 }
