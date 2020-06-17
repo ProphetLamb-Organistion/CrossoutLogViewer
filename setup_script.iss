@@ -43,14 +43,20 @@ Name: "german"; MessagesFile: "compiler:Languages\German.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 6.1; Check: not IsAdminInstallMode
 
+[Dirs]      
+Name: "{app}"; Permissions: everyone-full
+Name: "{app}\config"; Permissions: everyone-full
+Name: "{app}\images"; Permissions: everyone-full
+Name: "{app}\data"; Permissions: everyone-full
+
 [Files]
-Source: ".\publish\CrossoutLogViewer.GUI.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\publish\*"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\publish\images\*"; DestDir: "{app}\images"; Flags: ignoreversion
-Source: ".\publish\config\assets.json"; DestDir: "{app}\config"; Flags: ignoreversion
-Source: ".\publish\config\maps.json"; DestDir: "{app}\config"; Flags: ignoreversion
-Source: ".\publish\config\NLog.config"; DestDir: "{app}\config"; Flags: ignoreversion
-Source: ".\publish\config\stripes.json"; DestDir: "{app}\config"; Flags: ignoreversion
+Source: ".\publish\CrossoutLogViewer.GUI.exe"; DestDir: "{app}"; Flags: ignoreversion; Permissions: everyone-full
+Source: ".\publish\*"; DestDir: "{app}"; Flags: ignoreversion; Permissions: everyone-full
+Source: ".\publish\images\*"; DestDir: "{app}\images"; Flags: ignoreversion; Permissions: everyone-full
+Source: ".\publish\config\assets.json"; DestDir: "{app}\config"; Flags: ignoreversion; Permissions: everyone-full
+Source: ".\publish\config\maps.json"; DestDir: "{app}\config"; Flags: ignoreversion; Permissions: everyone-full
+Source: ".\publish\config\NLog.config"; DestDir: "{app}\config"; Flags: ignoreversion; Permissions: everyone-full
+Source: ".\publish\config\stripes.json"; DestDir: "{app}\config"; Flags: ignoreversion; Permissions: everyone-full
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
