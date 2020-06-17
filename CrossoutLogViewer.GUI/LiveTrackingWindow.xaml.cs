@@ -46,10 +46,11 @@ namespace CrossoutLogView.GUI
                 IsIndeterminate = true,
                 Title = App.GetSharedResource("Loading"),
                 Header = App.GetWindowResource("Live_LoadingHeader"),
-                Message = App.GetWindowResource("Live_LoadingMessage")
+                Message = App.GetWindowResource("Live_LoadingMessage"),
+                ShowActivated = true
             };
             loadingWindow.Show();
-
+            IsEnabled = false;
             CallbackTask.Run(App.InitializeSession, InitializedSession);
 
             logger.TraceResource("WinInit");
@@ -74,6 +75,7 @@ namespace CrossoutLogView.GUI
         private void ApplyViewModel(object sender, EventArgs e)
         {
             //TODO: apply data from viewmodel to window content
+            IsEnabled = true;
             loadingWindow.Close();
             logger.TraceResource("ViewModelInitD");
         }

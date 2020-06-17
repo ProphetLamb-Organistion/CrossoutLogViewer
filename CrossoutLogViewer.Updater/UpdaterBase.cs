@@ -106,8 +106,7 @@ namespace CrossoutLogView.Updater
                     {
                         Console.WriteLine(String.Concat("Message: ", ex.Message, Environment.NewLine, "StackTrace: ", ex.StackTrace, Environment.NewLine, "Source: ", ex.Source));
                     }
-                    if (!(value is null) && !(repositoryContents[i] is null))
-                        yield return (repositoryContents[i].Name, value);
+                    yield return (repositoryContents[i].Name, value);
                 }
             }
         }
@@ -155,8 +154,7 @@ namespace CrossoutLogView.Updater
             if (content is null) return false;
             if (includedFiles is null) throw new ArgumentNullException(nameof(includedFiles));
             var index = Array.FindIndex(includedFiles, x => x.Name.Equals(content.Name, StringComparison.InvariantCulture));
-            return index == -1 // Content doesnt exist locally
-                || includedFiles[index].Sha != content.Sha; // Hash is differnet form the github files hash
+            return index != -1; // Content isnt up to date locally
         }
     }
 }

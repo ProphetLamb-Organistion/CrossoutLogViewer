@@ -42,10 +42,11 @@ namespace CrossoutLogView.GUI
                 IsIndeterminate = true,
                 Title = App.GetSharedResource("Loading"),
                 Header = App.GetWindowResource("Stat_LoadingHeader"),
-                Message = App.GetWindowResource("Stat_LoadingMessage")
+                Message = App.GetWindowResource("Stat_LoadingMessage"),
+                ShowActivated = true
             };
             loadingWindow.Show();
-
+            IsEnabled = false;
             CallbackTask.Run(App.InitializeSession, InitializedSession);
             logger.TraceResource("WinInit");
             InitializeComponent();
@@ -81,6 +82,7 @@ namespace CrossoutLogView.GUI
             Title = String.Concat(App.GetWindowResource("Stat_Title"), " (", viewModel.MeUser.User.Name, ")");
             HamburgerMenuControl.Focus();
 
+            IsEnabled = true;
             loadingWindow.Close();
             logger.TraceResource("ViewModelInitD");
         }

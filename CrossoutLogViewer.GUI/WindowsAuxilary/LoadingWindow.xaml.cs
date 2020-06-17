@@ -24,7 +24,7 @@ namespace CrossoutLogView.GUI.WindowsAuxilary
     /// </summary>
     public partial class LoadingWindow : MetroWindow, ILogging
     {
-        Timer closeTimer = new Timer { Interval = 500, AutoReset = false };
+        Timer closeTimer = new Timer { Interval = 250, AutoReset = false };
         bool forceClose = false;
 
         public LoadingWindow()

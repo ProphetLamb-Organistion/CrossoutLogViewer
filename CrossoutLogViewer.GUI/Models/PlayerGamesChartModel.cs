@@ -134,11 +134,11 @@ namespace CrossoutLogView.GUI.Models
 
         protected override void UpdateCollections()
         {
-            if (Source == null)
-                return;
             // X axis Bounderies cannot have a negative range
             AxisXMinValue = AxisXLowerValue = 0;
-            AxisXMaxValue = AxisXUpperValue = Source.Count == 0 ? 0 : Source.Count - 1;
+            AxisXMaxValue = AxisXUpperValue = Source is null || Source.Count == 0 ? 0 : Source.Count - 1;
+            if (Source == null)
+                return;
             if (Series == null)
                 InitializeSeries();
             for (int i = 0; i < chartValues.Length; i++)
