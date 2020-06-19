@@ -10,7 +10,8 @@
              BorderThickness="0"
              MinHeight="35"
              d:DesignHeight="40"
-             d:DesignWidth="650">
+             d:DesignWidth="650"
+             Loaded="UserControl_Loaded">
     <UserControl.Resources>
         <ResourceDictionary>
             <Thickness x:Key="ContentMargin"

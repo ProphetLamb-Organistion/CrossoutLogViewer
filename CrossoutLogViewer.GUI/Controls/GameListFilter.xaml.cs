@@ -280,6 +280,11 @@ namespace CrossoutLogView.GUI.Controls
             Border_SpanFilter.Style = App.Current.Resources[highlighted ? "BorderStyle.Highlight" : "BorderStyle"] as Style;
         }
 
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            SetFilterMonth();
+        }
+
         #region ILogging support
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         NLog.Logger ILogging.Logger { get; } = logger;
