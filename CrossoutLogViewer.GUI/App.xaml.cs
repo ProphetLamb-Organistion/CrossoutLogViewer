@@ -44,7 +44,7 @@ namespace CrossoutLogView.GUI
             set
             {
                 _theme = value;
-                ThemeManager.Current.ChangeTheme(Application.Current, _theme);
+                ThemeManager.Current.ChangeTheme(App.Current, _theme);
                 Settings.Current.ColorScheme = _theme.ColorScheme;
                 Settings.Current.BaseColorScheme = Theme.BaseColorScheme;
             }

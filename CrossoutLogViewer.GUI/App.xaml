@@ -5,6 +5,8 @@
              xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:behaviors="http://metro.mahapps.com/winfx/xaml/shared"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:helper="clr-namespace:CrossoutLogView.GUI.Helpers"
+             xmlns:conv="clr-namespace:CrossoutLogView.GUI.ValueConverters"
              Startup="App_Start">
     <Application.Resources>
         <ResourceDictionary>
@@ -13,6 +15,8 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Cobalt.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <conv:TitleBarColorConverter x:Key="titleBarColor" />
 
             <Style x:Key="Header"
                    TargetType="{x:Type TextBlock}">
@@ -101,7 +105,7 @@
                     <DataTrigger Binding="{Binding ColorWindowTitlebar}"
                                  Value="False">
                         <Setter Property="WindowTitleBrush"
-                                Value="{DynamicResource MahApps.Brushes.ThemeBackground}" />
+                                Value="{helper:DynamicResourceBinding MahApps.Brushes.ThemeBackground, Converter={StaticResource titleBarColor}}" />
                         <Setter Property="TitleForeground"
                                 Value="{DynamicResource MahApps.Brushes.ThemeForeground}" />
                     </DataTrigger>
@@ -388,6 +392,7 @@
                 <GradientStop Color="Transparent"
                               Offset="0.9" />
             </LinearGradientBrush>
+            
             <SolidColorBrush x:Key="TeamWon"
                              Color="Green" />
             <SolidColorBrush x:Key="TeamLost"
