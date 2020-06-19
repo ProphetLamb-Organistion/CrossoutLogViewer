@@ -136,7 +136,7 @@ namespace CrossoutLogView.GUI.Models
         {
             // X axis Bounderies cannot have a negative range
             AxisXMinValue = AxisXLowerValue = 0;
-            AxisXMaxValue = AxisXUpperValue = Source is null || Source.Count == 0 ? 0 : Source.Count - 1;
+            AxisXMaxValue = AxisXUpperValue = Source is null || Source.Count <= 1 ? 1 : Source.Count - 1;
             if (Source == null)
                 return;
             if (Series == null)
