@@ -51,6 +51,8 @@
                         HorizontalAlignment="Stretch">
                 <Button x:Name="goBack"
                         Style="{StaticResource MahApps.Styles.Button.Circle}"
+                        BorderBrush="Transparent"
+                        BorderThickness="0"
                         IsEnabled="{Binding ElementName=frame, Path=CanGoBack}"
                         Width="26"
                         Height="26"
@@ -58,12 +60,14 @@
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center"
                         Click="GoBack">
-                    <iconPacks:PackIconModern Kind="ArrowLeft"
+                    <iconPacks:PackIconModern Kind="ChevronLeft"
                                               Width="14"
                                               Height="14" />
                 </Button>
                 <Button x:Name="goForward"
                         Style="{StaticResource MahApps.Styles.Button.Circle}"
+                        BorderBrush="Transparent"
+                        BorderThickness="0"
                         IsEnabled="{Binding ElementName=frame, Path=CanGoForward}"
                         Width="26"
                         Height="26"
@@ -71,7 +75,7 @@
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center"
                         Click="GoForward">
-                    <iconPacks:PackIconModern Kind="ArrowRight"
+                    <iconPacks:PackIconModern Kind="ChevronRight"
                                               Width="14"
                                               Height="14" />
                 </Button>
