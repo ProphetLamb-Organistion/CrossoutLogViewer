@@ -50,7 +50,7 @@ namespace CrossoutLogView.GUI
 
         private void SessionCalendar_SessionClick(object sender, SessionClickEventArgs e)
         {
-            var games = DataProvider.GetGames(e.Day.Date, e.Day.Date.AddDays(1).AddMilliseconds(-1));
+            var games = DataProvider.GetGames(e.Day.Date, e.Day.Date.AddDays(1).AddMilliseconds(-1)).Where(x => x.Mode == GameMode.ClanWars);
             UserListControl.ItemsSource = new ObservableCollection<UserModel>(User.ParseUsers(games).Select(x => new UserModel(x)));
         }
 
