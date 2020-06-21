@@ -30,7 +30,6 @@ namespace CrossoutLogView.GUI
     public partial class LiveTrackingWindow : MetroWindow, ILogging
     {
         private LoadingWindow loadingWindow;
-        private bool forceClose = false;
 
         private LiveTrackingWindowViewModel viewModel;
         private Game currentGame = new Game();
@@ -92,6 +91,7 @@ namespace CrossoutLogView.GUI
         }
 
         #region Confim close
+        private bool forceClose = false;
         protected override void OnClosing(CancelEventArgs e)
         {
             if (e.Cancel) return;
