@@ -149,7 +149,7 @@
                                 Click="DeleteDatabaseClick"
                                 Margin="{StaticResource ContentMargin}"
                                 HorizontalAlignment="Left" />
-                        <Button Content="Update"
+                        <Button Content="Update resources"
                                 Style="{DynamicResource Button.Outline}"
                                 Click="UpdateClick" 
                                 Margin="{StaticResource ContentMargin}"
