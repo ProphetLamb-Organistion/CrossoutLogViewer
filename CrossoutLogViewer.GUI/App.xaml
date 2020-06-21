@@ -144,6 +144,15 @@
                         Value="{DynamicResource MahApps.Brushes.ThemeForeground}" />
             </Style>
 
+            <Style x:Key="Button.Circle"
+                   BasedOn="{StaticResource MahApps.Styles.Button.Circle}"
+                   TargetType="Button">
+                <Setter Property="BorderBrush"
+                        Value="Transparent" />
+                <Setter Property="BorderThickness"
+                        Value="0" />
+            </Style>
+
             <Style x:Key="Button.Outline"
                    BasedOn="{StaticResource MahApps.Styles.Button.Flat}"
                    TargetType="{x:Type Button}">
