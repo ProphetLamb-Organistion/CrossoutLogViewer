@@ -49,6 +49,12 @@ namespace CrossoutLogView.GUI.WindowsAuxilary
             }));
         }
 
+        private void SessionReviewClick(object sender, RoutedEventArgs e)
+        {
+            new SessionReview().Show();
+            Close();
+        }
+
         private async void OnLoaded(object sender, RoutedEventArgs e)
         {
             loadingWindow = new LoadingWindow

@@ -11,8 +11,8 @@
                       Style="{DynamicResource MetroWindowTitlebarColorStyle}"
                       Title="Crossout Log Viewer: Launcher"
                       Icon="..\App.ico"
-                      Width="750"
-                      Height="220"
+                      Width="610"
+                      Height="340"
                       ShowDialogsOverTitleBar="False"
                       GlowBrush="{DynamicResource MahApps.Brushes.Accent2}"
                       BorderThickness="1"
@@ -97,6 +97,16 @@
                            Click="LiveTrackingClick"
                            VerticalTitleAlignment="Top">
                 <IconPacks:PackIconModern Kind="ControlPlayLive"
+                                          Width="48"
+                                          Height="48" />
+            </Controls:Tile>
+            <Controls:Tile Title="Session Review"
+                           Controls:ControlsHelper.MouseOverBorderBrush="{DynamicResource MahApps.Brushes.ThemeForeground}"
+                           Background="Teal"
+                           Style="{StaticResource LargeTileStyle}"
+                           Click="SessionReviewClick"
+                           VerticalTitleAlignment="Top">
+                <IconPacks:PackIconModern Kind="ControlRewind"
                                           Width="48"
                                           Height="48" />
             </Controls:Tile>
