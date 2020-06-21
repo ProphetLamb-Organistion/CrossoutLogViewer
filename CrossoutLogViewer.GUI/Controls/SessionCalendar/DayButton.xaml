@@ -1,0 +1,73 @@
+﻿<UserControl x:Class="CrossoutLogView.GUI.Controls.SessionCalendar.DayButton"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:CrossoutLogView.GUI.Controls.SessionCalendar"
+             mc:Ignorable="d"
+             Width="82"
+             Height="auto"
+             d:DesignHeight="85"
+             d:DesignWidth="82"
+             x:Name="_DayButton">
+    <UserControl.Resources>
+        <Style x:Key="Button.DayButton"
+               TargetType="{x:Type Button}"
+               BasedOn="{StaticResource Button.Free}">
+            <Style.Triggers>
+                <Trigger Property="IsEnabled"
+                         Value="False">
+                    <Setter Property="Background"
+                            Value="Transparent" />
+                </Trigger>
+            </Style.Triggers>
+            <Setter Property="Background"
+                    Value="{DynamicResource MahApps.Brushes.Gray.SemiTransparent}" />
+        </Style>
+        <Style x:Key="DayButtonBorder"
+               TargetType="{x:Type Border}"
+               BasedOn="{StaticResource BorderStyle}">
+            <Setter Property="BorderBrush"
+                    Value="{DynamicResource MahApps.Brushes.Accent2}" />
+            <Setter Property="Background"
+                    Value="{DynamicResource MahApps.Brushes.ThemeBackground}" />
+            <Setter Property="Padding"
+                    Value="1" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ElementName=_DayButton, Path=Highlight}"
+                             Value="True">
+                    <Setter Property="BorderThickness"
+                            Value="3" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+    <Border Style="{DynamicResource DayButtonBorder}">
+        <StackPanel Orientation="Vertical">
+            <TextBlock Text="{Binding ElementName=_DayButton, Path=Day, StringFormat=dddd dd.}"
+                       FontStyle="Italic"
+                       HorizontalAlignment="Center" />
+            <Button x:Name="ButtonNight"
+                    Content="Night"
+                    Style="{DynamicResource Button.DayButton}"
+                    Click="Button_Click"
+                    Margin="0,1,0,1"
+                    Padding="0"
+                    Height="20"/>
+            <Button x:Name="ButtonNoon"
+                    Content="Noon"
+                    Style="{DynamicResource Button.DayButton}"
+                    Click="Button_Click"
+                    Margin="0,1,0,1"
+                    Padding="0"
+                    Height="20" />
+            <Button x:Name="ButtonAfternoon"
+                    Content="Afternoon"
+                    Style="{DynamicResource Button.DayButton}"
+                    Click="Button_Click"
+                    Margin="0,0,0,1"
+                    Padding="0"
+                    Height="20" />
+        </StackPanel>
+    </Border>
+</UserControl>
