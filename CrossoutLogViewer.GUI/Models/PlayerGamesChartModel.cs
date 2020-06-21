@@ -97,7 +97,7 @@ namespace CrossoutLogView.GUI.Models
 
         private void InitializeSeries()
         {
-            //series & yaxis
+            // Series & yaxis
             Series = new SeriesCollection();
             AxisYCollection = new AxesCollection();
             var series = new LineSeries[chartValues.Length];
@@ -109,13 +109,13 @@ namespace CrossoutLogView.GUI.Models
             }
             Series.AddRange(series);
             AxisYCollection.AddRange(yAxes);
-            //label formatter
+            // Label formatter
             var xAxis = new Axis
             {
                 LabelsRotation = 1,
                 LabelFormatter = Formatter
             };
-            //bind x axis scale
+            // Bind x axis scale
             xAxis.SetBinding(Axis.MaxValueProperty, new Binding("AxisXUpperValue") { Mode = BindingMode.OneWay });
             xAxis.SetBinding(Axis.MinValueProperty, new Binding("AxisXLowerValue") { Mode = BindingMode.OneWay });
             AxisXCollection = new AxesCollection { xAxis };
