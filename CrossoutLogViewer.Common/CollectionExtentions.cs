@@ -26,6 +26,26 @@ namespace CrossoutLogView.Common
             while (en.MoveNext()) target.Add(selector(en.Current));
         }
 
+        /// <summary>
+        /// Adds all days between <paramref name="start"/> and <paramref name="end"/> to the collection.
+        /// </summary>
+        /// <param name="collection">The collection</param>
+        /// <param name="start">The frist day that will be added to the collection.</param>
+        /// <param name="end">The last day that will be added to the collection.</param>
+        public static TDateTime AddDays<TDateTime>(this TDateTime collection, DateTime start, DateTime end) where TDateTime : ICollection<DateTime>
+        {
+            if (end.Date < start.Date)
+                throw new ArgumentOutOfRangeException(nameof(end), "The end date must be greater or equal to the start date.");
+            while (start.Date != end.Date)
+            {
+                collection.Add(start);
+                // Increment
+                start = start.AddDays(1);
+            }
+            collection.Add(start);
+            return collection;
+        }
+
         // Filter
         public static void Filter<T>(this Collection<T> target, Collection<T> source, Predicate<T> filter)
         {
