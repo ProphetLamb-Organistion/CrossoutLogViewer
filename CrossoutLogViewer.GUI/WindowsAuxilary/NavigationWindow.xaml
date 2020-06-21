@@ -6,7 +6,7 @@
                       xmlns:local="clr-namespace:CrossoutLogView.GUI"
                       mc:Ignorable="d"
                       xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-                      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                      xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                       Style="{DynamicResource MetroWindowTitlebarColorStyle}"
                       Title="Crossout Log Viewer"
                       Icon="..\App.ico"
@@ -50,9 +50,7 @@
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Stretch">
                 <Button x:Name="goBack"
-                        Style="{StaticResource MahApps.Styles.Button.Circle}"
-                        BorderBrush="Transparent"
-                        BorderThickness="0"
+                        Style="{DynamicResource Button.Circle}"
                         IsEnabled="{Binding ElementName=frame, Path=CanGoBack}"
                         Width="26"
                         Height="26"
@@ -60,14 +58,12 @@
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center"
                         Click="GoBack">
-                    <iconPacks:PackIconModern Kind="ChevronLeft"
+                    <IconPacks:PackIconModern Kind="ChevronLeft"
                                               Width="14"
                                               Height="14" />
                 </Button>
                 <Button x:Name="goForward"
-                        Style="{StaticResource MahApps.Styles.Button.Circle}"
-                        BorderBrush="Transparent"
-                        BorderThickness="0"
+                        Style="{DynamicResource Button.Circle}"
                         IsEnabled="{Binding ElementName=frame, Path=CanGoForward}"
                         Width="26"
                         Height="26"
@@ -75,7 +71,7 @@
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center"
                         Click="GoForward">
-                    <iconPacks:PackIconModern Kind="ChevronRight"
+                    <IconPacks:PackIconModern Kind="ChevronRight"
                                               Width="14"
                                               Height="14" />
                 </Button>
