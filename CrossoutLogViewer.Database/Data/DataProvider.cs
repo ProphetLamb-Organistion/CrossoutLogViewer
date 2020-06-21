@@ -124,6 +124,16 @@ namespace CrossoutLogView.Database.Data
             }
         }
 
+        public static IEnumerable<Game> GetGames(DateTime start, DateTime end)
+        {
+            using var statCon = new StatisticsConnection();
+            var rowids = statCon.RequestGameRowIds(start, end);
+            for (int i = 0; i < rowids.Count; i++)
+            {
+                yield return GetGame(rowids[i]);
+            }
+        }
+
         public static Game GetGame(long rowId)
         {
             if (rowId == -1) return null;
@@ -208,7 +218,7 @@ namespace CrossoutLogView.Database.Data
             }),
             Task.Run(delegate
             {
-                foreach (var rid in statCon.RequestWeaponGamesRowIDs(weapon.Name))
+                foreach (var rid in statCon.RequestWeaponGamesRowIds(weapon.Name))
                 {
                     weapon.Games.Add(GetGame(rid));
                 }
