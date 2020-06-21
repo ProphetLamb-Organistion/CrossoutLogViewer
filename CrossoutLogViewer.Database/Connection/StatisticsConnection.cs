@@ -1,5 +1,6 @@
 ﻿using CrossoutLogView.Common;
 using CrossoutLogView.Database.Reflection;
+using CrossoutLogView.Log;
 using CrossoutLogView.Statistics;
 
 using System;
@@ -27,6 +28,7 @@ namespace CrossoutLogView.Database.Connection
             DatabaseTableTypes = IStatisticData.Implementations;
         }
 
+        #region Insert
         protected override object InsertVariableHandler(in object obj, in VariableInfo vi)
         {
             if (obj is null || vi is null) return default;
@@ -106,7 +108,9 @@ namespace CrossoutLogView.Database.Connection
         {
             Insert<WeaponGlobal>(weapon);
         }
+        #endregion
 
+        #region Request
         public Game RequestGame(DateTime containsDateTime, TableRepresentation includeTableRepresentation = TableRepresentation.All)
         {
             var type = typeof(Game);
@@ -121,6 +125,28 @@ namespace CrossoutLogView.Database.Connection
         {
             var request = GetRowIdRequestString(typeof(Game), rowId, includeTableRepresentation);
             return ExecuteRequestSingleObject<Game>(request, includeTableRepresentation);
+        }
+
+        public List<long> RequestGameRowIds(DateTime start, DateTime end)
+        {
+            var type = typeof(Game);
+            var request = String.Format(FormatRequestWhere, RowIdName, type.Name, String.Format("{0} <= {1} AND {1} <= {2}",
+                SQLiteVariable(start.Ticks),
+                nameof(Game.Start).ToLowerInvariant(),
+                SQLiteVariable(end.Ticks)));
+            var rowIds = new List<long>();
+            try
+            {
+                using var cmd = new SQLiteCommand(request, Connection);
+                using var reader = cmd.ExecuteReader();
+                while (reader.Read())
+                    rowIds.Add(ReadField<long>(RowIdName, reader));
+            }
+            catch (SQLiteException)
+            {
+                logger.Error(request.Length > 255 ? request.Substring(0, 254) : request);
+            }
+            return rowIds;
         }
 
         public Map RequestMap(string name)
@@ -174,9 +200,7 @@ namespace CrossoutLogView.Database.Connection
             using var cmd = new SQLiteCommand(request, Connection);
             using var reader = cmd.ExecuteReader();
             while (reader.Read())
-            {
                 rowIds.Add(ReadField<long>(RowIdName, reader));
-            }
             return rowIds;
         }
 
@@ -189,13 +213,11 @@ namespace CrossoutLogView.Database.Connection
                 using var cmd = new SQLiteCommand(request, Connection);
                 using var reader = cmd.ExecuteReader();
                 while (reader.Read())
-                {
                     rowIds.Add(ReadField<long>(RowIdName, reader));
-                }
             }
             catch (SQLiteException)
             {
-                logger.Error(request.Substring(0, 254));
+                logger.Error(request.Length > 255 ? request.Substring(0, 254) : request);
             }
             return rowIds;
         }
@@ -213,7 +235,7 @@ namespace CrossoutLogView.Database.Connection
             }
             catch (SQLiteException)
             {
-                logger.Error(request.Substring(0, 254));
+                logger.Error(request.Length > 255 ? request.Substring(0, 254) : request);
             }
             return rowId;
         }
@@ -261,13 +283,11 @@ namespace CrossoutLogView.Database.Connection
                 using var cmd = new SQLiteCommand(request, Connection);
                 using var reader = cmd.ExecuteReader();
                 while (reader.Read())
-                {
                     userIDs.Add(reader.GetInt32(0));
-                }
             }
             catch (SQLiteException)
             {
-                logger.Error(request.Substring(0, 254));
+                logger.Error(request.Length > 255 ? request.Substring(0, 254) : request);
             }
             return userIDs;
         }
@@ -288,13 +308,11 @@ namespace CrossoutLogView.Database.Connection
                 using var cmd = new SQLiteCommand(request, Connection);
                 using var reader = cmd.ExecuteReader();
                 while (reader.Read())
-                {
                     userIDs.Add(reader.GetInt32(0));
-                }
             }
             catch (SQLiteException)
             {
-                logger.Error(request.Substring(0, 254));
+                logger.Error(request.Length > 255 ? request.Substring(0, 254) : request);
             }
             return userIDs;
         }
@@ -316,7 +334,7 @@ namespace CrossoutLogView.Database.Connection
             return userIDs;
         }
 
-        public long[] RequestWeaponGamesRowIDs(string weaponName)
+        public long[] RequestWeaponGamesRowIds(string weaponName)
         {
             return RequestReferences(nameof(WeaponGlobal.Name).ToLowerInvariant() + " == " + SQLiteVariable(weaponName), typeof(WeaponGlobal), nameof(WeaponGlobal.Games).ToLowerInvariant());
         }
@@ -331,9 +349,7 @@ namespace CrossoutLogView.Database.Connection
                 using var cmd = new SQLiteCommand(request, Connection);
                 using var reader = cmd.ExecuteReader();
                 while (reader.Read())
-                {
                     names.Add(ReadField<string>(field, reader));
-                }
             }
             catch (SQLiteException)
             {
@@ -341,7 +357,9 @@ namespace CrossoutLogView.Database.Connection
             }
             return names;
         }
+        #endregion
 
+        #region Update
         public void UpdateUser(User user)
         {
             if (user is null) return;
@@ -453,7 +471,7 @@ namespace CrossoutLogView.Database.Connection
             }
             catch (SQLiteException)
             {
-                logger.Error(request.Substring(0, 254));
+                logger.Error(request.Length > 255 ? request.Substring(0, 254) : request);
             }
         }
 
@@ -505,6 +523,7 @@ namespace CrossoutLogView.Database.Connection
             sets.Append(nameof(WeaponGlobal.Uses)).Append(" = ").Append(SQLiteVariable(SerializeArray(uses, Base85.Encode)));
             InvokeNonQuery(String.Format(FormatUpdate, nameof(WeaponGlobal), sets.ToString(), condition), Connection);
         }
+        #endregion
 
         public long RequestUserRowId(int userId)
         {
@@ -521,7 +540,7 @@ namespace CrossoutLogView.Database.Connection
             catch (ArgumentException) { }
             catch (SQLiteException)
             {
-                logger.Error(request.Substring(0, 254));
+                logger.Error(request.Length > 255 ? request.Substring(0, 254) : request);
             }
             return rowId;
         }
@@ -542,7 +561,7 @@ namespace CrossoutLogView.Database.Connection
             catch (ArgumentException) { }
             catch (SQLiteException)
             {
-                logger.Error(request.Substring(0, 254));
+                logger.Error(request.Length > 255 ? request.Substring(0, 254) : request);
             }
             return uid;
         }
@@ -564,7 +583,7 @@ namespace CrossoutLogView.Database.Connection
             catch (ArgumentException) { }
             catch (SQLiteException)
             {
-                logger.Error(request.Substring(0, 254));
+                logger.Error(request.Length > 255 ? request.Substring(0, 254) : request);
             }
             return rowId;
         }
