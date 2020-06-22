@@ -2,6 +2,7 @@
 using CrossoutLogView.Database.Data;
 using CrossoutLogView.Database.Reflection;
 using CrossoutLogView.GUI.Core;
+using CrossoutLogView.GUI.Helpers;
 
 using LiveCharts;
 using LiveCharts.Configurations;
@@ -25,9 +26,9 @@ using static CrossoutLogView.Common.Strings;
 
 namespace CrossoutLogView.GUI.Models
 {
-    public class PlayerGamesChartModel : CollectionViewModel
+    public class PlayerGamesChartModel : CollectionViewModelBase
     {
-        private ObservableCollection<PlayerGameCompositeModel> _source;
+        private ObservableCollection<PlayerGameModel> _source;
         private Dimensions _seriesDimensions;
         private SeriesCollection _series;
         private AxesCollection _axisYCollection;
@@ -40,7 +41,7 @@ namespace CrossoutLogView.GUI.Models
         {
             var chartValuesInterface = typeof(IChartValues);
             chartValues = VariableInfo.FromType(typeof(PlayerGamesChartModel), true).Where(vi => chartValuesInterface.IsAssignableFrom(vi.VariableType)).ToArray();
-            playerGameModelVariables = VariableInfo.FromType(typeof(PlayerGameCompositeModel), true);
+            playerGameModelVariables = VariableInfo.FromType(typeof(PlayerGameModel), true);
         }
 
         public PlayerGamesChartModel(Chart chart)
@@ -50,7 +51,7 @@ namespace CrossoutLogView.GUI.Models
 
         public Chart Chart { get; }
 
-        public ObservableCollection<PlayerGameCompositeModel> Source
+        public ObservableCollection<PlayerGameModel> Source
         {
             get => _source;
             set

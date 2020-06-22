@@ -53,7 +53,7 @@ namespace CrossoutLogView.GUI.Models
                 OnPropertyChanged(nameof(CriticalDamage));
                 OnPropertyChanged(nameof(TotalDamage));
             }
-            catch (InvalidOperationException) { } // Collection was modified exception
+            catch (InvalidOperationException) { } // Collection was modified exception, thrown when quickly successively selecting elements
         }
     }
 }

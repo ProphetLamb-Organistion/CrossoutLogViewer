@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace CrossoutLogView.GUI.Models
 {
-    public class WeaponGlobalModel : CollectionViewModel
+    public class WeaponGlobalModel : CollectionViewModelBase
     {
         private string _displayName;
         private IEnumerable<GameModel> _games;

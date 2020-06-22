@@ -4,8 +4,6 @@ using CrossoutLogView.Statistics;
 
 using System;
 
-using static CrossoutLogView.Common.Strings;
-
 namespace CrossoutLogView.GUI.Models
 {
     public sealed class StripeModel : ViewModelBase
@@ -26,9 +24,7 @@ namespace CrossoutLogView.GUI.Models
 
         public Stripe Stripe { get; }
 
-        public object Parent { get; } //either playerview or userview
-
-        public string ListItemString => String.Concat(Stripe.Ammount, CenterDotSeparator, Stripe.Name);
+        public object Parent { get; } // Either playerview or userview
 
         public string Name { get; }
 

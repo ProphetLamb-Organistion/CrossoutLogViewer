@@ -5,6 +5,9 @@ using CrossoutLogView.Log;
 using CrossoutLogView.Statistics;
 
 using System;
+using System.Globalization;
+using System.Runtime.Versioning;
+using System.Windows.Data;
 using System.Windows.Media;
 
 namespace CrossoutLogView.GUI.Models
@@ -31,18 +34,7 @@ namespace CrossoutLogView.GUI.Models
         private bool _isExpanded = false;
         public bool IsExpanded { get => _isExpanded; set => Set(ref _isExpanded, value); }
 
-        public Brush DamageForeground => App.Current.Resources[Assist.IsCriticalDamage ? "CriticalDamage" : "ArmorDamage"] as SolidColorBrush;
-
-        public string DamageWithString => Assist.IsCriticalDamage ? " criticaldamage with " : " damage with ";
-
-        public string ListItemStringElapsed
-        {
-            get
-            {
-                if (Assist.Elapsed == 0.0) return String.Empty;
-                return String.Concat(Strings.CenterDotSeparator, Math.Round(Assist.Elapsed), " sec ago");
-            }
-        }
+        public string DamageWithString => Assist.IsCriticalDamage ? "" : "";
 
         public string WeaponName => DisplayStringFactory.AssetName(Assist.Weapon.Name);
 
@@ -57,5 +49,25 @@ namespace CrossoutLogView.GUI.Models
         public DamageFlag DamageFlags => Assist.DamageFlags;
 
         public bool IsCriticalDamage => Assist.IsCriticalDamage;
+    }
+
+    public class CriticalDamageConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is AssistModel assist)
+            {
+                if (targetType == typeof(Brush))
+                    return App.Current.Resources[assist.Assist.IsCriticalDamage ? "CriticalDamage" : "ArmorDamage"];
+                if (targetType == typeof(string) || targetType == typeof(object))
+                    return App.GetControlResource(assist.Assist.IsCriticalDamage ? "Assist_CritWith" : "Assist_DmgWith");
+            }
+            throw new NotSupportedException();
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotSupportedException();
+        }
     }
 }

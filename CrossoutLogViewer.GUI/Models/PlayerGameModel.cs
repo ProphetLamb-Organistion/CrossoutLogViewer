@@ -1,4 +1,5 @@
-﻿using CrossoutLogView.Database.Data;
+﻿using CrossoutLogView.Common;
+using CrossoutLogView.Database.Data;
 using CrossoutLogView.GUI.Core;
 using CrossoutLogView.Statistics;
 
@@ -9,26 +10,20 @@ using System.Windows.Media;
 
 namespace CrossoutLogView.GUI.Models
 {
-    public sealed class PlayerGameCompositeModel : CollectionViewModel
+    public sealed class PlayerGameModel : CollectionViewModelBase
     {
-        public PlayerGameCompositeModel()
+        public PlayerGameModel()
         {
             Game = new GameModel();
             Player = new PlayerModel();
             Map = String.Empty;
         }
 
-        public PlayerGameCompositeModel(GameModel game, PlayerModel player)
+        public PlayerGameModel(GameModel game, PlayerModel player)
         {
             Game = game ?? throw new ArgumentNullException(nameof(game));
             Player = player ?? throw new ArgumentNullException(nameof(player));
             Map = DisplayStringFactory.MapName(Game.Game.Map.Name);
-        }
-
-        protected override void UpdateCollections()
-        {
-            Game.UpdateCollectionsSafe();
-            Player.UpdateCollectionsSafe();
         }
 
         public GameModel Game { get; }
@@ -65,16 +60,20 @@ namespace CrossoutLogView.GUI.Models
 
         public double TotalDamageTaken => Player.Player.ArmorDamageTaken + Player.Player.CriticalDamageTaken;
 
-        public Brush Background => Won ? App.Current.Resources["TeamWon"] as Brush : !Unfinished ? App.Current.Resources["TeamLost"] as Brush : default;
+        protected override void UpdateCollections()
+        {
+            Game.UpdateCollectionsSafe();
+            Player.UpdateCollectionsSafe();
+        }
     }
 
-    public sealed class PlayerGameCompositeModelScoreDescending : IComparer<PlayerGameCompositeModel>
+    public sealed class PlayerGameModelScoreDescending : IComparer<PlayerGameModel>
     {
-        int IComparer<PlayerGameCompositeModel>.Compare(PlayerGameCompositeModel x, PlayerGameCompositeModel y) => y.Score.CompareTo(x.Score);
+        int IComparer<PlayerGameModel>.Compare(PlayerGameModel x, PlayerGameModel y) => y.Score.CompareTo(x.Score);
     }
 
-    public sealed class PlayerGameCompositeModelStartTimeDescending : IComparer<PlayerGameCompositeModel>
+    public sealed class PlayerGameModelStartTimeDescending : IComparer<PlayerGameModel>
     {
-        int IComparer<PlayerGameCompositeModel>.Compare(PlayerGameCompositeModel x, PlayerGameCompositeModel y) => y.StartTime.CompareTo(x.StartTime);
+        int IComparer<PlayerGameModel>.Compare(PlayerGameModel x, PlayerGameModel y) => y.StartTime.CompareTo(x.StartTime);
     }
 }

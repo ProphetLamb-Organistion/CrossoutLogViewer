@@ -38,28 +38,6 @@ namespace CrossoutLogView.GUI.Models
         private bool _isExpanded = true;
         public bool IsExpanded { get => _isExpanded; set => Set(ref _isExpanded, value); }
 
-        public string ListItemString
-        {
-            get
-            {
-                var sb = new StringBuilder();
-                sb.Append("Round ");
-                sb.Append(RoundNumber);
-                sb.Append(CenterDotSeparator);
-                sb.Append("from ");
-                sb.Append(TimeSpanStringFactory(Round.Start - Game.Start));
-                sb.Append(" to ");
-                sb.Append(TimeSpanStringFactory(Round.End - Game.Start));
-                sb.Append(CenterDotSeparator);
-                sb.Append("duration ");
-                sb.Append(TimeSpanStringFactory(Round.End - Round.Start));
-                sb.Append(CenterDotSeparator);
-                sb.Append(Round.Kills.Count);
-                sb.Append(" kills");
-                return sb.ToString();
-            }
-        }
-
         public int RoundNumber => Game == null || Game.Rounds == null ? 1 : Game.Rounds.FindIndex(x => x.Start == Round.Start) + 1;
 
         public DateTime Start => Round.Start;
@@ -69,7 +47,5 @@ namespace CrossoutLogView.GUI.Models
         public byte Winner => Round.Winner;
 
         public bool Won => Round.Winner == Game.Players.FirstOrDefault(x => x.UserID == Settings.Current.MyUserID).Team;
-
-        public Brush Background => App.Current.Resources[Won ? "TeamWon" : "TeamLost"] as Brush;
     }
 }

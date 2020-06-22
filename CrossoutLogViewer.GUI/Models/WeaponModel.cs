@@ -30,8 +30,6 @@ namespace CrossoutLogView.GUI.Models
 
         public double TotalDamage => Weapon.ArmorDamage + Weapon.CriticalDamage;
 
-        public string ListItemString => String.Concat(TotalDamage.ToString("0.##", CultureInfo.InvariantCulture.NumberFormat), Strings.CenterDotSeparator, Name);
-
         public string Name { get; }
 
         public double CriticalDamage => Weapon.CriticalDamage;

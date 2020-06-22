@@ -1,5 +1,6 @@
 ﻿using CrossoutLogView.Database.Data;
 using CrossoutLogView.GUI.Core;
+using CrossoutLogView.GUI.Helpers;
 using CrossoutLogView.Statistics;
 
 using System;
@@ -9,7 +10,7 @@ using System.Text;
 
 namespace CrossoutLogView.GUI.Models
 {
-    public class MapModel : CollectionViewModel
+    public class MapModel : CollectionViewModelBase
     {
         public MapModel(GameMap map)
         {
@@ -30,10 +31,6 @@ namespace CrossoutLogView.GUI.Models
             }
         }
 
-        public string GeneralGroup => StatDisplayMode == DisplayMode.Average ? "General (per battle)" : "General";
-
-        public string DamageGroup => StatDisplayMode == DisplayMode.Average ? "Damage Dealt (per battle)" : "Damage Dealt";
-
         public GameMap GameMap { get; }
 
         public string Name { get; }
@@ -41,10 +38,10 @@ namespace CrossoutLogView.GUI.Models
         private int _gamesPlayed;
         public int GamesPlayed { get => _gamesPlayed; set => Set(ref _gamesPlayed, value); }
 
-        public IEnumerable<PlayerGameCompositeModel> Games { get; private set; }
+        public IEnumerable<PlayerGameModel> Games { get; private set; }
 
-        private PlayerGameCompositeModel _selectedItem;
-        public PlayerGameCompositeModel SelectedItem { get => _selectedItem; set => Set(ref _selectedItem, value); }
+        private PlayerGameModel _selectedItem;
+        public PlayerGameModel SelectedItem { get => _selectedItem; set => Set(ref _selectedItem, value); }
 
         private double _winrate;
         public double Winrate { get => _winrate; set => Set(ref _winrate, value); }
@@ -88,13 +85,13 @@ namespace CrossoutLogView.GUI.Models
 
         protected override void UpdateCollections()
         {
-            var games = new List<PlayerGameCompositeModel>();
+            var games = new List<PlayerGameModel>();
             foreach (var g in GameMap.Games)
             {
                 var game = new GameModel(g);
                 var player = game.Players.FirstOrDefault(x => x.Player.UserID == Settings.Current.MyUserID);
                 if (player != null)
-                    games.Add(new PlayerGameCompositeModel(game, player));
+                    games.Add(new PlayerGameModel(game, player));
             }
             Games = games;
         }

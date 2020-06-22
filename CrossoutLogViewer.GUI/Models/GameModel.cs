@@ -12,7 +12,7 @@ using static CrossoutLogView.Common.Strings;
 
 namespace CrossoutLogView.GUI.Models
 {
-    public sealed class GameModel : CollectionViewModel
+    public sealed class GameModel : CollectionViewModelBase
     {
         public GameModel()
         {
@@ -48,7 +48,7 @@ namespace CrossoutLogView.GUI.Models
             }
         }
 
-        public string MVPName => MVP == null ? String.Empty : "MVP: " + MVP.Player.Name;
+        public string MVPName => MVP == null ? String.Empty : App.GetControlResource("Game_Mvp") + MVP.Player.Name;
 
         private PlayerModel _RedMVP = null;
         public PlayerModel RedMVP
@@ -63,11 +63,11 @@ namespace CrossoutLogView.GUI.Models
             }
         }
 
-        public string RedMVPName => RedMVP == null ? String.Empty : "Unyielding: " + RedMVP.Player.Name;
+        public string RedMVPName => RedMVP == null ? String.Empty : App.GetControlResource("Game_RedMvp") + RedMVP.Player.Name;
 
-        public string Team1String => Game.MVP == -1 ? "Team 1" : "Winning Team";
+        public string Team1String => Game.MVP == -1 ? App.GetControlResource("Game_Team1") : App.GetControlResource("Game_TeamWin");
 
-        public string Team2String => Game.MVP == -1 ? "Team 2" : "Loosing Team";
+        public string Team2String => Game.MVP == -1 ? App.GetControlResource("Game_Team2") : App.GetControlResource("Game_TeamLoose");
 
         public Visibility MVPVisible => Game.MVP != -1 ? Visibility.Visible : Visibility.Hidden;
 
@@ -75,10 +75,7 @@ namespace CrossoutLogView.GUI.Models
 
         public Visibility UnfinishedVisible => Game.MVP == -1 ? Visibility.Visible : Visibility.Hidden;
 
-        public string Title => String.Concat(DateTimeStringFactory(Game.Start), " - ", DateTimeStringFactory(Game.End),
-                CenterDotSeparator, DisplayStringFactory.MapName(Game.Map.Name), CenterDotSeparator, Game.Mission, CenterDotSeparator, Game.Mode);
-
-        public string Duration => "Duration: " + TimeSpanStringFactory(Start - End);
+        public string Duration => App.GetControlResource("Game_Duration") + TimeSpanStringFactory(Start - End);
 
         private List<PlayerModel> _players;
         public List<PlayerModel> Players { get => _players; private set => Set(ref _players, value); }
@@ -102,7 +99,5 @@ namespace CrossoutLogView.GUI.Models
 
         public bool Won => _players.FirstOrDefault(x => x.UserID == Settings.Current.MyUserID).Won;
         public bool Unfinished => Game.MVP == -1;
-
-        public Brush Background => Won ? App.Current.Resources["TeamWon"] as Brush : !Unfinished ? App.Current.Resources["TeamLost"] as Brush : default;
     }
 }

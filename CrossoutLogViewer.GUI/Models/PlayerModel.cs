@@ -11,7 +11,7 @@ using static CrossoutLogView.Common.Strings;
 
 namespace CrossoutLogView.GUI.Models
 {
-    public sealed class PlayerModel : CollectionViewModel
+    public sealed class PlayerModel : CollectionViewModelBase
     {
         public PlayerModel()
         {
@@ -42,10 +42,6 @@ namespace CrossoutLogView.GUI.Models
         public GameModel Parent { get; }
 
         public Player Player { get; }
-
-        public string Title => String.Concat(Player.Name, " (", Player.IsBot ? "Bot" : Player.UserID.ToString(CultureInfo.CurrentUICulture.NumberFormat), ")");
-
-        public string ListItemString => String.Concat(Player.Score, CenterDotSeparator, Title);
 
         private IEnumerable<WeaponModel> _weapons;
         public IEnumerable<WeaponModel> Weapons { get => _weapons; private set => Set(ref _weapons, value); }
