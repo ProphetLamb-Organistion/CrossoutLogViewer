@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:CrossoutLogView.GUI.Controls.SessionCalendar"
+             xmlns:helpers="clr-namespace:CrossoutLogView.GUI.Helpers"
              mc:Ignorable="d"
              Width="82"
              Height="auto"
@@ -11,6 +12,8 @@
              d:DesignWidth="82"
              x:Name="_DayButton">
     <UserControl.Resources>
+        <helpers:LocalisationHelper x:Key="res"
+                                    DefaultManager="ControlResources" />
         <Style x:Key="Button.DayButton"
                TargetType="{x:Type Button}"
                BasedOn="{StaticResource Button.Free}">
@@ -48,21 +51,21 @@
                        FontStyle="Italic"
                        HorizontalAlignment="Center" />
             <Button x:Name="ButtonNight"
-                    Content="Night"
+                    Content="{Binding Source={StaticResource res}, Path=.[Session_Night]}"
                     Style="{DynamicResource Button.DayButton}"
                     Click="Button_Click"
                     Margin="0,1,0,1"
                     Padding="0"
                     Height="20"/>
             <Button x:Name="ButtonNoon"
-                    Content="Noon"
+                    Content="{Binding Source={StaticResource res}, Path=.[Session_Noon]}"
                     Style="{DynamicResource Button.DayButton}"
                     Click="Button_Click"
                     Margin="0,1,0,1"
                     Padding="0"
                     Height="20" />
             <Button x:Name="ButtonAfternoon"
-                    Content="Afternoon"
+                    Content="{Binding Source={StaticResource res}, Path=.[Session_Afternoon]}"
                     Style="{DynamicResource Button.DayButton}"
                     Click="Button_Click"
                     Margin="0,0,0,1"

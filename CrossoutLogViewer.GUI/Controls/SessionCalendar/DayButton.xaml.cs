@@ -1,5 +1,5 @@
-﻿using CrossoutLogView.GUI.Core;
-using CrossoutLogView.GUI.Events;
+﻿using CrossoutLogView.GUI.Events;
+using CrossoutLogView.GUI.Helpers;
 
 using System;
 using System.Collections.Generic;
