@@ -59,5 +59,860 @@ namespace CrossoutLogView.GUI.LocalResources {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to criticaldamage with .
+        /// </summary>
+        internal static string Assist_CritWith {
+            get {
+                return ResourceManager.GetString("Assist_CritWith", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to  dealt .
+        /// </summary>
+        internal static string Assist_Dealt {
+            get {
+                return ResourceManager.GetString("Assist_Dealt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to damage with .
+        /// </summary>
+        internal static string Assist_DmgWith {
+            get {
+                return ResourceManager.GetString("Assist_DmgWith", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dimensions.
+        /// </summary>
+        internal static string Chart_Dims {
+            get {
+                return ResourceManager.GetString("Chart_Dims", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Armor.
+        /// </summary>
+        internal static string Damage_Armor {
+            get {
+                return ResourceManager.GetString("Damage_Armor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Critical.
+        /// </summary>
+        internal static string Damage_Critical {
+            get {
+                return ResourceManager.GetString("Damage_Critical", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total.
+        /// </summary>
+        internal static string Damage_Total {
+            get {
+                return ResourceManager.GetString("Damage_Total", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Today.
+        /// </summary>
+        internal static string Date_Tdy {
+            get {
+                return ResourceManager.GetString("Date_Tdy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tomorrow.
+        /// </summary>
+        internal static string Date_Tmrw {
+            get {
+                return ResourceManager.GetString("Date_Tmrw", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Yesterday.
+        /// </summary>
+        internal static string Date_Ystdy {
+            get {
+                return ResourceManager.GetString("Date_Ystdy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Armor dealt.
+        /// </summary>
+        internal static string DGGames_ArmorDealt {
+            get {
+                return ResourceManager.GetString("DGGames_ArmorDealt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Armor taken.
+        /// </summary>
+        internal static string DGGames_ArmorTaken {
+            get {
+                return ResourceManager.GetString("DGGames_ArmorTaken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Assists.
+        /// </summary>
+        internal static string DGGames_Assists {
+            get {
+                return ResourceManager.GetString("DGGames_Assists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open selected game..
+        /// </summary>
+        internal static string DGGames_CM_OpenGame {
+            get {
+                return ResourceManager.GetString("DGGames_CM_OpenGame", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open Users from selected games..
+        /// </summary>
+        internal static string DGGames_CM_OpenSelectedGames {
+            get {
+                return ResourceManager.GetString("DGGames_CM_OpenSelectedGames", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Crit. dealt.
+        /// </summary>
+        internal static string DGGames_CritDealt {
+            get {
+                return ResourceManager.GetString("DGGames_CritDealt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Crit. taken.
+        /// </summary>
+        internal static string DGGames_CritTaken {
+            get {
+                return ResourceManager.GetString("DGGames_CritTaken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Date.
+        /// </summary>
+        internal static string DGGames_Date {
+            get {
+                return ResourceManager.GetString("DGGames_Date", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deaths.
+        /// </summary>
+        internal static string DGGames_Deaths {
+            get {
+                return ResourceManager.GetString("DGGames_Deaths", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total dealt.
+        /// </summary>
+        internal static string DGGames_DmgDealt {
+            get {
+                return ResourceManager.GetString("DGGames_DmgDealt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total taken.
+        /// </summary>
+        internal static string DGGames_DmgTaken {
+            get {
+                return ResourceManager.GetString("DGGames_DmgTaken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kills.
+        /// </summary>
+        internal static string DGGames_Kills {
+            get {
+                return ResourceManager.GetString("DGGames_Kills", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Map.
+        /// </summary>
+        internal static string DGGames_Map {
+            get {
+                return ResourceManager.GetString("DGGames_Map", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mode.
+        /// </summary>
+        internal static string DGGames_Mode {
+            get {
+                return ResourceManager.GetString("DGGames_Mode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Score.
+        /// </summary>
+        internal static string DGGames_Score {
+            get {
+                return ResourceManager.GetString("DGGames_Score", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Assists.
+        /// </summary>
+        internal static string DGUsers_Assists {
+            get {
+                return ResourceManager.GetString("DGUsers_Assists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open User.
+        /// </summary>
+        internal static string DGUsers_CM_OpenUser {
+            get {
+                return ResourceManager.GetString("DGUsers_CM_OpenUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deaths.
+        /// </summary>
+        internal static string DGUsers_Deaths {
+            get {
+                return ResourceManager.GetString("DGUsers_Deaths", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Damage dealt.
+        /// </summary>
+        internal static string DGUsers_DmgDealt {
+            get {
+                return ResourceManager.GetString("DGUsers_DmgDealt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Damage taken.
+        /// </summary>
+        internal static string DGUsers_DmgTaken {
+            get {
+                return ResourceManager.GetString("DGUsers_DmgTaken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Games played.
+        /// </summary>
+        internal static string DGUsers_Games {
+            get {
+                return ResourceManager.GetString("DGUsers_Games", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kills.
+        /// </summary>
+        internal static string DGUsers_Kills {
+            get {
+                return ResourceManager.GetString("DGUsers_Kills", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        internal static string DGUsers_Name {
+            get {
+                return ResourceManager.GetString("DGUsers_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        internal static string DGWeapon_Name {
+            get {
+                return ResourceManager.GetString("DGWeapon_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to End.
+        /// </summary>
+        internal static string Filter_CustomEnd {
+            get {
+                return ResourceManager.GetString("Filter_CustomEnd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start.
+        /// </summary>
+        internal static string Filter_CustomStart {
+            get {
+                return ResourceManager.GetString("Filter_CustomStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Day.
+        /// </summary>
+        internal static string Filter_Day {
+            get {
+                return ResourceManager.GetString("Filter_Day", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mode .
+        /// </summary>
+        internal static string Filter_Mode {
+            get {
+                return ResourceManager.GetString("Filter_Mode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Month.
+        /// </summary>
+        internal static string Filter_Month {
+            get {
+                return ResourceManager.GetString("Filter_Month", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Span.
+        /// </summary>
+        internal static string Filter_Span {
+            get {
+                return ResourceManager.GetString("Filter_Span", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set time to after noon ClanWars session. 18:00 - 23:00.
+        /// </summary>
+        internal static string Filter_Tooltip_Afternoon {
+            get {
+                return ResourceManager.GetString("Filter_Tooltip_Afternoon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set time to all day..
+        /// </summary>
+        internal static string Filter_Tooltip_Allday {
+            get {
+                return ResourceManager.GetString("Filter_Tooltip_Allday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clears all filters, showing all games. Warning might consume a lot of resources..
+        /// </summary>
+        internal static string Filter_Tooltip_Clear {
+            get {
+                return ResourceManager.GetString("Filter_Tooltip_Clear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Opens custom date span popup..
+        /// </summary>
+        internal static string Filter_Tooltip_CustomSpan {
+            get {
+                return ResourceManager.GetString("Filter_Tooltip_CustomSpan", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose the kind of games to show..
+        /// </summary>
+        internal static string Filter_Tooltip_Mode {
+            get {
+                return ResourceManager.GetString("Filter_Tooltip_Mode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set filter to the current month..
+        /// </summary>
+        internal static string Filter_Tooltip_Month {
+            get {
+                return ResourceManager.GetString("Filter_Tooltip_Month", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set time to night ClanWars session. 00:00 - 05:00.
+        /// </summary>
+        internal static string Filter_Tooltip_Night {
+            get {
+                return ResourceManager.GetString("Filter_Tooltip_Night", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set time to noon ClanWars session. 12:00 - 17:00.
+        /// </summary>
+        internal static string Filter_Tooltip_Noon {
+            get {
+                return ResourceManager.GetString("Filter_Tooltip_Noon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose a day to view the games, relative to today..
+        /// </summary>
+        internal static string Filter_Tooltip_Slider {
+            get {
+                return ResourceManager.GetString("Filter_Tooltip_Slider", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set filter to the current week..
+        /// </summary>
+        internal static string Filter_Tooltip_Week {
+            get {
+                return ResourceManager.GetString("Filter_Tooltip_Week", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Week.
+        /// </summary>
+        internal static string Filter_Week {
+            get {
+                return ResourceManager.GetString("Filter_Week", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Duration: .
+        /// </summary>
+        internal static string Game_Duration {
+            get {
+                return ResourceManager.GetString("Game_Duration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MVP: .
+        /// </summary>
+        internal static string Game_Mvp {
+            get {
+                return ResourceManager.GetString("Game_Mvp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unyielding.
+        /// </summary>
+        internal static string Game_RedMvp {
+            get {
+                return ResourceManager.GetString("Game_RedMvp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Team1.
+        /// </summary>
+        internal static string Game_Team1 {
+            get {
+                return ResourceManager.GetString("Game_Team1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Team2.
+        /// </summary>
+        internal static string Game_Team2 {
+            get {
+                return ResourceManager.GetString("Game_Team2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Loosing Team.
+        /// </summary>
+        internal static string Game_TeamLoose {
+            get {
+                return ResourceManager.GetString("Game_TeamLoose", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Winning Team.
+        /// </summary>
+        internal static string Game_TeamWin {
+            get {
+                return ResourceManager.GetString("Game_TeamWin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unfinished game.
+        /// </summary>
+        internal static string Game_Unfinished {
+            get {
+                return ResourceManager.GetString("Game_Unfinished", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Games.
+        /// </summary>
+        internal static string Games {
+            get {
+                return ResourceManager.GetString("Games", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open Users.
+        /// </summary>
+        internal static string Games_OpenUsers {
+            get {
+                return ResourceManager.GetString("Games_OpenUsers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to  despawned.
+        /// </summary>
+        internal static string Kill_Despawn {
+            get {
+                return ResourceManager.GetString("Kill_Despawn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to  destroyed .
+        /// </summary>
+        internal static string Kill_Destroyed {
+            get {
+                return ResourceManager.GetString("Kill_Destroyed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to  suicided.
+        /// </summary>
+        internal static string Kill_Suicide {
+            get {
+                return ResourceManager.GetString("Kill_Suicide", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Games.
+        /// </summary>
+        internal static string Maps_GamesHeader {
+            get {
+                return ResourceManager.GetString("Maps_GamesHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Maps.
+        /// </summary>
+        internal static string Maps_Header {
+            get {
+                return ResourceManager.GetString("Maps_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open Games.
+        /// </summary>
+        internal static string Party_OpenGames {
+            get {
+                return ResourceManager.GetString("Party_OpenGames", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Afternoon.
+        /// </summary>
+        internal static string Session_Afternoon {
+            get {
+                return ResourceManager.GetString("Session_Afternoon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Night.
+        /// </summary>
+        internal static string Session_Night {
+            get {
+                return ResourceManager.GetString("Session_Night", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Noon.
+        /// </summary>
+        internal static string Session_Noon {
+            get {
+                return ResourceManager.GetString("Session_Noon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stripes.
+        /// </summary>
+        internal static string Stripes {
+            get {
+                return ResourceManager.GetString("Stripes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name1|Name2|Name3.
+        /// </summary>
+        internal static string UserList_Names_Watermark {
+            get {
+                return ResourceManager.GetString("UserList_Names_Watermark", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Assists.
+        /// </summary>
+        internal static string UserOverview_Assists {
+            get {
+                return ResourceManager.GetString("UserOverview_Assists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to  (avg. battle).
+        /// </summary>
+        internal static string UserOverview_Avg {
+            get {
+                return ResourceManager.GetString("UserOverview_Avg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deaths.
+        /// </summary>
+        internal static string UserOverview_Deaths {
+            get {
+                return ResourceManager.GetString("UserOverview_Deaths", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Damage Dealt.
+        /// </summary>
+        internal static string UserOverview_DmgDealt {
+            get {
+                return ResourceManager.GetString("UserOverview_DmgDealt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Damage Taken.
+        /// </summary>
+        internal static string UserOverview_DmgTaken {
+            get {
+                return ResourceManager.GetString("UserOverview_DmgTaken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to General.
+        /// </summary>
+        internal static string UserOverview_General {
+            get {
+                return ResourceManager.GetString("UserOverview_General", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kills.
+        /// </summary>
+        internal static string UserOverview_Kills {
+            get {
+                return ResourceManager.GetString("UserOverview_Kills", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lost.
+        /// </summary>
+        internal static string UserOverview_Lost {
+            get {
+                return ResourceManager.GetString("UserOverview_Lost", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Score.
+        /// </summary>
+        internal static string UserOverview_Score {
+            get {
+                return ResourceManager.GetString("UserOverview_Score", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stats.
+        /// </summary>
+        internal static string UserOverview_Stats {
+            get {
+                return ResourceManager.GetString("UserOverview_Stats", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unfinished.
+        /// </summary>
+        internal static string UserOverview_Unfinished {
+            get {
+                return ResourceManager.GetString("UserOverview_Unfinished", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Winrate.
+        /// </summary>
+        internal static string UserOverview_Winrate {
+            get {
+                return ResourceManager.GetString("UserOverview_Winrate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Won.
+        /// </summary>
+        internal static string UserOverview_Won {
+            get {
+                return ResourceManager.GetString("UserOverview_Won", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Users.
+        /// </summary>
+        internal static string Users {
+            get {
+                return ResourceManager.GetString("Users", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Names.
+        /// </summary>
+        internal static string UsersList_Names {
+            get {
+                return ResourceManager.GetString("UsersList_Names", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Armor damage.
+        /// </summary>
+        internal static string Weapon_ArmorDmg {
+            get {
+                return ResourceManager.GetString("Weapon_ArmorDmg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Critical damage.
+        /// </summary>
+        internal static string Weapon_CritDmg {
+            get {
+                return ResourceManager.GetString("Weapon_CritDmg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User.
+        /// </summary>
+        internal static string Weapon_Filter_User {
+            get {
+                return ResourceManager.GetString("Weapon_Filter_User", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Weapon.
+        /// </summary>
+        internal static string Weapon_Filter_Weapon {
+            get {
+                return ResourceManager.GetString("Weapon_Filter_Weapon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Weapon Name.
+        /// </summary>
+        internal static string Weapon_Name {
+            get {
+                return ResourceManager.GetString("Weapon_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total damage.
+        /// </summary>
+        internal static string Weapon_TotalDmg {
+            get {
+                return ResourceManager.GetString("Weapon_TotalDmg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Uses.
+        /// </summary>
+        internal static string Weapon_Uses {
+            get {
+                return ResourceManager.GetString("Weapon_Uses", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Weapons.
+        /// </summary>
+        internal static string Weapons {
+            get {
+                return ResourceManager.GetString("Weapons", resourceCulture);
+            }
+        }
     }
 }

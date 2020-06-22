@@ -117,11 +117,29 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Duration" xml:space="preserve">
+    <value>duration </value>
+  </data>
   <data name="Excp_UnupportedVM" xml:space="preserve">
     <value>View model not supported.</value>
   </data>
+  <data name="From" xml:space="preserve">
+    <value> from </value>
+  </data>
+  <data name="Kills" xml:space="preserve">
+    <value> kills</value>
+  </data>
   <data name="Loading" xml:space="preserve">
     <value>Loading</value>
+  </data>
+  <data name="Round" xml:space="preserve">
+    <value>Round </value>
+  </data>
+  <data name="SecAgo" xml:space="preserve">
+    <value> sec ago</value>
+  </data>
+  <data name="To" xml:space="preserve">
+    <value> to </value>
   </data>
   <data name="UnderConstr" xml:space="preserve">
     <value>Work in progress.

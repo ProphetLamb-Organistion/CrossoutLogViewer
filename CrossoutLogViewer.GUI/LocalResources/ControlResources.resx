@@ -1,101 +1,405 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-	<!-- 
-		Microsoft ResX Schema
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
 
-		Version 1.3
-
-		The primary goals of this format is to allow a simple XML format 
-		that is mostly human readable. The generation and parsing of the 
-		various data types are done through the TypeConverter classes 
-		associated with the data types.
-
-		Example:
-
-		... ado.net/XML headers & schema ...
-		<resheader name="resmimetype">text/microsoft-resx</resheader>
-		<resheader name="version">1.3</resheader>
-		<resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-		<resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-		<data name="Name1">this is my long string</data>
-		<data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
-		<data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-			[base64 mime encoded serialized .NET Framework object]
-		</data>
-		<data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-			[base64 mime encoded string representing a byte array form of the .NET Framework object]
-		</data>
-
-		There are any number of "resheader" rows that contain simple 
-		name/value pairs.
-
-		Each data row contains a name, and value. The row also contains a 
-		type or mimetype. Type corresponds to a .NET class that support 
-		text/value conversion through the TypeConverter architecture. 
-		Classes that don't support this are serialized and stored with the 
-		mimetype set.
-
-		The mimetype is used for serialized objects, and tells the 
-		ResXResourceReader how to depersist the object. This is currently not 
-		extensible. For a given mimetype the value must be set accordingly:
-
-		Note - application/x-microsoft.net.object.binary.base64 is the format 
-		that the ResXResourceWriter will generate, however the reader can 
-		read any of the formats listed below.
-
-		mimetype: application/x-microsoft.net.object.binary.base64
-		value   : The object must be serialized with 
-			: System.Serialization.Formatters.Binary.BinaryFormatter
-			: and then encoded with base64 encoding.
-
-		mimetype: application/x-microsoft.net.object.soap.base64
-		value   : The object must be serialized with 
-			: System.Runtime.Serialization.Formatters.Soap.SoapFormatter
-			: and then encoded with base64 encoding.
-
-		mimetype: application/x-microsoft.net.object.bytearray.base64
-		value   : The object must be serialized into a byte array 
-			: using a System.ComponentModel.TypeConverter
-			: and then encoded with base64 encoding.
-	-->
-	
-	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-		<xsd:element name="root" msdata:IsDataSet="true">
-			<xsd:complexType>
-				<xsd:choice maxOccurs="unbounded">
-					<xsd:element name="data">
-						<xsd:complexType>
-							<xsd:sequence>
-								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-							</xsd:sequence>
-							<xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
-							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-						</xsd:complexType>
-					</xsd:element>
-					<xsd:element name="resheader">
-						<xsd:complexType>
-							<xsd:sequence>
-								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-							</xsd:sequence>
-							<xsd:attribute name="name" type="xsd:string" use="required" />
-						</xsd:complexType>
-					</xsd:element>
-				</xsd:choice>
-			</xsd:complexType>
-		</xsd:element>
-	</xsd:schema>
-	<resheader name="resmimetype">
-		<value>text/microsoft-resx</value>
-	</resheader>
-	<resheader name="version">
-		<value>1.3</value>
-	</resheader>
-	<resheader name="reader">
-		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-	</resheader>
-	<resheader name="writer">
-		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-	</resheader>
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Assist_CritWith" xml:space="preserve">
+    <value>criticaldamage with </value>
+  </data>
+  <data name="Assist_Dealt" xml:space="preserve">
+    <value> dealt </value>
+  </data>
+  <data name="Assist_DmgWith" xml:space="preserve">
+    <value>damage with </value>
+  </data>
+  <data name="Chart_Dims" xml:space="preserve">
+    <value>Dimensions</value>
+  </data>
+  <data name="Damage_Armor" xml:space="preserve">
+    <value>Armor</value>
+  </data>
+  <data name="Damage_Critical" xml:space="preserve">
+    <value>Critical</value>
+  </data>
+  <data name="Damage_Total" xml:space="preserve">
+    <value>Total</value>
+  </data>
+  <data name="Date_Tdy" xml:space="preserve">
+    <value>Today</value>
+  </data>
+  <data name="Date_Tmrw" xml:space="preserve">
+    <value>Tomorrow</value>
+  </data>
+  <data name="Date_Ystdy" xml:space="preserve">
+    <value>Yesterday</value>
+  </data>
+  <data name="DGGames_ArmorDealt" xml:space="preserve">
+    <value>Armor dealt</value>
+  </data>
+  <data name="DGGames_ArmorTaken" xml:space="preserve">
+    <value>Armor taken</value>
+  </data>
+  <data name="DGGames_Assists" xml:space="preserve">
+    <value>Assists</value>
+  </data>
+  <data name="DGGames_CM_OpenGame" xml:space="preserve">
+    <value>Open selected game.</value>
+  </data>
+  <data name="DGGames_CM_OpenSelectedGames" xml:space="preserve">
+    <value>Open Users from selected games.</value>
+  </data>
+  <data name="DGGames_CritDealt" xml:space="preserve">
+    <value>Crit. dealt</value>
+  </data>
+  <data name="DGGames_CritTaken" xml:space="preserve">
+    <value>Crit. taken</value>
+  </data>
+  <data name="DGGames_Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="DGGames_Deaths" xml:space="preserve">
+    <value>Deaths</value>
+  </data>
+  <data name="DGGames_DmgDealt" xml:space="preserve">
+    <value>Total dealt</value>
+  </data>
+  <data name="DGGames_DmgTaken" xml:space="preserve">
+    <value>Total taken</value>
+  </data>
+  <data name="DGGames_Kills" xml:space="preserve">
+    <value>Kills</value>
+  </data>
+  <data name="DGGames_Map" xml:space="preserve">
+    <value>Map</value>
+  </data>
+  <data name="DGGames_Mode" xml:space="preserve">
+    <value>Mode</value>
+  </data>
+  <data name="DGGames_Score" xml:space="preserve">
+    <value>Score</value>
+  </data>
+  <data name="DGUsers_Assists" xml:space="preserve">
+    <value>Assists</value>
+  </data>
+  <data name="DGUsers_CM_OpenUser" xml:space="preserve">
+    <value>Open User</value>
+  </data>
+  <data name="DGUsers_Deaths" xml:space="preserve">
+    <value>Deaths</value>
+  </data>
+  <data name="DGUsers_DmgDealt" xml:space="preserve">
+    <value>Damage dealt</value>
+  </data>
+  <data name="DGUsers_DmgTaken" xml:space="preserve">
+    <value>Damage taken</value>
+  </data>
+  <data name="DGUsers_Games" xml:space="preserve">
+    <value>Games played</value>
+  </data>
+  <data name="DGUsers_Kills" xml:space="preserve">
+    <value>Kills</value>
+  </data>
+  <data name="DGUsers_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="DGWeapon_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Filter_CustomEnd" xml:space="preserve">
+    <value>End</value>
+  </data>
+  <data name="Filter_CustomStart" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="Filter_Day" xml:space="preserve">
+    <value>Day</value>
+  </data>
+  <data name="Filter_Mode" xml:space="preserve">
+    <value>Mode </value>
+  </data>
+  <data name="Filter_Month" xml:space="preserve">
+    <value>Month</value>
+  </data>
+  <data name="Filter_Span" xml:space="preserve">
+    <value>Span</value>
+  </data>
+  <data name="Filter_Tooltip_Afternoon" xml:space="preserve">
+    <value>Set time to after noon ClanWars session. 18:00 - 23:00</value>
+  </data>
+  <data name="Filter_Tooltip_Allday" xml:space="preserve">
+    <value>Set time to all day.</value>
+  </data>
+  <data name="Filter_Tooltip_Clear" xml:space="preserve">
+    <value>Clears all filters, showing all games. Warning might consume a lot of resources.</value>
+  </data>
+  <data name="Filter_Tooltip_CustomSpan" xml:space="preserve">
+    <value>Opens custom date span popup.</value>
+  </data>
+  <data name="Filter_Tooltip_Mode" xml:space="preserve">
+    <value>Choose the kind of games to show.</value>
+  </data>
+  <data name="Filter_Tooltip_Month" xml:space="preserve">
+    <value>Set filter to the current month.</value>
+  </data>
+  <data name="Filter_Tooltip_Night" xml:space="preserve">
+    <value>Set time to night ClanWars session. 00:00 - 05:00</value>
+  </data>
+  <data name="Filter_Tooltip_Noon" xml:space="preserve">
+    <value>Set time to noon ClanWars session. 12:00 - 17:00</value>
+  </data>
+  <data name="Filter_Tooltip_Slider" xml:space="preserve">
+    <value>Choose a day to view the games, relative to today.</value>
+  </data>
+  <data name="Filter_Tooltip_Week" xml:space="preserve">
+    <value>Set filter to the current week.</value>
+  </data>
+  <data name="Filter_Week" xml:space="preserve">
+    <value>Week</value>
+  </data>
+  <data name="Games" xml:space="preserve">
+    <value>Games</value>
+  </data>
+  <data name="Games_OpenUsers" xml:space="preserve">
+    <value>Open Users</value>
+  </data>
+  <data name="Game_Duration" xml:space="preserve">
+    <value>Duration: </value>
+  </data>
+  <data name="Game_Mvp" xml:space="preserve">
+    <value>MVP: </value>
+  </data>
+  <data name="Game_RedMvp" xml:space="preserve">
+    <value>Unyielding</value>
+  </data>
+  <data name="Game_Team1" xml:space="preserve">
+    <value>Team1</value>
+  </data>
+  <data name="Game_Team2" xml:space="preserve">
+    <value>Team2</value>
+  </data>
+  <data name="Game_TeamLoose" xml:space="preserve">
+    <value>Loosing Team</value>
+  </data>
+  <data name="Game_TeamWin" xml:space="preserve">
+    <value>Winning Team</value>
+  </data>
+  <data name="Game_Unfinished" xml:space="preserve">
+    <value>Unfinished game</value>
+  </data>
+  <data name="Kill_Despawn" xml:space="preserve">
+    <value> despawned</value>
+  </data>
+  <data name="Kill_Destroyed" xml:space="preserve">
+    <value> destroyed </value>
+  </data>
+  <data name="Kill_Suicide" xml:space="preserve">
+    <value> suicided</value>
+  </data>
+  <data name="Maps_GamesHeader" xml:space="preserve">
+    <value>Games</value>
+  </data>
+  <data name="Maps_Header" xml:space="preserve">
+    <value>Maps</value>
+  </data>
+  <data name="Party_OpenGames" xml:space="preserve">
+    <value>Open Games</value>
+  </data>
+  <data name="Session_Afternoon" xml:space="preserve">
+    <value>Afternoon</value>
+  </data>
+  <data name="Session_Night" xml:space="preserve">
+    <value>Night</value>
+  </data>
+  <data name="Session_Noon" xml:space="preserve">
+    <value>Noon</value>
+  </data>
+  <data name="Stripes" xml:space="preserve">
+    <value>Stripes</value>
+  </data>
+  <data name="UserList_Names_Watermark" xml:space="preserve">
+    <value>Name1|Name2|Name3</value>
+  </data>
+  <data name="UserOverview_Assists" xml:space="preserve">
+    <value>Assists</value>
+  </data>
+  <data name="UserOverview_Avg" xml:space="preserve">
+    <value> (avg. battle)</value>
+  </data>
+  <data name="UserOverview_Deaths" xml:space="preserve">
+    <value>Deaths</value>
+  </data>
+  <data name="UserOverview_DmgDealt" xml:space="preserve">
+    <value>Damage Dealt</value>
+  </data>
+  <data name="UserOverview_DmgTaken" xml:space="preserve">
+    <value>Damage Taken</value>
+  </data>
+  <data name="UserOverview_General" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="UserOverview_Kills" xml:space="preserve">
+    <value>Kills</value>
+  </data>
+  <data name="UserOverview_Lost" xml:space="preserve">
+    <value>Lost</value>
+  </data>
+  <data name="UserOverview_Score" xml:space="preserve">
+    <value>Score</value>
+  </data>
+  <data name="UserOverview_Stats" xml:space="preserve">
+    <value>Stats</value>
+  </data>
+  <data name="UserOverview_Unfinished" xml:space="preserve">
+    <value>Unfinished</value>
+  </data>
+  <data name="UserOverview_Winrate" xml:space="preserve">
+    <value>Winrate</value>
+  </data>
+  <data name="UserOverview_Won" xml:space="preserve">
+    <value>Won</value>
+  </data>
+  <data name="Users" xml:space="preserve">
+    <value>Users</value>
+  </data>
+  <data name="UsersList_Names" xml:space="preserve">
+    <value>Names</value>
+  </data>
+  <data name="Weapons" xml:space="preserve">
+    <value>Weapons</value>
+  </data>
+  <data name="Weapon_ArmorDmg" xml:space="preserve">
+    <value>Armor damage</value>
+  </data>
+  <data name="Weapon_CritDmg" xml:space="preserve">
+    <value>Critical damage</value>
+  </data>
+  <data name="Weapon_Filter_User" xml:space="preserve">
+    <value>User</value>
+  </data>
+  <data name="Weapon_Filter_Weapon" xml:space="preserve">
+    <value>Weapon</value>
+  </data>
+  <data name="Weapon_Name" xml:space="preserve">
+    <value>Weapon Name</value>
+  </data>
+  <data name="Weapon_TotalDmg" xml:space="preserve">
+    <value>Total damage</value>
+  </data>
+  <data name="Weapon_Uses" xml:space="preserve">
+    <value>Uses</value>
+  </data>
 </root>

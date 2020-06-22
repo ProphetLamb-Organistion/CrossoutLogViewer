@@ -61,6 +61,15 @@ namespace CrossoutLogView.GUI.LocalResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to duration .
+        /// </summary>
+        internal static string Duration {
+            get {
+                return ResourceManager.GetString("Duration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to View model not supported..
         /// </summary>
         internal static string Excp_UnupportedVM {
@@ -70,11 +79,56 @@ namespace CrossoutLogView.GUI.LocalResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to  from .
+        /// </summary>
+        internal static string From {
+            get {
+                return ResourceManager.GetString("From", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to  kills.
+        /// </summary>
+        internal static string Kills {
+            get {
+                return ResourceManager.GetString("Kills", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Loading.
         /// </summary>
         internal static string Loading {
             get {
                 return ResourceManager.GetString("Loading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Round .
+        /// </summary>
+        internal static string Round {
+            get {
+                return ResourceManager.GetString("Round", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to  sec ago.
+        /// </summary>
+        internal static string SecAgo {
+            get {
+                return ResourceManager.GetString("SecAgo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to  to .
+        /// </summary>
+        internal static string To {
+            get {
+                return ResourceManager.GetString("To", resourceCulture);
             }
         }
         
