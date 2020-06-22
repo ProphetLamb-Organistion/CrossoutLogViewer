@@ -69,12 +69,12 @@ namespace CrossoutLogView.Database.Data
         private bool _startupMaximized = false;
         public bool StartupMaximized { get => _startupMaximized; set => Set(ref _startupMaximized, value); }
 
-        private void Set<T>(ref T field, T value, [CallerMemberName] string name = "") where T : IEquatable<T>
+        private void Set<T>(ref T field, T newValue = default, [CallerMemberName] string name = "")
         {
-            if (value != null && value.Equals(field))
+            if (EqualityComparer<T>.Default.Equals(field, newValue))
                 return;
             var oldValue = field;
-            field = value;
+            field = newValue;
             if (!lockWrite)
             {
                 WriteInstance();
