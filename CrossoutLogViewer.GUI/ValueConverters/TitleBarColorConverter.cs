@@ -15,7 +15,7 @@ namespace CrossoutLogView.GUI.ValueConverters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is SolidColorBrush brush)
+            if (targetType == typeof(Brush) && value is SolidColorBrush brush)
             {
                 return brush.Color.GetLightness() <= 96
                     ? new SolidColorBrush(Color.FromArgb(brush.Color.A,
@@ -27,14 +27,12 @@ namespace CrossoutLogView.GUI.ValueConverters
                             (byte)Math.Max(brush.Color.G - 30, 0),
                             (byte)Math.Max(brush.Color.B - 30, 0)));
             }
-            return null;
+            throw new NotSupportedException();
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is SolidColorBrush brush)
-                return brush;
-            return null;
+            throw new NotSupportedException();
         }
     }
 }
