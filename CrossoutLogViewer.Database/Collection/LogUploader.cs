@@ -25,7 +25,7 @@ namespace CrossoutLogView.Database.Collection
             if (!PathUtility.TryParseCrossoutLogDirectoryName(PathUtility.GetDirectoryName(logPath), out var logDate))
                 throw new ArgumentException("Directory name doesnot fullfill format requirement.", nameof(logPath));
             if (PathUtility.IsDirectory(logPath)) logPath = Path.Combine(logPath, Strings.ComatLogName);
-            if (!File.Exists(logPath)) throw new FileNotFoundException();
+            if (!File.Exists(logPath)) throw new FileNotFoundException("The file \"" + logPath + "\" does not exist.");
             collector = new LogCollector(logDate);
             fileStream = new FileStream(logPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             streamReader = new StreamReader(fileStream);
