@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CrossoutLogView.GUI.Core
+namespace CrossoutLogView.GUI.Helpers
 {
     [Flags]
     public enum SessionTimes

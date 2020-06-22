@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CrossoutLogView.GUI.Models
+namespace CrossoutLogView.GUI.Helpers
 {
     [Flags]
     public enum Dimensions
