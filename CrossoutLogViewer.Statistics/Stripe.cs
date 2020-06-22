@@ -1,8 +1,10 @@
-﻿using System;
+﻿using CrossoutLogView.Common;
+
+using System;
 
 namespace CrossoutLogView.Statistics
 {
-    public class Stripe : IStatisticData, ICloneable
+    public class Stripe : IStatisticData, ICloneable, IMergable<Stripe>
     {
         public string Name;
         public int Ammount;

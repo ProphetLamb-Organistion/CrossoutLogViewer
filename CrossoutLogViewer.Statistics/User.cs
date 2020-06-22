@@ -37,7 +37,7 @@ namespace CrossoutLogView.Statistics
             Participations = participations;
         }
 
-        public static List<User> ParseUsers(IEnumerable<Game> games)
+        public static List<User> Parse(IEnumerable<Game> games)
         {
             var users = new List<User>();
             foreach (var game in games)

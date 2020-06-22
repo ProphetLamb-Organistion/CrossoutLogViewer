@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace CrossoutLogView.Statistics
 {
-    public class WeaponGlobal : WeaponBase, IStatisticData
+    public class WeaponGlobal : WeaponBase, IStatisticData, IMergable<WeaponGlobal>
     {
         public List<User> Users;
         public List<int> Uses;
@@ -26,7 +26,7 @@ namespace CrossoutLogView.Statistics
             CriticalDamage = weapon.CriticalDamage;
         }
 
-        public void Merge(WeaponGlobal other)
+        public WeaponGlobal Merge(WeaponGlobal other)
         {
             for (int i = 0; i < other.Users.Count; i++)
             {
@@ -42,6 +42,7 @@ namespace CrossoutLogView.Statistics
                 ArmorDamage += other.ArmorDamage;
                 CriticalDamage += other.CriticalDamage;
             }
+            return this;
         }
 
         public static List<WeaponGlobal> ParseWeapons(List<Game> games)

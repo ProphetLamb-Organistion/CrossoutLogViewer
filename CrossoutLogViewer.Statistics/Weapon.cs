@@ -1,4 +1,5 @@
-﻿using CrossoutLogView.Log;
+﻿using CrossoutLogView.Common;
+using CrossoutLogView.Log;
 
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using static CrossoutLogView.Common.Strings;
 
 namespace CrossoutLogView.Statistics
 {
-    public class Weapon : WeaponBase, IStatisticData, ICloneable
+    public class Weapon : WeaponBase, IStatisticData, ICloneable, IMergable<Weapon>
     {
         public int Uses;
 
