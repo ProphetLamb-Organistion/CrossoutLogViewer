@@ -155,8 +155,9 @@ namespace CrossoutLogView.Database
         private void ParseLogDelta()
         {
             var filePath = Path.Combine(current.Path, Strings.ComatLogName);
-            using (var logs = new LogUploader(filePath))
+            if (File.Exists(filePath))
             {
+                using var logs = new LogUploader(filePath);
                 logs.Reposition(current.Position);
                 current.Position += logs.Parse();
                 logs.Upload();
