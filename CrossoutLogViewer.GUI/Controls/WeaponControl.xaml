@@ -3,12 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:helpers="clr-namespace:CrossoutLogView.GUI.Helpers"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              mc:Ignorable="d"
              BorderThickness="0"
              d:DesignHeight="450"
              d:DesignWidth="800"
              x:Name="_WeaponControl">
+    <UserControl.Resources>
+        <helpers:LocalisationHelper x:Key="res"
+                                    DefaultManager="ControlResources" />
+    </UserControl.Resources>
     <Grid>
         <GroupBox x:Name="GroupBoxOverview"
                   DataContext="{Binding ElementName=_WeaponControl, Path=SelectedItem}"
@@ -19,34 +24,34 @@
                         Margin="4,0">
                 <TextBlock Style="{DynamicResource Content}"
                            VerticalAlignment="Center">
-                    <Run Text="Uses" />
+                    <Run Text="{Binding Source={StaticResource res}, Mode=OneWay, Path=.[Weapon_Uses]}" />
                     <Run Text="{Binding TotalUses, Mode=OneWay}" />
                 </TextBlock>
                 <TextBlock Style="{DynamicResource Content}"
                            Margin="8,0,0,0"
                            VerticalAlignment="Center">
-                    <Run Text="Total damage" />
+                    <Run Text="{Binding Source={StaticResource res}, Mode=OneWay, Path=.[Weapon_TotalDmg]}" />
                     <Run Text="{Binding TotalDamage, StringFormat=0.##, Mode=OneWay}"
                          Foreground="{DynamicResource TotalDamage}" />
                 </TextBlock>
                 <TextBlock Style="{DynamicResource Content}"
                            Margin="8,0,0,0"
                            VerticalAlignment="Center">
-                    <Run Text="Critical damage" />
+                    <Run Text="{Binding Source={StaticResource res}, Mode=OneWay, Path=.[Weapon_CritDmg]}" />
                     <Run Text="{Binding CriticalDamage, StringFormat=0.##, Mode=OneWay}"
                          Foreground="{DynamicResource CriticalDamage}" />
                 </TextBlock>
                 <TextBlock Style="{DynamicResource Content}"
                            Margin="8,0,0,0"
                            VerticalAlignment="Center">
-                    <Run Text="Armor damage" />
+                    <Run Text="{Binding Source={StaticResource res}, Mode=OneWay, Path=.[Weapon_ArmorDmg]}" />
                     <Run Text="{Binding ArmorDamage, StringFormat=0.##, Mode=OneWay}"
                          Foreground="{DynamicResource ArmorDamage}" />
                 </TextBlock>
             </StackPanel>
         </GroupBox>
         <GroupBox x:Name="GroupBoxUsers"
-                  Header="Users"
+                  Header="{Binding Source={StaticResource res}, Mode=OneWay, Path=.[Users]}"
                   Style="{DynamicResource GroupBox.Border}"
                   DataContext="{Binding ElementName=_WeaponControl, Path=SelectedItem}"
                   Grid.Row="1"
@@ -57,7 +62,7 @@
                 <ListBox.Resources>
                     <ContextMenu x:Key="ListBoxWeaponUsersContextMenu"
                                  Style="{DynamicResource MahApps.Styles.ContextMenu}">
-                        <MenuItem Header="Open user"
+                        <MenuItem Header="{Binding Source={StaticResource res}, Path=.[DGUsers_CM_OpenUser]}"
                                   Click="WeaponOpenUserClick"
                                   CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}" />
                     </ContextMenu>
@@ -84,13 +89,13 @@
                 </ListBox.ItemTemplate>
             </ListBox>
         </GroupBox>
-        <GroupBox Header="Weapons"
+        <GroupBox Header="{Binding Source={StaticResource res}, Path=.[Weapons]}"
                   Style="{DynamicResource GroupBox.TitleBar}"
                   Grid.Row="2">
             <Grid>
                 <StackPanel Orientation="Horizontal"
                             Margin="4">
-                    <TextBlock Text="Weapon"
+                    <TextBlock Text="{Binding Source={StaticResource res}, Path=.[Weapon_Filter_Weapon]}"
                                Margin="0,0,4,0"
                                VerticalAlignment="Center" />
                     <TextBox TextChanged="WeaponNameFilterTextChanged"
@@ -99,7 +104,7 @@
                              Controls:TextBoxHelper.ClearTextButton="True"
                              Width="150"
                              VerticalAlignment="Center" />
-                    <TextBlock Text="User"
+                    <TextBlock Text="{Binding Source={StaticResource res}, Path=.[Weapon_Filter_User]}"
                                Margin="8,0,4,0"
                                VerticalAlignment="Center" />
                     <TextBox TextChanged="UserNameFilterTextChanged"
@@ -121,17 +126,17 @@
                           SelectionChanged="WeaponsSelectWeapon"
                           Grid.Row="1">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Name"
+                        <DataGridTextColumn Header="{Binding Source={StaticResource res}, Path=.[DGWeapon_Name]}"
                                             Binding="{Binding DisplayName}" />
-                        <DataGridTextColumn Header="Uses"
+                        <DataGridTextColumn Header="{Binding Source={StaticResource res}, Path=.[Weapon_Uses]}"
                                             Binding="{Binding TotalUses}" 
                                             SortDirection="Descending"/>
-                        <DataGridTextColumn Header="Total"
+                        <DataGridTextColumn Header="{Binding Source={StaticResource res}, Path=.[Damage_Total]}"
                                             Binding="{Binding TotalDamage, StringFormat=0.##}" />
-                        <DataGridTextColumn Header="Armor"
-                                            Binding="{Binding ArmorDamage, StringFormat=0.##}" />
-                        <DataGridTextColumn Header="Critical"
+                        <DataGridTextColumn Header="{Binding Source={StaticResource res}, Path=.[Damage_Critical]}"
                                             Binding="{Binding CriticalDamage, StringFormat=0.##}" />
+                        <DataGridTextColumn Header="{Binding Source={StaticResource res}, Path=.[Damage_Armor]}"
+                                            Binding="{Binding ArmorDamage, StringFormat=0.##}" />
                     </DataGrid.Columns>
                 </DataGrid>
                 <Grid.RowDefinitions>

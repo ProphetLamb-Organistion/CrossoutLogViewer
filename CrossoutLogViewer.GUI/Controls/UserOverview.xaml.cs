@@ -1,4 +1,5 @@
 ﻿using CrossoutLogView.GUI.Core;
+using CrossoutLogView.GUI.Helpers;
 using CrossoutLogView.GUI.Models;
 
 using System;
@@ -36,6 +37,15 @@ namespace CrossoutLogView.GUI.Controls
                 umNew.StatDisplayMode = umOld.StatDisplayMode;
             }
         }
+
+        public Visibility GameStatGroupVisibility { get; set; }
+        public static readonly DependencyProperty GameStatGroupVisibilityProperty = DependencyProperty.Register(nameof(GameStatGroupVisibility), typeof(Visibility), typeof(UserOverview));
+
+        public Visibility DamageGroupVisibility { get; set; }
+        public static readonly DependencyProperty DamageGroupVisibilityProperty = DependencyProperty.Register(nameof(DamageGroupVisibility), typeof(Visibility), typeof(UserOverview));
+
+        public Visibility StatDisplayVisibility { get; set; }
+        public static readonly DependencyProperty StatDisplayVisibilityProperty = DependencyProperty.Register(nameof(StatDisplayVisibility), typeof(Visibility), typeof(UserOverview));
 
         #region ILogging support
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();

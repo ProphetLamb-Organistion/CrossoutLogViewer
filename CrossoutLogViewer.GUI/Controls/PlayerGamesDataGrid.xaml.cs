@@ -41,15 +41,15 @@ namespace CrossoutLogView.GUI.Controls
 
         public void OpenSelectedGame()
         {
-            if (SelectedItems[0] is PlayerGameCompositeModel pgc)
+            if (SelectedItems[0] is PlayerGameModel pgc)
                 OpenViewModel?.Invoke(pgc, new OpenModelViewerEventArgs(pgc));
         }
 
         public void OpenSelectedGamesUsers()
         {
             if (SelectedItems == null || SelectedItems.Count == 0) return;
-            var users = new ObservableCollection<UserModel>(User.ParseUsers(SelectedItems
-                .Cast<PlayerGameCompositeModel>()
+            var users = new ObservableCollection<UserModel>(User.Parse(SelectedItems
+                .Cast<PlayerGameModel>()
                 .Select(x => x.Game.Game))
                 .Select(x => new UserModel(x)));
             OpenViewModel?.Invoke(this, new OpenModelViewerEventArgs(new UserListModel(users)));
@@ -61,10 +61,10 @@ namespace CrossoutLogView.GUI.Controls
             var games = new List<Game>();
             foreach (var item in CollectionViewSource.GetDefaultView(ItemsSource)) //items in collectionview respect filter
             {
-                if (item is PlayerGameCompositeModel pgm) games.Add(pgm.Game.Game);
+                if (item is PlayerGameModel pgm) games.Add(pgm.Game.Game);
             }
             var users = new ObservableCollection<UserModel>();
-            foreach (var user in User.ParseUsers(games))
+            foreach (var user in User.Parse(games))
             {
                 users.Add(new UserModel(user));
             }

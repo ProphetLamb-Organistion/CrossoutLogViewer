@@ -4,153 +4,224 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:CrossoutLogView.GUI.Controls"
-             mc:Ignorable="d"
+             xmlns:helpers="clr-namespace:CrossoutLogView.GUI.Helpers"
+             xmlns:conv="clr-namespace:CrossoutLogView.GUI.ValueConverters"
+             xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-             BorderThickness="0"
-             Margin="0"
-             Padding="0"
-             d:DesignHeight="100"
-             d:DesignWidth="500"
-             MinWidth="200">
+             mc:Ignorable="d"
+             d:DesignHeight="150"
+             d:DesignWidth="700"
+             MinWidth="200"
+             x:Name="_UserOverview">
+    <UserControl.Resources>
+        <helpers:LocalisationHelper x:Key="res"
+                                    DefaultManager="ControlResources" />
+        <conv:UserOverviewGroupTitleConverter x:Key="UserOverviewGroupTitleConverter" />
+    </UserControl.Resources>
     <Grid>
-        <GroupBox Header="{Binding GeneralGroup}"
-                  Style="{DynamicResource GroupBox.Border}"
-                  Grid.ColumnSpan="2"
-                  Margin="0,0,0,2">
-            <Grid>
+        <WrapPanel Orientation="Horizontal">
+            <GroupBox Header="{Binding Path=StatDisplayMode, ConverterParameter=General, Converter={StaticResource UserOverviewGroupTitleConverter}}"
+                      Style="{DynamicResource GroupBox.Border}"
+                      Margin="0,0,0,2">
                 <WrapPanel Orientation="Horizontal">
                     <StackPanel Orientation="Horizontal"
+                                Visibility="{Binding ElementName=_UserOverview, Path=GameStatGroupVisibility}"
                                 Margin="4">
-                        <TextBlock Style="{DynamicResource Content}"
-                                   VerticalAlignment="Center">
-                            <Run Text="Winrate" />
-                            <Run Text="{Binding Winrate, StringFormat=p0, Mode=OneWay}" />
-                        </TextBlock>
-                        <TextBlock Style="{DynamicResource Content}"
-                                   Margin="8,0,0,0"
-                                   VerticalAlignment="Center">
-                            <Run Text="Won" />
-                            <Run Text="{Binding GamesWon, StringFormat=0.##, Mode=OneWay}" />
-                        </TextBlock>
-                        <TextBlock Style="{DynamicResource Content}"
-                                   Margin="8,0,0,0"
-                                   VerticalAlignment="Center">
-                            <Run Text="Lost" />
-                            <Run Text="{Binding GamesLost, StringFormat=0.##, Mode=OneWay}" />
-                        </TextBlock>
-                        <TextBlock Style="{DynamicResource Content}"
-                                   Margin="8,0,0,0"
-                                   VerticalAlignment="Center">
-                            <Run Text="Unfinished" />
-                            <Run Text="{Binding GamesUnfinished, StringFormat=0.##, Mode=OneWay}" />
-                        </TextBlock>
+                        <WrapPanel Orientation="Vertical">
+                            <IconPacks:PackIconMaterial Kind="Percent"
+                                                      Foreground="{DynamicResource MahApps.Brushes.Accent}"
+                                                      Height="28"
+                                                      Width="28"
+                                                      HorizontalAlignment="Center" />
+                            <TextBlock Style="{DynamicResource Content}"
+                                       VerticalAlignment="Center">
+                                <Run Text="{Binding Source={StaticResource res}, Mode=OneWay, Path=.[UserOverview_Winrate]}" />
+                                <Run Text="{Binding Winrate, StringFormat=p0, Mode=OneWay}" />
+                            </TextBlock>
+                        </WrapPanel>
+                        <WrapPanel Orientation="Vertical">
+                            <IconPacks:PackIconMaterial Kind="Crown"
+                                                      Foreground="{DynamicResource MahApps.Brushes.Accent}"
+                                                      Height="28"
+                                                      Width="28"
+                                                      HorizontalAlignment="Center"/>
+                            <TextBlock Style="{DynamicResource Content}"
+                                       Margin="8,0,0,0"
+                                       VerticalAlignment="Center">
+                                <Run Text="{Binding Source={StaticResource res}, Mode=OneWay, Path=.[UserOverview_Won]}" />
+                                <Run Text="{Binding GamesWon, StringFormat=0.##, Mode=OneWay}" />
+                            </TextBlock>
+                        </WrapPanel>
+                        <WrapPanel Orientation="Vertical">
+                            <IconPacks:PackIconMaterial Kind="TrophyBroken"
+                                                      Foreground="{DynamicResource MahApps.Brushes.Accent}"
+                                                      Height="28"
+                                                      Width="28"
+                                                      HorizontalAlignment="Center" />
+                            <TextBlock Style="{DynamicResource Content}"
+                                       Margin="8,0,0,0"
+                                       VerticalAlignment="Center">
+                                <Run Text="{Binding Source={StaticResource res}, Mode=OneWay, Path=.[UserOverview_Lost]}" />
+                                <Run Text="{Binding GamesLost, StringFormat=0.##, Mode=OneWay}" />
+                            </TextBlock>
+                        </WrapPanel>
+                        <WrapPanel Orientation="Vertical">
+                            <IconPacks:PackIconModern Kind="Stop"
+                                                      Foreground="{DynamicResource MahApps.Brushes.Accent}"
+                                                      Height="28"
+                                                      Width="28"
+                                                      HorizontalAlignment="Center" />
+                            <TextBlock Style="{DynamicResource Content}"
+                                       Margin="8,0,0,0"
+                                       VerticalAlignment="Center">
+                                <Run Text="{Binding Source={StaticResource res}, Mode=OneWay, Path=.[UserOverview_Unfinished]}" />
+                                <Run Text="{Binding GamesUnfinished, StringFormat=0.##, Mode=OneWay}" />
+                            </TextBlock>
+                        </WrapPanel>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal"
+                                Visibility="{Binding ElementName=_UserOverview, Path=DamageGroupVisibility}"
                                 Margin="4">
-                        <TextBlock Style="{DynamicResource Content}"
-                                   VerticalAlignment="Center">
-                            <Run Text="Score" />
-                            <Run Text="{Binding Score, StringFormat=0.##, Mode=OneWay}" />
-                        </TextBlock>
-                        <TextBlock Style="{DynamicResource Content}"
+                        <Separator VerticalAlignment="Stretch"
+                                   Visibility="{Binding ElementName=_UserOverview, Path=GameStatGroupVisibility}"
+                                   Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"
+                                   Background="{DynamicResource MahApps.Brushes.Gray.SemiTransparent}"
+                                   Width="1" />
+                        <WrapPanel Orientation="Vertical"
+                                   Margin="4,0,0,0">
+                            <IconPacks:PackIconMaterial Kind="Counter"
+                                                      Foreground="{DynamicResource MahApps.Brushes.Accent}"
+                                                      Height="28"
+                                                      Width="28"
+                                                      HorizontalAlignment="Center" />
+                            <TextBlock Style="{DynamicResource Content}"
+                                       VerticalAlignment="Center">
+                                <Run Text="{Binding Source={StaticResource res}, Mode=OneWay, Path=.[UserOverview_Score]}" />
+                                <Run Text="{Binding Score, StringFormat=0.##, Mode=OneWay}" />
+                            </TextBlock>
+                        </WrapPanel>
+                        <WrapPanel Orientation="Vertical">
+                            <IconPacks:PackIconModern Kind="Laser"
+                                                      Foreground="{DynamicResource MahApps.Brushes.Accent}"
+                                                      Height="28"
+                                                      Width="28"
+                                                      HorizontalAlignment="Center" />
+                            <TextBlock Style="{DynamicResource Content}"
+                                       Margin="8,0,0,0"
+                                       VerticalAlignment="Center">
+                                <Run Text="{Binding Source={StaticResource res}, Mode=OneWay, Path=.[UserOverview_Kills]}" />
+                                <Run Text="{Binding Kills, StringFormat=0.##, Mode=OneWay}" />
+                            </TextBlock>
+                        </WrapPanel>
+                        <WrapPanel Orientation="Vertical">
+                            <IconPacks:PackIconMaterial Kind="Handshake"
+                                                      Foreground="{DynamicResource MahApps.Brushes.Accent}"
+                                                      Height="28"
+                                                      Width="28"
+                                                      HorizontalAlignment="Center" />
+                            <TextBlock Style="{DynamicResource Content}"
                                    Margin="8,0,0,0"
                                    VerticalAlignment="Center">
-                            <Run Text="Kills" />
-                            <Run Text="{Binding Kills, StringFormat=0.##, Mode=OneWay}" />
-                        </TextBlock>
-                        <TextBlock Style="{DynamicResource Content}"
+                                <Run Text="{Binding Source={StaticResource res}, Mode=OneWay, Path=.[UserOverview_Assists]}" />
+                                <Run Text="{Binding Assists, StringFormat=0.##, Mode=OneWay}" />
+                            </TextBlock>
+                        </WrapPanel>
+                        <WrapPanel Orientation="Vertical">
+                            <IconPacks:PackIconModern Kind="UserDelete"
+                                                      Foreground="{DynamicResource MahApps.Brushes.Accent}"
+                                                      Height="28"
+                                                      Width="28"
+                                                      HorizontalAlignment="Center" />
+                            <TextBlock Style="{DynamicResource Content}"
                                    Margin="8,0,0,0"
                                    VerticalAlignment="Center">
-                            <Run Text="Assists" />
-                            <Run Text="{Binding Assists, StringFormat=0.##, Mode=OneWay}" />
-                        </TextBlock>
-                        <TextBlock Style="{DynamicResource Content}"
-                                   Margin="8,0,0,0"
-                                   VerticalAlignment="Center">
-                            <Run Text="Deaths" />
-                            <Run Text="{Binding Deaths, StringFormat=0.##, Mode=OneWay}" />
-                        </TextBlock>
+                                <Run Text="{Binding Source={StaticResource res}, Mode=OneWay, Path=.[UserOverview_Deaths]}" />
+                                <Run Text="{Binding Deaths, StringFormat=0.##, Mode=OneWay}" />
+                            </TextBlock>
+                        </WrapPanel>
                     </StackPanel>
                 </WrapPanel>
-                <StackPanel Orientation="Horizontal"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Top"
-                            Grid.Column="1">
-                    <TextBlock Text="Stats"
-                               Margin="0,0,4,0"
-                               VerticalAlignment="Center" />
-                    <ComboBox x:Name="ComboBoxDisplayMode"
-                              SelectedItem="{Binding StatDisplayMode, Mode=TwoWay}"
-                              VerticalAlignment="Center" />
-                </StackPanel>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-            </Grid>
-        </GroupBox>
-        <GroupBox Header="{Binding DamageGroup}"
-                  Grid.Row="1"
-                  Style="{DynamicResource GroupBox.Border}"
-                  Margin="0,2,0,0">
-            <WrapPanel>
-                <TextBlock Style="{DynamicResource Content}"
-                           VerticalAlignment="Center">
-                    <Run Text="Total" />
+            </GroupBox>
+            <StackPanel Orientation="Horizontal"
+                        Visibility="{Binding ElementName=_UserOverview, Path=StatDisplayVisibility}"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                        Grid.Column="1"
+                        Margin="4,0,0,0">
+                <TextBlock Text="{Binding Source={StaticResource res}, Mode=OneWay, Path=.[UserOverview_Stats]}"
+                           Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+                           Margin="0,0,4,0"
+                           VerticalAlignment="Center" />
+                <ComboBox x:Name="ComboBoxDisplayMode"
+                          SelectedItem="{Binding StatDisplayMode, Mode=TwoWay}"
+                          VerticalAlignment="Center" />
+            </StackPanel>
+        </WrapPanel>
+        <WrapPanel Orientation="Horizontal"
+                   Grid.Row="1">
+            <GroupBox Header="{Binding Path=StatDisplayMode, ConverterParameter=DmgDealt, Converter={StaticResource UserOverviewGroupTitleConverter}}"
+                      Style="{DynamicResource GroupBox.Border}"
+                      Visibility="{Binding ElementName=_UserOverview, Path=DamageGroupVisibility}"
+                      Padding="4"
+                      Grid.Row="1"
+                      Margin="0,2,4,0">
+                <WrapPanel>
+                    <TextBlock Style="{DynamicResource Content}"
+                               VerticalAlignment="Center">
+                    <Run Text="{Binding Source={StaticResource res}, Mode=OneWay, Path=.[Damage_Total]}" />
                     <Run Text="{Binding TotalDamageDealt, StringFormat=0.##, Mode=OneWay}"
                          Foreground="{DynamicResource TotalDamage}" />
-                </TextBlock>
-                <TextBlock Style="{DynamicResource Content}"
-                           Margin="8,0,0,0"
-                           VerticalAlignment="Center">
-                    <Run Text="Critical" />
+                    </TextBlock>
+                    <TextBlock Style="{DynamicResource Content}"
+                               Margin="8,0,0,0"
+                               VerticalAlignment="Center">
+                    <Run Text="{Binding Source={StaticResource res}, Mode=OneWay, Path=.[Damage_Critical]}" />
                     <Run Text="{Binding CriticalDamageDealt, StringFormat=0.##, Mode=OneWay}"
                          Foreground="{DynamicResource CriticalDamage}" />
-                </TextBlock>
-                <TextBlock Style="{DynamicResource Content}"
-                           Margin="8,0,0,0"
-                           VerticalAlignment="Center">
-                    <Run Text="Armor" />
+                    </TextBlock>
+                    <TextBlock Style="{DynamicResource Content}"
+                               Margin="8,0,0,0"
+                               VerticalAlignment="Center">
+                    <Run Text="{Binding Source={StaticResource res}, Mode=OneWay, Path=.[Damage_Armor]}" />
                     <Run Text="{Binding ArmorDamageDealt, StringFormat=0.##, Mode=OneWay}"
                          Foreground="{DynamicResource ArmorDamage}" />
-                </TextBlock>
-            </WrapPanel>
-        </GroupBox>
-        <GroupBox Header="Damage Taken"
-                  Grid.Row="1"
-                  Grid.Column="1"
-                  Style="{DynamicResource GroupBox.Border}"
-                  Margin="0,2,0,0">
-            <WrapPanel>
-                <TextBlock Style="{DynamicResource Content}"
-                           VerticalAlignment="Center">
-                    <Run Text="Total" />
+                    </TextBlock>
+                </WrapPanel>
+            </GroupBox>
+            <GroupBox Header="{Binding Path=StatDisplayMode, ConverterParameter=DmgTaken, Converter={StaticResource UserOverviewGroupTitleConverter}}"
+                      Style="{DynamicResource GroupBox.Border}"
+                      Visibility="{Binding ElementName=_UserOverview, Path=DamageGroupVisibility}"
+                      Padding="4"
+                      Grid.Row="1"
+                      Grid.Column="1"
+                      Margin="0,2,0,0">
+                <WrapPanel>
+                    <TextBlock Style="{DynamicResource Content}"
+                               VerticalAlignment="Center">
+                    <Run Text="{Binding Source={StaticResource res}, Mode=OneWay, Path=.[Damage_Total]}" />
                     <Run Text="{Binding TotalDamageTaken, StringFormat=0.##, Mode=OneWay}"
                          Foreground="{DynamicResource TotalDamage}" />
-                </TextBlock>
-                <TextBlock Style="{DynamicResource Content}"
-                           Margin="8,0,0,0"
-                           VerticalAlignment="Center">
-                    <Run Text="Crtitical" />
+                    </TextBlock>
+                    <TextBlock Style="{DynamicResource Content}"
+                               Margin="8,0,0,0"
+                               VerticalAlignment="Center">
+                    <Run Text="{Binding Source={StaticResource res}, Mode=OneWay, Path=.[Damage_Critical]}" />
                     <Run Text="{Binding CriticalDamageTaken, StringFormat=0.##, Mode=OneWay}"
                          Foreground="{DynamicResource CriticalDamage}" />
                     </TextBlock>
-                <TextBlock Style="{DynamicResource Content}"
-                           Margin="8,0,0,0"
-                           VerticalAlignment="Center">
-                    <Run Text="Armor" />
+                    <TextBlock Style="{DynamicResource Content}"
+                               Margin="8,0,0,0"
+                               VerticalAlignment="Center">
+                    <Run Text="{Binding Source={StaticResource res}, Mode=OneWay, Path=.[Damage_Armor]}" />
                     <Run Text="{Binding ArmorDamageTaken, StringFormat=0.##, Mode=OneWay}"
-                            Foreground="{DynamicResource ArmorDamage}" />
-                </TextBlock>
-            </WrapPanel>
-        </GroupBox>
+                         Foreground="{DynamicResource ArmorDamage}" />
+                    </TextBlock>
+                </WrapPanel>
+            </GroupBox>
+        </WrapPanel>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
     </Grid>
 </UserControl>

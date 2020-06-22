@@ -31,7 +31,7 @@ namespace CrossoutLogView.GUI.Controls
     {
         public event OpenModelViewerEventHandler OpenViewModel;
         public event SelectionChangedEventHandler SelectionChanged;
-        public event WeaponFilterChangedEventHandler FilterChanged;
+        public event ValueChangedEventHandler<WeaponFilter> FilterChanged;
 
         private WeaponFilter _weaponFilter;
 
@@ -53,7 +53,7 @@ namespace CrossoutLogView.GUI.Controls
             {
                 var oldValue = _weaponFilter;
                 _weaponFilter = value;
-                FilterChanged?.Invoke(this, new WeaponFilterChangedEventArgs(oldValue, _weaponFilter));
+                FilterChanged?.Invoke(this, new ValueChangedEventArgs<WeaponFilter>(oldValue, _weaponFilter));
                 var view = CollectionViewSource.GetDefaultView(DataGridWeapons.ItemsSource);
                 view.Filter = WeaponFilter.Filter;
                 view.Refresh();

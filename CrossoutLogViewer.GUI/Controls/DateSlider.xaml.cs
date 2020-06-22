@@ -1,18 +1,10 @@
 ﻿using CrossoutLogView.GUI.Core;
 
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Timers;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace CrossoutLogView.GUI.Controls
 {
@@ -29,24 +21,6 @@ namespace CrossoutLogView.GUI.Controls
             InitializeComponent();
             Refresh();
         }
-
-        /// <summary>
-        /// The string representing the value displayed for the relative date today.
-        /// </summary>
-        public string Today { get => GetValue(TodayProperty) as string; set => SetValue(TodayProperty, value); }
-        public static readonly DependencyProperty TodayProperty = DependencyProperty.Register(nameof(Today), typeof(string), typeof(DateSlider), new PropertyMetadata("Today", RefreshOnPropertyChanged));
-
-        /// <summary>
-        /// The string representing the value displayed for the relative date tomorrow.
-        /// </summary>
-        public string Tomorrow { get => GetValue(TomorrowProperty) as string; set => SetValue(TomorrowProperty, value); }
-        public static readonly DependencyProperty TomorrowProperty = DependencyProperty.Register(nameof(Tomorrow), typeof(string), typeof(DateSlider), new PropertyMetadata("Tomorrow", RefreshOnPropertyChanged));
-
-        /// <summary>
-        /// The string representing the value displayed for the relative date yesterday.
-        /// </summary>
-        public string Yesterday { get => GetValue(YesterdayProperty) as string; set => SetValue(YesterdayProperty, value); }
-        public static readonly DependencyProperty YesterdayProperty = DependencyProperty.Register(nameof(Yesterday), typeof(string), typeof(DateSlider), new PropertyMetadata("Yesterday", RefreshOnPropertyChanged));
 
         /// <summary>
         /// The value filling the middle slot of the <see cref="DateSlider"/>.
@@ -182,14 +156,14 @@ namespace CrossoutLogView.GUI.Controls
             }
         }
 
-        private string DisplayStringFromValue(int value)
+        private static string DisplayStringFromValue(int value)
         {
             return value switch
             {
-                0 => Today,
-                1 => Tomorrow,
-                -1 => Yesterday,
-                _ => value.ToString(),
+                0 => App.GetControlResource("Date_Tdy"),
+                1 => App.GetControlResource("Date_Tmrw"),
+                -1 => App.GetControlResource("Date_Ystdy"),
+                _ => value.ToString(CultureInfo.CurrentUICulture.NumberFormat),
             };
         }
 

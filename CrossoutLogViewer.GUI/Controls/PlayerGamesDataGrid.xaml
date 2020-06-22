@@ -4,9 +4,11 @@
           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
           xmlns:local="clr-namespace:CrossoutLogView.GUI.Controls"
+          xmlns:helpers="clr-namespace:CrossoutLogView.GUI.Helpers"
           mc:Ignorable="d"
           d:DesignHeight="450"
           d:DesignWidth="800"
+          xmlns:conv="clr-namespace:CrossoutLogView.GUI.ValueConverters"
           MouseDoubleClick="OnOpenViewModel"
           AutoGenerateColumns="False"
           Style="{DynamicResource MahApps.Styles.DataGrid}"
@@ -17,10 +19,13 @@
           Grid.Row="2">
     <DataGrid.Resources>
         <ResourceDictionary>
+            <helpers:LocalisationHelper x:Key="res"
+                                        DefaultManager="ControlResources" />
+            <conv:BackgroundConverter x:Key="BackgroundConverter" />
             <ContextMenu x:Key="DataGridGamesContextMenu">
-                <MenuItem Header="Open selected game"
+                <MenuItem Header="{Binding Source={StaticResource res}, Path=.[DGGames_CM_OpenGame]}"
                           Click="OpenGameClick" />
-                <MenuItem Header="Open Users from selected games"
+                <MenuItem Header="{Binding Source={StaticResource res}, Path=.[DGGames_CM_OpenSelectedGames]}"
                           Click="OpenGameUsersClick" />
             </ContextMenu>
         </ResourceDictionary>
@@ -31,36 +36,36 @@
             <Setter Property="ContextMenu"
                     Value="{DynamicResource DataGridGamesContextMenu}" />
             <Setter Property="Background"
-                    Value="{Binding Background}" />
+                    Value="{Binding Path=., Converter={StaticResource BackgroundConverter}}" />
         </Style>
     </DataGrid.RowStyle>
     <DataGrid.Columns>
-        <DataGridTextColumn Header="Date"
+        <DataGridTextColumn Header="{Binding Source={StaticResource res}, Path=.[DGGames_Date]}"
                             Binding="{Binding StartTime}" 
                             SortDirection="Descending"/>
-        <DataGridTextColumn Header="Map"
+        <DataGridTextColumn Header="{Binding Source={StaticResource res}, Path=.[DGGames_Map]}"
                             Binding="{Binding Map}" />
-        <DataGridTextColumn Header="Mode"
+        <DataGridTextColumn Header="{Binding Source={StaticResource res}, Path=.[DGGames_Mode]}"
                             Binding="{Binding Mode}" />
-        <DataGridTextColumn Header="Score"
+        <DataGridTextColumn Header="{Binding Source={StaticResource res}, Path=.[DGGames_Score]}"
                             Binding="{Binding Score}" />
-        <DataGridTextColumn Header="Kills"
+        <DataGridTextColumn Header="{Binding Source={StaticResource res}, Path=.[DGGames_Kills]}"
                             Binding="{Binding Kills}" />
-        <DataGridTextColumn Header="Assists"
+        <DataGridTextColumn Header="{Binding Source={StaticResource res}, Path=.[DGGames_Assists]}"
                             Binding="{Binding Assists}" />
-        <DataGridTextColumn Header="Deaths"
+        <DataGridTextColumn Header="{Binding Source={StaticResource res}, Path=.[DGGames_Deaths]}"
                             Binding="{Binding Deaths}" />
-        <DataGridTextColumn Header="Total dealt"
+        <DataGridTextColumn Header="{Binding Source={StaticResource res}, Path=.[DGGames_DmgDealt]}"
                             Binding="{Binding TotalDamageDealt, StringFormat=0.##}" />
-        <DataGridTextColumn Header="Total taken"
+        <DataGridTextColumn Header="{Binding Source={StaticResource res}, Path=.[DGGames_DmgTaken]}"
                             Binding="{Binding TotalDamageTaken, StringFormat=0.##}" />
-        <DataGridTextColumn Header="Crit. dealt"
+        <DataGridTextColumn Header="{Binding Source={StaticResource res}, Path=.[DGGames_CritDealt]}"
                             Binding="{Binding CriticalDamageDealt, StringFormat=0.##}" />
-        <DataGridTextColumn Header="Armor dealt"
+        <DataGridTextColumn Header="{Binding Source={StaticResource res}, Path=.[DGGames_ArmorDealt]}"
                             Binding="{Binding ArmorDamageDealt, StringFormat=0.##}" />
-        <DataGridTextColumn Header="Crit. taken"
+        <DataGridTextColumn Header="{Binding Source={StaticResource res}, Path=.[DGGames_CritTaken]}"
                             Binding="{Binding CriticalDamageTaken, StringFormat=0.##}" />
-        <DataGridTextColumn Header="Armor taken"
+        <DataGridTextColumn Header="{Binding Source={StaticResource res}, Path=.[DGGames_ArmorTaken]}"
                             Binding="{Binding ArmorDamageTaken, StringFormat=0.##}" />
     </DataGrid.Columns>
 </DataGrid>

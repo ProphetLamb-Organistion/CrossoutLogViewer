@@ -4,12 +4,17 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:CrossoutLogView.GUI.Controls"
+             xmlns:helpers="clr-namespace:CrossoutLogView.GUI.Helpers"
              mc:Ignorable="d"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              d:DesignHeight="450"
              d:DesignWidth="800">
+    <UserControl.Resources>
+        <helpers:LocalisationHelper x:Key="res"
+                                    DefaultManager="ControlResources" />
+    </UserControl.Resources>
     <Grid>
-        <GroupBox Header="Maps"
+        <GroupBox Header="{Binding Source={StaticResource res}, Path=.[Maps_Header]}"
                   Style="{DynamicResource GroupBox.TitleBar}">
             <ListBox x:Name="ListBoxMaps"
                      Background="Transparent"
@@ -39,12 +44,12 @@
             <local:ScrollableHeaderedControl x:Name="ScrollableHeaderedControl_Scroller"
                                              Grid.Row="1">
                 <local:ScrollableHeaderedControl.HeaderContent>
-                    <GroupBox Header="Games"
+                    <GroupBox Header="{Binding Source={StaticResource res}, Path=.[Maps_GamesHeader]}"
                               Style="{DynamicResource GroupBox.TitleBar}">
                         <Grid>
                             <local:GameListFilter FilterChanged="GameListFilter_FilterChanged"
                                                   HorizontalAlignment="Stretch" />
-                            <Button Content="Open Users"
+                            <Button Content="{Binding Source={StaticResource res}, Path=.[Games_OpenUsers]}"
                                     Style="{DynamicResource Button.Outline}"
                                     Click="OpenUsersClick"
                                     VerticalAlignment="Center"

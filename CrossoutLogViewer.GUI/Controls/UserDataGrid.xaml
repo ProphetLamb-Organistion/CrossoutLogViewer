@@ -4,6 +4,7 @@
           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
           xmlns:local="clr-namespace:CrossoutLogView.GUI.Controls"
+          xmlns:helpers="clr-namespace:CrossoutLogView.GUI.Helpers"
           mc:Ignorable="d"
           Style="{DynamicResource MahApps.Styles.DataGrid.Azure}"
           Background="Transparent"
@@ -15,8 +16,10 @@
           CanUserAddRows="False"
           MouseDoubleClick="OpenUserMouseDoubleClick">
     <DataGrid.Resources>
+        <helpers:LocalisationHelper x:Key="res"
+                                    DefaultManager="ControlResources" />
         <ContextMenu x:Key="DataGridUserContextMenu">
-            <MenuItem Header="Open User"
+            <MenuItem Header="{Binding Source={StaticResource res}, Path=.[DGUsers_CM_OpenUser]}"
                       Click="OpenUserClick" />
         </ContextMenu>
     </DataGrid.Resources>
@@ -28,24 +31,24 @@
         </Style>
     </DataGrid.RowStyle>
     <DataGrid.Columns>
-        <DataGridTextColumn Header="Name"
+        <DataGridTextColumn Header="{Binding Source={StaticResource res}, Path=.[DGUsers_Name]}"
                             Binding="{Binding Name}" />
-        <DataGridTextColumn Header="Damage dealt"
+        <DataGridTextColumn Header="{Binding Source={StaticResource res}, Path=.[DGUsers_DmgDealt]}"
                             Binding="{Binding TotalDamageDealt, StringFormat=0.##}"
                             SortMemberPath="{Binding TotalDamaggeDealt}" />
-        <DataGridTextColumn Header="Damage taken"
+        <DataGridTextColumn Header="{Binding Source={StaticResource res}, Path=.[DGUsers_DmgTaken]}"
                             Binding="{Binding TotalDamageTaken, StringFormat=0.##}"
                             SortMemberPath="{Binding TotalDamageTaken}" />
-        <DataGridTextColumn Header="Games played"
+        <DataGridTextColumn Header="{Binding Source={StaticResource res}, Path=.[DGUsers_Games]}"
                             Binding="{Binding ParticipationCount}"
                             SortDirection="Descending"/>
-        <DataGridTextColumn Header="Kills"
+        <DataGridTextColumn Header="{Binding Source={StaticResource res}, Path=.[DGUsers_Kills]}"
                             Binding="{Binding Kills, StringFormat=0.##}"
                             SortMemberPath="{Binding Kills}" />
-        <DataGridTextColumn Header="Assists"
+        <DataGridTextColumn Header="{Binding Source={StaticResource res}, Path=.[DGUsers_Assists]}"
                             Binding="{Binding Assists, StringFormat=0.##}"
                             SortMemberPath="{Binding Assists}" />
-        <DataGridTextColumn Header="Deaths"
+        <DataGridTextColumn Header="{Binding Source={StaticResource res}, Path=.[DGUsers_Deaths]}"
                             Binding="{Binding Deaths, StringFormat=0.##}"
                             SortMemberPath="{Binding Deaths}" />
     </DataGrid.Columns>

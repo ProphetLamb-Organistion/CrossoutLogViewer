@@ -1,11 +1,8 @@
-﻿using ControlzEx.Standard;
-
-using CrossoutLogView.Common;
+﻿using CrossoutLogView.Common;
 using CrossoutLogView.GUI.Core;
 using CrossoutLogView.GUI.Events;
+using CrossoutLogView.GUI.Helpers;
 using CrossoutLogView.Statistics;
-
-using MahApps.Metro.Controls;
 
 using System;
 using System.Collections.Generic;
@@ -30,13 +27,12 @@ namespace CrossoutLogView.GUI.Controls
     /// </summary>
     public partial class GameListFilter : ILogging
     {
-        public event GameFilterChangedEventHandler FilterChanged;
+        public event ValueChangedEventHandler<GameFilter> FilterChanged;
 
         public GameListFilter()
         {
             InitializeComponent();
             ComboBoxGameMode.ItemsSource = Enum.GetValues(typeof(GameMode)).Cast<GameMode>();
-            Filter = DefaultFilter;
         }
 
         public static (TimeSpan Start, TimeSpan End) AllDayTimeSpan = (new TimeSpan(0, 0, 0), new TimeSpan(23, 59, 59));
@@ -47,7 +43,7 @@ namespace CrossoutLogView.GUI.Controls
         /// <summary>
         /// Gets or sets the default value of <see cref="GameFilter"/> used when initializing a new instance of <see cref="GameListFilter"/>.
         /// </summary>
-        public static GameFilter DefaultFilter { get; set; } = new GameFilter(GameMode.All, DateTime.Now.StartOfWeek(), DateTime.Now.StartOfWeek().AddDays(7.0).AddSeconds(-1.0));
+        public static GameFilter DefaultFilter { get; protected set; } = new GameFilter(GameMode.All, DateTime.Now.StartOfWeek(), DateTime.Now.EndOfWeek());
 
         /// <summary>
         /// Gets or sets the instance of <see cref="GameFilter"/> defining the setting of <see cref="GameListFilter"/>.
@@ -57,7 +53,7 @@ namespace CrossoutLogView.GUI.Controls
             get => ObjToGameFilter(GetValue(FilterProperty));
             set => SetValue(FilterProperty, value);
         }
-        public static readonly DependencyProperty FilterProperty = DependencyProperty.Register(nameof(Filter), typeof(GameFilter), typeof(GameListFilter), new PropertyMetadata(OnFilterPropertyChanged));
+        public static readonly DependencyProperty FilterProperty = DependencyProperty.Register(nameof(Filter), typeof(GameFilter), typeof(GameListFilter), new PropertyMetadata(default(GameFilter), OnFilterPropertyChanged));
 
         /// <summary>
         /// Gets or sets the lower bound of <see cref="DateTime"/> for <see cref="Game"/>s included in the filter.
@@ -223,7 +219,7 @@ namespace CrossoutLogView.GUI.Controls
                 cntr.StartLimit = newGameFilter.StartLimit == default ? null : (newGameFilter.StartLimit as DateTime?);
                 cntr.EndLimit = newGameFilter.EndLimit == default ? null : (newGameFilter.EndLimit as DateTime?);
                 cntr.GameMode = newGameFilter.GameModes;
-                cntr.FilterChanged?.Invoke(cntr, new GameFilterChangedEventArgs(ObjToGameFilter(e.OldValue), newGameFilter));
+                cntr.FilterChanged?.Invoke(cntr, new ValueChangedEventArgs<GameFilter>(ObjToGameFilter(e.OldValue), newGameFilter));
                 DefaultFilter = newValue;
             }
         }
@@ -282,7 +278,8 @@ namespace CrossoutLogView.GUI.Controls
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            SetFilterMonth();
+            if (Filter == default)
+                Filter = DefaultFilter;
         }
 
         #region ILogging support

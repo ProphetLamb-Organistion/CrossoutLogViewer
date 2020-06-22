@@ -2,8 +2,8 @@
 using CrossoutLogView.Database.Data;
 using CrossoutLogView.GUI.Core;
 using CrossoutLogView.GUI.Events;
+using CrossoutLogView.GUI.Helpers;
 using CrossoutLogView.GUI.Models;
-using CrossoutLogView.GUI.WindowsAuxilary;
 
 using LiveCharts;
 using LiveCharts.Wpf;
@@ -51,12 +51,12 @@ namespace CrossoutLogView.GUI.Controls
             }
         }
 
-        public ObservableCollection<PlayerGameCompositeModel> ItemsSource
+        public ObservableCollection<PlayerGameModel> ItemsSource
         {
-            get => GetValue(ItemsSourceProperty) as ObservableCollection<PlayerGameCompositeModel>;
+            get => GetValue(ItemsSourceProperty) as ObservableCollection<PlayerGameModel>;
             set => SetValue(ItemsSourceProperty, value);
         }
-        public static readonly DependencyProperty ItemsSourceProperty = DependencyProperty.Register(nameof(ItemsSource), typeof(ObservableCollection<PlayerGameCompositeModel>), typeof(PlayerGamesChart), new PropertyMetadata(OnItemsSourcePropertyChanged));
+        public static readonly DependencyProperty ItemsSourceProperty = DependencyProperty.Register(nameof(ItemsSource), typeof(ObservableCollection<PlayerGameModel>), typeof(PlayerGamesChart), new PropertyMetadata(OnItemsSourcePropertyChanged));
 
         public Dimensions Dimensions
         {
@@ -73,7 +73,7 @@ namespace CrossoutLogView.GUI.Controls
 
         private static void OnItemsSourcePropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
         {
-            if (obj is PlayerGamesChart cntr && e.NewValue is ObservableCollection<PlayerGameCompositeModel> newValue)
+            if (obj is PlayerGamesChart cntr && e.NewValue is ObservableCollection<PlayerGameModel> newValue)
             {
                 cntr.viewModel.Source = newValue;
             }

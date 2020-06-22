@@ -4,20 +4,25 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:CrossoutLogView.GUI.Controls"
-             mc:Ignorable="d"
-             Loaded="UserControl_Loaded"
+             xmlns:helpers="clr-namespace:CrossoutLogView.GUI.Helpers"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             mc:Ignorable="d"
              BorderThickness="0"
              d:DesignHeight="450"
              d:DesignWidth="800"
-             x:Name="_UserGameControl">
+             x:Name="_UserGameControl"
+             Loaded="UserGameControl_Loaded">
+    <UserControl.Resources>
+        <helpers:LocalisationHelper x:Key="res"
+                                    DefaultManager="ControlResources" />
+    </UserControl.Resources>
     <Grid>
         <local:UserOverview Height="Auto" />
         <local:ScrollableHeaderedControl Grid.Row="1">
             <local:ScrollableHeaderedControl.HeaderContent>
                 <Grid>
-                    <Expander Header="Games"
+                    <Expander Header="{Binding Source={StaticResource res}, Path=.[Games]}"
                               Controls:ControlsHelper.CornerRadius="4"
                               Grid.ColumnSpan="2"
                               IsExpanded="True"
@@ -27,7 +32,7 @@
                     <local:GameListFilter FilterChanged="RefreshGamesFilter"
                                           HorizontalAlignment="Stretch"
                                           Grid.Row="1" />
-                    <Button Content="Open Users"
+                    <Button Content="{Binding Source={StaticResource res}, Path=.[Games_OpenUsers]}"
                             Style="{DynamicResource Button.Outline}"
                             Click="OpenUsersClick"
                             VerticalAlignment="Center"

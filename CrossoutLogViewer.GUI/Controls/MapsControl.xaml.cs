@@ -44,11 +44,7 @@ namespace CrossoutLogView.GUI.Controls
         /// <summary>
         /// Gets or sets the <see cref="ObservableCollection{MapModel}"/> used to generate the selection of the <see cref="MapsControl"/>.
         /// </summary>
-        public ObservableCollection<MapModel> Maps
-        {
-            get => GetValue(MapsProperty) as ObservableCollection<MapModel>;
-            set => SetValue(MapsProperty, value);
-        }
+        public ObservableCollection<MapModel> Maps { get => GetValue(MapsProperty) as ObservableCollection<MapModel>; set => SetValue(MapsProperty, value); }
         public static readonly DependencyProperty MapsProperty = DependencyProperty.Register(nameof(Maps), typeof(ObservableCollection<MapModel>), typeof(MapsControl), new PropertyMetadata(OnMapsPropertyChanged));
 
         private static void OnMapsPropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
@@ -73,7 +69,7 @@ namespace CrossoutLogView.GUI.Controls
             }
         }
 
-        private void GameListFilter_FilterChanged(object sender, GameFilterChangedEventArgs e)
+        private void GameListFilter_FilterChanged(object sender, ValueChangedEventArgs<GameFilter> e)
         {
             filter = e.NewValue;
             RefreshGameFilter();

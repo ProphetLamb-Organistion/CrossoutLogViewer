@@ -2,6 +2,7 @@
 using CrossoutLogView.Database.Data;
 using CrossoutLogView.GUI.Core;
 using CrossoutLogView.GUI.Events;
+using CrossoutLogView.GUI.Helpers;
 using CrossoutLogView.GUI.Models;
 using CrossoutLogView.Statistics;
 
@@ -61,13 +62,13 @@ namespace CrossoutLogView.GUI.Controls
             if (obj is UserGamesControl cntr && e.NewValue is UserModel newValue)
             {
                 if (newValue.Participations != null)
-                    newValue.Participations.Sort(new PlayerGameCompositeModelStartTimeDescending());
+                    newValue.Participations.Sort(new PlayerGameModelStartTimeDescending());
                 cntr.DataContext = newValue;
                 cntr.RefreshGamesFilter();
             }
         }
 
-        private void RefreshGamesFilter(object sender, GameFilterChangedEventArgs e) => RefreshGamesFilter();
+        private void RefreshGamesFilter(object sender, ValueChangedEventArgs<GameFilter> e) => RefreshGamesFilter();
         private void RefreshGamesFilter()
         {
             if (User != null)
@@ -88,7 +89,7 @@ namespace CrossoutLogView.GUI.Controls
             GamesChart.Dimensions = (Dimensions)e.NewValue.Value;
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        private void UserGameControl_Loaded(object sender, RoutedEventArgs e)
         {
             RefreshGamesFilter();
         }
