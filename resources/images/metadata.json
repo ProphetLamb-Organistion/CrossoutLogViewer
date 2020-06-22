@@ -210,9 +210,9 @@
     "Size": 26039
   },
   {
-    "Sha": "E5VOCJUUXKoqDnXCjiE3i5EMHsU=",
+    "Sha": "lZNjM57V3A79oNP9E2LbZLOfkc8=",
     "Name": "metadata.json",
-    "Size": 7679
+    "Size": 7782
   },
   {
     "Sha": "vuSuw1d2TiYbzgBIl9t/Cj9Gdx0=",
@@ -228,6 +228,21 @@
     "Sha": "yDkUZRqLkCySswgf2edZZXP8wTg=",
     "Name": "miners_way_256x256.jpg",
     "Size": 28741
+  },
+  {
+    "Sha": "AnGG23sidmUh3hM8K4piW3E1QUg=",
+    "Name": "port.jpg",
+    "Size": 452281
+  },
+  {
+    "Sha": "KKoWddf8SU1ItoYwdNiCieUV3m0=",
+    "Name": "port_128x128.jpg",
+    "Size": 6323
+  },
+  {
+    "Sha": "7A799UG7CdTIG/2vC2gh8a8fzFQ=",
+    "Name": "port_256x256.jpg",
+    "Size": 19717
   },
   {
     "Sha": "FZzNLhBTDw1z10GKoAEWFN3oeX4=",
