@@ -8,19 +8,6 @@ using System.Text;
 
 namespace CrossoutLogView.GUI.Events
 {
-    public delegate void WeaponFilterChangedEventHandler(object sender, WeaponFilterChangedEventArgs e);
-    public sealed class WeaponFilterChangedEventArgs : EventArgs
-    {
-        public WeaponFilterChangedEventArgs(WeaponFilter oldValue, WeaponFilter newValue)
-        {
-            OldValue = oldValue;
-            NewValue = newValue;
-        }
-
-        public WeaponFilter OldValue { get; }
-        public WeaponFilter NewValue { get; }
-    }
-
     public readonly struct WeaponFilter : IEquatable<WeaponFilter>
     {
         public readonly string WeaponName;

@@ -1,4 +1,4 @@
-﻿using CrossoutLogView.GUI.Core;
+﻿using CrossoutLogView.GUI.Helpers;
 
 using System;
 using System.Collections.Generic;
