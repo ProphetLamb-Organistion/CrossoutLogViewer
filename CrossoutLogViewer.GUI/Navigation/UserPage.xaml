@@ -6,16 +6,24 @@
       xmlns:core="clr-namespace:CrossoutLogView.GUI.Core"
       mc:Ignorable="d"
       xmlns:models="clr-namespace:CrossoutLogView.GUI.Models"
+      xmlns:helpers="clr-namespace:CrossoutLogView.GUI.Helpers"
+      xmlns:conv="clr-namespace:CrossoutLogView.GUI.ValueConverters"
       xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
       xmlns:UserControls="clr-namespace:CrossoutLogView.GUI.Controls"
       Loaded="Page_Loaded"
       d:DesignHeight="500"
       d:DesignWidth="600"
       Title="UserPage">
+    <Page.Resources>
+        <conv:TitleConverter x:Key="TitleConverter" />
+        <conv:ListItemTextConverter x:Key="ListItemTextConverter" />
+        <helpers:LocalisationHelper x:Key="res"
+                                    DefaultManager="ControlResources" />
+    </Page.Resources>
     <Grid Background="{DynamicResource MahApps.Brushes.ThemeBackground}">
         <WrapPanel Orientation="Horizontal"
                    Grid.ColumnSpan="3">
-            <Label Content="{Binding Title}"
+            <Label Content="{Binding Path=., Converter={StaticResource TitleConverter}}"
                    Style="{DynamicResource LabelHeader}"
                    Margin="8,0"
                    VerticalAlignment="Center" />
@@ -25,19 +33,19 @@
                                        Grid.Row="2" />
         <Grid Grid.Row="1"
               Grid.Column="2">
-            <GroupBox Header="Weapons"
+            <GroupBox Header="{Binding Source={StaticResource res}, Path=.[Weapons]}"
                       Style="{DynamicResource GroupBox.Border}">
                 <ListBox x:Name="ListBoxWeapons"
                          ItemContainerStyle="{DynamicResource ListBoxHideSelection}"
                          Background="Transparent">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding ListItemString}" />
+                            <TextBlock Text="{Binding Path=., Converter={StaticResource ListItemTextConverter}}" />
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
             </GroupBox>
-            <GroupBox Header="Stripes"
+            <GroupBox Header="{Binding Source={StaticResource res}, Path=.[Stripes]}"
                       Style="{DynamicResource GroupBox.Border}"
                       Grid.Row="1">
                 <ListBox x:Name="ListBoxStripes"
@@ -45,7 +53,7 @@
                          Background="Transparent">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding ListItemString}" />
+                            <TextBlock Text="{Binding Path=., Converter={StaticResource ListItemTextConverter}}" />
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ListBox>

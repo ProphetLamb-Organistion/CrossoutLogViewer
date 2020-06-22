@@ -5,6 +5,8 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       mc:Ignorable="d"
       xmlns:models="clr-namespace:CrossoutLogView.GUI.Models"
+      xmlns:conv="clr-namespace:CrossoutLogView.GUI.ValueConverters"
+      xmlns:helpers="clr-namespace:CrossoutLogView.GUI.Helpers"
       xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
       d:DesignHeight="500"
       d:DesignWidth="600"
@@ -17,14 +19,22 @@
                         Value="True" />
             </Style.Setters>
         </Style>
+        <helpers:LocalisationHelper x:Key="res"
+                                    DefaultManager="ControlResources" />
+        <conv:TitleConverter x:Key="TitleConverter" />
+        <conv:ListItemTextConverter x:Key="ListItemTextConverter" />
+        <conv:BackgroundConverter x:Key="BackgroundConverter" />
+        <models:CriticalDamageConverter x:Key="CriticalDamageConverter" />
+        <models:DamageFlagConverter x:Key="DamageFlagConverter" />
+        <models:TimeDisplayConverter x:Key="TimeDisplayConverter" />
     </Page.Resources>
 
     <Grid Background="{DynamicResource MahApps.Brushes.ThemeBackground}">
         <!--Title Element-->
-        <StackPanel Background="{Binding Background}"
+        <StackPanel Background="{Binding Path=., Converter={StaticResource BackgroundConverter}}"
                     Orientation="Horizontal"
                     Grid.ColumnSpan="3">
-            <TextBlock Text="{Binding Title}"
+            <TextBlock Text="{Binding Path=., Converter={StaticResource TitleConverter}}"
                        Style="{DynamicResource Header}"
                        Margin="8,0"
                        VerticalAlignment="Center" />
@@ -48,7 +58,7 @@
                        Style="{DynamicResource Content}"
                        Margin="8,0"
                        VerticalAlignment="Center" />
-            <TextBlock Text="Unfinished game"
+            <TextBlock Text="{Binding Source={StaticResource res}, Path=.[Game_Unfinished]}"
                        Style="{DynamicResource Content}"
                        Visibility="{Binding UnfinishedVisible}"
                        VerticalAlignment="Center" />
@@ -87,10 +97,10 @@
                                  Color="{DynamicResource MahApps.Colors.ThemeForeground}" />
                 <HierarchicalDataTemplate DataType="{x:Type models:RoundModel}"
                                           ItemsSource="{Binding Kills}">
-                    <StackPanel Background="{Binding Background}"
+                    <StackPanel Background="{Binding Path=., Converter={StaticResource BackgroundConverter}}"
                                 Orientation="Horizontal"
                                 Height="26">
-                        <TextBlock Text="{Binding ListItemString}"
+                        <TextBlock Text="{Binding Path=.,Converter={StaticResource ListItemTextConverter}}"
                                    VerticalAlignment="Center" />
                     </StackPanel>
                 </HierarchicalDataTemplate>
@@ -98,22 +108,22 @@
                                           ItemsSource="{Binding Assists}">
                     <StackPanel Orientation="Horizontal"
                                 Height="26">
-                        <TextBlock Text="{Binding TimeDisplayString}"
+                        <TextBlock Text="{Binding Path=., Converter={StaticResource TimeDisplayConverter}}"
                                    VerticalAlignment="Center" />
                         <TextBlock Text="{Binding Killer}"
                                    Style="{DynamicResource Highlight}"
                                    VerticalAlignment="Center"
                                    MouseEnter="RoundKillEnter"
                                    MouseLeave="RoundKillLeave" />
-                        <TextBlock Text=" destroyed "
+                        <TextBlock Text="{Binding Source={StaticResource res}, Path=.[Kill_Destroyed]}"
                                    VerticalAlignment="Center" />
                         <TextBlock Text="{Binding Victim}"
                                    Style="{DynamicResource Highlight}"
                                    VerticalAlignment="Center"
                                    MouseEnter="RoundVictimEnter"
                                    MouseLeave="RoundVictimLeave" />
-                        <TextBlock Text="{Binding DamageFlagInfo}"
-                                   Foreground="{Binding DamageFlagInfoBrush}"
+                        <TextBlock Text="{Binding Path=., Converter={StaticResource DamageFlagConverter}}"
+                                   Foreground="{Binding Path=., Converter={StaticResource DamageFlagConverter}}"
                                    VerticalAlignment="Center" />
                     </StackPanel>
                 </HierarchicalDataTemplate>
@@ -127,13 +137,13 @@
                                    MouseLeave="RoundAssistantLeave" />
                         <TextBlock VerticalAlignment="Center">
                             <TextBlock.Inlines>
-                                <Run Text=" dealt " />
+                                <Run Text="{Binding Source={StaticResource res}, Mode=OneWay, Path=.[Assist_Dealt]}" />
                                 <Run Text="{Binding Damage, StringFormat=f0, Mode=OneWay}"
                                      FontWeight="DemiBold"
-                                     Foreground="{Binding DamageForeground}" />
-                                <Run Text="{Binding DamageWithString, Mode=OneWay}" />
+                                     Foreground="{Binding Path=., Converter={StaticResource CriticalDamageConverter}}" />
+                                <Run Text="{Binding Path=., Mode=OneWay, Converter={StaticResource CriticalDamageConverter}}" />
                                 <Run Text="{Binding WeaponName, Mode=OneWay}" />
-                                <Run Text="{Binding ListItemStringElapsed, Mode=OneWay}" />
+                                <Run Text="{Binding Path=., Mode=OneWay, Converter={StaticResource ListItemTextConverter}}" />
                             </TextBlock.Inlines>
                         </TextBlock>
                     </StackPanel>
@@ -152,7 +162,7 @@
                          MouseDoubleClick="ScoreOpenPlayer">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding ListItemString}" />
+                            <TextBlock Text="{Binding Path=., Converter={StaticResource ListItemTextConverter}}" />
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
@@ -168,7 +178,7 @@
                          Grid.Row="1">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding ListItemString}" 
+                            <TextBlock Text="{Binding Path=., Converter={StaticResource ListItemTextConverter}}" 
                                        Margin="4"/>
                         </DataTemplate>
                     </ListBox.ItemTemplate>

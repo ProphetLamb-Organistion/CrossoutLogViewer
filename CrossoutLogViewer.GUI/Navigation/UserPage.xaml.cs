@@ -38,7 +38,7 @@ namespace CrossoutLogView.GUI.Navigation
 
         private void OpenViewModelClick(object sender, OpenModelViewerEventArgs e)
         {
-            if (e.ViewModel is PlayerGameCompositeModel pgc)
+            if (e.ViewModel is PlayerGameModel pgc)
             {
                 nav.Navigate(new GamePage(nav, pgc.Game));
             }
