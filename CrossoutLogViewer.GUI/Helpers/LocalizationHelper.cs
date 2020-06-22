@@ -49,12 +49,12 @@ namespace CrossoutLogView.GUI.Helpers
             get
             {
                 if (key is null)
-                    throw new ArgumentNullException(nameof(key), @"Value cannot be null.");
+                    throw new ArgumentNullException(nameof(key));
                 bool isValidKey = ValidKey(key);
                 if (!isValidKey && String.IsNullOrEmpty(DefaultManager))
-                    throw new ArgumentException(@"Key is not in the valid [ManagerName].[ResourceKey] format.");
+                    throw new ArgumentException("Key cannot be empty, and must be in the valid [ManagerName].[ResourceKey] format. Key = \"" + key + "\"");
                 if (DesignHelpers.IsInDesignModeStatic)
-                    throw new Exception("Design mode is not supported.");
+                    return key; //throw new Exception("Design mode is not supported.");
                 if (isValidKey)
                     return ResourceManagerService.GetResourceString(GetManagerKey(key), GetResourceKey(key));
                 else
