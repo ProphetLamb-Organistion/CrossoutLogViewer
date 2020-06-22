@@ -5,12 +5,12 @@
                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                       mc:Ignorable="d"
                       xmlns:UserControls="clr-namespace:CrossoutLogView.GUI.Controls"
-                      xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-                      xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                       xmlns:helpers="clr-namespace:CrossoutLogView.GUI.Helpers"
                       xmlns:local="clr-namespace:CrossoutLogView.GUI"
                       xmlns:cntr="clr-namespace:CrossoutLogView.GUI.Controls"
                       xmlns:sescal="clr-namespace:CrossoutLogView.GUI.Controls.SessionCalendar"
+                      xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                      xmlns:IconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                       Style="{DynamicResource MetroWindowTitlebarColorStyle}"
                       Title="Crossout Log Viewer: Session Review"
                       Icon="App.ico"
@@ -71,9 +71,21 @@
                                         SessionClick="SessionCalendar_SessionClick"/>
             </Border>
         </Popup>
-        <cntr:UsersListControl x:Name="UserListControl"
-                               OpenViewModel="UserListControl_OpenViewModel"
-                               Grid.Column="1"/>
+        <cntr:PlayerGamesChart x:Name="PlayerGamesChart"
+                               Grid.Column="1"
+                               Margin="0,2,8,4"/>
+        <Separator Grid.Row="1"
+                   Grid.Column="1"/>
+        <cntr:PartyControl x:Name="PartyControl"
+                           OpenViewModel="OpenViewModel"
+                           SelectedUserChanged="PartyControl_SelectedUserChanged"
+                           Grid.Row="2"
+                           Grid.Column="1"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="200" />
+                <RowDefinition Height="5" />
+                <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="48" />
             <ColumnDefinition Width="*" />

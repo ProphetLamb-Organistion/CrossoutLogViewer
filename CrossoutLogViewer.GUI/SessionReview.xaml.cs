@@ -1,15 +1,10 @@
-﻿using CrossoutLogView.Common;
-using CrossoutLogView.Database.Collection;
-using CrossoutLogView.Database.Data;
-using CrossoutLogView.Database.Events;
+﻿using CrossoutLogView.Database.Data;
 using CrossoutLogView.GUI.Core;
 using CrossoutLogView.GUI.Events;
 using CrossoutLogView.GUI.Models;
 using CrossoutLogView.GUI.WindowsAuxilary;
-using CrossoutLogView.Log;
 using CrossoutLogView.Statistics;
 
-using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 
 using System;
@@ -51,12 +46,17 @@ namespace CrossoutLogView.GUI
         private void SessionCalendar_SessionClick(object sender, SessionClickEventArgs e)
         {
             var games = DataProvider.GetGames(e.Day.Date, e.Day.Date.AddDays(1).AddMilliseconds(-1)).Where(x => x.Mode == GameMode.ClanWars);
-            UserListControl.ItemsSource = new ObservableCollection<UserModel>(User.ParseUsers(games).Select(x => new UserModel(x)));
+            PartyControl.ItemsSource = new ObservableCollection<GameModel>(games.Select(x => new GameModel(x)));
         }
 
-        private void UserListControl_OpenViewModel(object sender, OpenModelViewerEventArgs e)
+        private void OpenViewModel(object sender, OpenModelViewerEventArgs e)
         {
             new NavigationWindow(e.ViewModel).Show();
+        }
+
+        private void PartyControl_SelectedUserChanged(object sender, ValueChangedEventArgs<UserModel> e)
+        {
+            PlayerGamesChart.ItemsSource = e.NewValue.Participations;
         }
 
         #region Confim close
@@ -117,5 +117,6 @@ namespace CrossoutLogView.GUI
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         NLog.Logger ILogging.Logger { get; } = logger;
         #endregion
+
     }
 }
