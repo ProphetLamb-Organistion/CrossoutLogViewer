@@ -22,7 +22,7 @@ namespace CrossoutLogView.GUI
 {
     public sealed class CollectedStatisticsWindowViewModel : WindowViewModelBase
     {
-        private ObservableCollection<PlayerGameCompositeModel> _playerGameModels;
+        private ObservableCollection<PlayerGameModel> _playerGameModels;
         private ObservableCollection<WeaponGlobalModel> _weaponModel;
         private ObservableCollection<UserModel> _userModels;
         private UserModel _meUser;
@@ -40,7 +40,7 @@ namespace CrossoutLogView.GUI
             WindowDispatcher = windowDispatcher;
         }
 
-        public ObservableCollection<PlayerGameCompositeModel> PlayerGameModels { get => _playerGameModels; set => Set(ref _playerGameModels, value); }
+        public ObservableCollection<PlayerGameModel> PlayerGameModels { get => _playerGameModels; set => Set(ref _playerGameModels, value); }
 
         public ObservableCollection<WeaponGlobalModel> WeaponModels { get => _weaponModel; set => Set(ref _weaponModel, value); }
 
@@ -66,7 +66,7 @@ namespace CrossoutLogView.GUI
             Task.Run(delegate
             {
                 meUser = new UserModel(DataProvider.GetUser(Settings.Current.MyUserID));
-                meUser.Participations.Sort(new PlayerGameCompositeModelStartTimeDescending());
+                meUser.Participations.Sort(new PlayerGameModelStartTimeDescending());
             }),
             Task.Run(delegate
             {
@@ -100,7 +100,7 @@ namespace CrossoutLogView.GUI
             {
                 var uid = MeUser.User.UserID;
                 MeUser = new UserModel(DataProvider.GetUser(uid));
-                MeUser.Participations.Sort(new PlayerGameCompositeModelStartTimeDescending());
+                MeUser.Participations.Sort(new PlayerGameModelStartTimeDescending());
                 PlayerGameModels = MeUser.Participations;
                 foreach (var wName in e.WeaponsChanged)
                 {

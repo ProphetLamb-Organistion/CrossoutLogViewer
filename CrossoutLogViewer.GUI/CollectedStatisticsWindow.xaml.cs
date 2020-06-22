@@ -174,7 +174,7 @@ namespace CrossoutLogView.GUI
 
         private void GamesOpenGame(object sender, OpenModelViewerEventArgs e)
         {
-            if (e.ViewModel is PlayerGameCompositeModel pgc)
+            if (e.ViewModel is PlayerGameModel pgc)
             {
                 new NavigationWindow(pgc.Game).Show();
             }

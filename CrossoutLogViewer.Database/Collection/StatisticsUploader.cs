@@ -79,7 +79,7 @@ namespace CrossoutLogView.Database.Collection
             }
             if (games.Count != 0) //games were finished in the added logs
             {
-                var users = User.ParseUsers(games);
+                var users = User.Parse(games);
                 var weapons = WeaponGlobal.ParseWeapons(games);
                 using (var statCon = new StatisticsConnection())
                 {

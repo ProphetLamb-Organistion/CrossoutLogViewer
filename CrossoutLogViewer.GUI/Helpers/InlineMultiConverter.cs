@@ -31,6 +31,6 @@ namespace CrossoutLogView.GUI.Helpers
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
             => (_convertBack != null)
                 ? _convertBack(value, targetTypes, parameter, culture)
-                : throw new NotImplementedException();
+                : throw new NotSupportedException();
     }
 }

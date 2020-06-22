@@ -41,7 +41,7 @@ namespace CrossoutLogView.Common
 
         public override bool Equals(object obj) => obj is Int32Range range && Equals(range);
         public bool Equals(Int32Range other) => Start == other.Start && End == other.End;
-        public override int GetHashCode() => HashCode.Combine(Start, End);
+        public override int GetHashCode() => System.HashCode.Combine(Start, End);
 
         public static bool operator ==(Int32Range left, Int32Range right) => left.Equals(right);
         public static bool operator !=(Int32Range left, Int32Range right) => !(left == right);

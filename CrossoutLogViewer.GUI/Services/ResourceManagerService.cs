@@ -16,14 +16,7 @@ namespace CrossoutLogView.GUI.Services
     {
         private static Dictionary<string, ResourceManager> _managers;
 
-        public static event LocaleChangedEventHander LocaleChanged;
-        private static void RaiseLocaleChanged(Locale newLocale)
-        {
-            var evt = LocaleChanged;
-
-            if (evt != null)
-                evt.Invoke(null, new LocaleChangedEventArgs(newLocale));
-        }
+        public static event ValueChangedEventHandler<Locale> LocaleChanged;
 
         /// <summary>
         /// Current application locale
@@ -71,9 +64,10 @@ namespace CrossoutLogView.GUI.Services
             Thread.CurrentThread.CurrentUICulture = newCultureInfo;
 
             Locale newLocale = new Locale() { Name = newLocaleName, RTL = newCultureInfo.TextInfo.IsRightToLeft };
+            Locale oldLocale = CurrentLocale?.Clone();
             CurrentLocale = newLocale;
 
-            RaiseLocaleChanged(newLocale);
+            LocaleChanged?.Invoke(null, new ValueChangedEventArgs<Locale>(oldLocale, newLocale));
         }
 
         /// <summary>

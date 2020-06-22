@@ -1,4 +1,5 @@
 ﻿using CrossoutLogView.Common;
+using CrossoutLogView.GUI.Events;
 using CrossoutLogView.GUI.Services;
 using CrossoutLogView.GUI.WindowsAuxilary;
 
@@ -57,12 +58,10 @@ namespace CrossoutLogView.GUI.Core
             loadingWindow.Close();
         }
 
-        protected virtual void LocaleChanged(object sender, Events.LocaleChangedEventArgs e)
+        protected virtual void LocaleChanged(object sender, ValueChangedEventArgs<Locale> e)
         {
-            if (!(e is null))
-            {
-                FlowDirection = e.NewLocale.RTL ? System.Windows.FlowDirection.RightToLeft : System.Windows.FlowDirection.LeftToRight;
-            }
+            if (!(e is null || e.NewValue is null))
+                FlowDirection = e.NewValue.RTL ? System.Windows.FlowDirection.RightToLeft : System.Windows.FlowDirection.LeftToRight;
         }
 
         protected virtual void OnInitializeSession() { }
