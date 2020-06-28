@@ -16,6 +16,7 @@
     <UserControl.Resources>
         <helpers:LocalisationHelper x:Key="res"
                                     DefaultManager="ControlResources" />
+        <conv:EnumDisplayValueConverter x:Key="EnumDisplayValueConverter" />
         <conv:UserOverviewGroupTitleConverter x:Key="UserOverviewGroupTitleConverter" />
     </UserControl.Resources>
     <Grid>
@@ -154,7 +155,13 @@
                            VerticalAlignment="Center" />
                 <ComboBox x:Name="ComboBoxDisplayMode"
                           SelectedItem="{Binding StatDisplayMode, Mode=TwoWay}"
-                          VerticalAlignment="Center" />
+                          VerticalAlignment="Center">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding ., Converter={StaticResource EnumDisplayValueConverter}}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
             </StackPanel>
         </WrapPanel>
         <WrapPanel Orientation="Horizontal"

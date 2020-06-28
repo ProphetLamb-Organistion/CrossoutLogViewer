@@ -32,7 +32,7 @@ namespace CrossoutLogView.Common
         /// <param name="collection">The collection</param>
         /// <param name="start">The frist day that will be added to the collection.</param>
         /// <param name="end">The last day that will be added to the collection.</param>
-        public static TDateTime AddDays<TDateTime>(this TDateTime collection, DateTime start, DateTime end) where TDateTime : ICollection<DateTime>
+        public static TCollection AddDays<TCollection>(this TCollection collection, DateTime start, DateTime end) where TCollection : ICollection<DateTime>
         {
             if (end.Date < start.Date)
                 throw new ArgumentOutOfRangeException(nameof(end), "The end date must be greater or equal to the start date.");

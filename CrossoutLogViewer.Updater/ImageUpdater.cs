@@ -34,12 +34,11 @@ namespace CrossoutLogView.Updater
             // All files that need updating
             var metadata = ComputeMetadataDelta(local, await remote);
             // Iterate through images in metadata
-            var imageEnu = GetDirectoryContent(Strings.RemoteImagePath, ImageConverter, x => UpdateSelector(metadata, x)).GetAsyncEnumerator();
-            while (await imageEnu.MoveNextAsync())
+            await foreach(var (Name, Value) in GetDirectoryContent(Strings.RemoteImagePath, ImageConverter, x => UpdateSelector(metadata, x)))
             {
                 // Write file to the images folder
-                using var fs = new FileStream(Path.Combine(Strings.ImagePath, imageEnu.Current.Name), System.IO.FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
-                imageEnu.Current.Value.Save(fs, ImageFormat.Jpeg);
+                using var fs = new FileStream(Path.Combine(Strings.ImagePath, Name), System.IO.FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
+                Value.Save(fs, ImageFormat.Jpeg);
             }
         }
 

@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:CrossoutLogView.GUI.Controls"
              xmlns:helpers="clr-namespace:CrossoutLogView.GUI.Helpers"
+             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800"
@@ -18,7 +19,8 @@
         <ItemsControl ItemsSource="{Binding ElementName=_PartyControl, Path=Parties}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <WrapPanel Orientation="Horizontal" />
+                    <StackPanel Orientation="Vertical"
+                                HorizontalAlignment="Center" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
@@ -52,17 +54,19 @@
                                         Margin="4,0,0,0" />
                             </StackPanel>
                             <Expander Header="{Binding Path=., Converter={StaticResource PartyUsersConverter}}"
+                                      Controls:HeaderedControlHelper.HeaderFontSize="14"
                                       IsExpanded="{Binding UsersExpanded, Mode=TwoWay}"
                                       Background="{DynamicResource MahApps.Brushes.ThemeBackground}">
                                 <StackPanel Orientation="Vertical">
                                     <local:UserOverview DataContext="{Binding ElementName=UserDateGrid, Path=SelectedItem}"
                                                         GameStatGroupVisibility="Collapsed"
-                                                        Margin="0,0,0,4"/>
+                                                        Margin="0,0,0,4" />
                                     <local:UserDataGrid x:Name="UserDateGrid"
                                                         ItemsSource="{Binding Users}"
-                                                        SelectedIndex="0" 
+                                                        SelectedIndex="0"
                                                         SelectedItem="{Binding SelectedUser, Mode=TwoWay}"
-                                                        OpenViewModel="UserDateGrid_OpenViewModel"/>
+                                                        PreviewMouseWheel="UserDateGrid_PreviewMouseWheel"
+                                                        OpenViewModel="UserDateGrid_OpenViewModel" />
                                 </StackPanel>
                             </Expander>
                         </StackPanel>
