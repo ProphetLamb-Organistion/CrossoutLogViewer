@@ -10,7 +10,7 @@ using System.Text;
 
 namespace CrossoutLogView.GUI.Models
 {
-    public class MapModel : CollectionViewModelBase
+    public class MapModel : StatDisplayViewModeBase
     {
         public MapModel(GameMap map)
         {
@@ -18,17 +18,6 @@ namespace CrossoutLogView.GUI.Models
             UpdateCollectionsSafe();
             UpdateProperties();
             Name = DisplayStringFactory.MapName(map.Map.Name);
-        }
-
-        private DisplayMode _statDisplayMode;
-        public DisplayMode StatDisplayMode
-        {
-            get => _statDisplayMode;
-            set
-            {
-                Set(ref _statDisplayMode, value);
-                UpdateProperties();
-            }
         }
 
         public GameMap GameMap { get; }
@@ -96,14 +85,19 @@ namespace CrossoutLogView.GUI.Models
             Games = games;
         }
 
-        public void UpdateProperties()
+        public override void UpdateProperties()
         {
             GamesPlayed = Games.Count();
             GamesWon = Games.Where(x => x.Won).Count();
             GamesLost = Games.Where(x => !x.Won && !x.Unfinished).Count();
             Winrate = GamesWon == 0 ? 0 : GamesLost == 0 ? 1 : GamesWon / (double)(GamesWon + GamesLost);
             GamesUnfinished = GamesPlayed - GamesWon - GamesLost;
-            var mult = StatDisplayMode == DisplayMode.Average ? 1.0 / GamesPlayed : 1.0;
+            var mult = StatDisplayMode switch
+            {
+                DisplayMode.GameAvg => 1.0 / GamesPlayed,
+                DisplayMode.RoundAvg => 1.0 / Games.Sum(x => x.Game.Game.RoundCount),
+                _ => 1.0
+            };
             Score = Games.Sum(x => x.Score) * mult;
             Kills = Games.Sum(x => x.Kills) * mult;
             Assists = Games.Sum(x => x.Assists) * mult;

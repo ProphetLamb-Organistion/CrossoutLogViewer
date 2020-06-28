@@ -16,6 +16,7 @@ namespace CrossoutLogView.Statistics
         public Map Map;
         public byte WinningTeam;
         public List<Round> Rounds;
+        public int RoundCount;
         public List<Player> Players;
         public List<Weapon> Weapons;
         public int MVP;
@@ -52,6 +53,7 @@ namespace CrossoutLogView.Statistics
             game.WinningTeam = end.Team;
             game.Weapons = Weapon.ParseWeapons(gameLog.Where(x => x is Damage).Cast<Damage>());
             game.Rounds = Round.ParseRounds(game, gameLog);
+            game.RoundCount = game.Rounds.Count;
             game.Players = Player.ParsePlayers(gameLog);
             if (game.WinningTeam != 0xff)
             {

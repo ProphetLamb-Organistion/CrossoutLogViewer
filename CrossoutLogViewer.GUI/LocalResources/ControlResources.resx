@@ -336,9 +336,6 @@
   <data name="UserOverview_Assists" xml:space="preserve">
     <value>Assists</value>
   </data>
-  <data name="UserOverview_Avg" xml:space="preserve">
-    <value> (avg. battle)</value>
-  </data>
   <data name="UserOverview_Deaths" xml:space="preserve">
     <value>Deaths</value>
   </data>
@@ -348,6 +345,9 @@
   <data name="UserOverview_DmgTaken" xml:space="preserve">
     <value>Damage Taken</value>
   </data>
+  <data name="UserOverview_GameAvg" xml:space="preserve">
+    <value> (avg. game)</value>
+  </data>
   <data name="UserOverview_General" xml:space="preserve">
     <value>General</value>
   </data>
@@ -356,6 +356,9 @@
   </data>
   <data name="UserOverview_Lost" xml:space="preserve">
     <value>Lost</value>
+  </data>
+  <data name="UserOverview_RoundAvg" xml:space="preserve">
+    <value> (avg. round)</value>
   </data>
   <data name="UserOverview_Score" xml:space="preserve">
     <value>Score</value>

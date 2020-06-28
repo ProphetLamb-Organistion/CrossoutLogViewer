@@ -21,10 +21,12 @@ namespace CrossoutLogView.GUI.ValueConverters
                 {
                     if (parameter is null || !(parameter is string kind) || String.IsNullOrEmpty(kind))
                         throw new ArgumentException("Parameter must be a string, and cannot be null or empty,");
-                    var title = App.GetControlResource("UserOverview_" + kind);
-                    if (mode == DisplayMode.Average)
-                        title += App.GetControlResource("UserOverview_Avg");
-                    return title;
+                    return App.GetControlResource("UserOverview_" + kind) + mode switch
+                    {
+                        DisplayMode.GameAvg => App.GetControlResource("UserOverview_GameAvg"),
+                        DisplayMode.RoundAvg => App.GetControlResource("UserOverview_RoundAvg"),
+                        _ => String.Empty
+                    }; ;
                 }
             }
             throw new NotSupportedException();

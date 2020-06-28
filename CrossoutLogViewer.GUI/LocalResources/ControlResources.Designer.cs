@@ -718,15 +718,6 @@ namespace CrossoutLogView.GUI.LocalResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to  (avg. battle).
-        /// </summary>
-        internal static string UserOverview_Avg {
-            get {
-                return ResourceManager.GetString("UserOverview_Avg", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Deaths.
         /// </summary>
         internal static string UserOverview_Deaths {
@@ -754,6 +745,15 @@ namespace CrossoutLogView.GUI.LocalResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to  (avg. game).
+        /// </summary>
+        internal static string UserOverview_GameAvg {
+            get {
+                return ResourceManager.GetString("UserOverview_GameAvg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to General.
         /// </summary>
         internal static string UserOverview_General {
@@ -777,6 +777,15 @@ namespace CrossoutLogView.GUI.LocalResources {
         internal static string UserOverview_Lost {
             get {
                 return ResourceManager.GetString("UserOverview_Lost", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to  (avg. round).
+        /// </summary>
+        internal static string UserOverview_RoundAvg {
+            get {
+                return ResourceManager.GetString("UserOverview_RoundAvg", resourceCulture);
             }
         }
         

@@ -97,7 +97,12 @@ namespace CrossoutLogView.GUI.Models
             var count = ParticipationsFiltered.Count();
             GamesUnfinished = count - GamesWon - GamesLost;
             Winrate = GamesWon == 0 ? 0.0 : GamesLost == 0 ? 1.0 : GamesWon / (double)(GamesWon + GamesLost);
-            var mult = StatDisplayMode == DisplayMode.Average ? 1.0 / count : 1.0;
+            var mult = StatDisplayMode switch
+            {
+                DisplayMode.GameAvg => 1.0 / count,
+                DisplayMode.RoundAvg => 1.0 / ParticipationsFiltered.Sum(x => x.Game.Game.RoundCount),
+                _ => 1.0
+            };
             Score = ParticipationsFiltered.Sum(x => x.Score) * mult;
             Kills = ParticipationsFiltered.Sum(x => x.Kills) * mult;
             Assists = ParticipationsFiltered.Sum(x => x.Assists) * mult;

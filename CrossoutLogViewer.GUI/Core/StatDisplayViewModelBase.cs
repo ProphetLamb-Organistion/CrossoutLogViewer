@@ -9,9 +9,9 @@ namespace CrossoutLogView.GUI.Core
 {
     public class StatDisplayViewModeBase : CollectionViewModelBase
     {
-        private DisplayMode _statDisplayMode = DisplayMode.Average;
+        private DisplayMode _statDisplayMode = DisplayMode.GameAvg;
         private static bool lockUpdate = false;
-        
+
         private static event ValueChangedEventHandler<DisplayMode> StatDisplayModeChanged;
 
         public StatDisplayViewModeBase()
