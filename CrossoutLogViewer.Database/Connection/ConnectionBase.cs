@@ -18,6 +18,17 @@ namespace CrossoutLogView.Database.Connection
 {
     public abstract class ConnectionBase : IDisposable
     {
+        private static bool firstLaunch;
+        protected ConnectionBase()
+        {
+            if (!firstLaunch)
+            {
+                Task.Run(FirstInitialize).Wait();
+                firstLaunch = true;
+            }
+            InitializeConnection();
+        }
+
         /// <summary>
         /// Returns the state of the SQLite Connection.
         /// </summary>
@@ -48,7 +59,12 @@ namespace CrossoutLogView.Database.Connection
         /// <summary>
         /// Creates the database, and the tables (if not already exisiting).
         /// </summary>
-        public abstract void InitializeDataStructure();
+        public abstract void InitializeConnection();
+
+        /// <summary>
+        /// Runs actions only required on first initialization of a instance.
+        /// </summary>
+        public abstract Task FirstInitialize();
 
         /// <summary>
         /// Invokes any SQLite command via the provided Connection.

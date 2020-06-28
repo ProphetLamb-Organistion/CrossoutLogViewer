@@ -11,6 +11,7 @@ using System.Data.SQLite;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,9 +23,8 @@ namespace CrossoutLogView.Database.Connection
     public class StatisticsConnection : ConnectionBase
     {
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
-        public StatisticsConnection()
+        public StatisticsConnection() : base()
         {
-            InitializeDataStructure();
             DatabaseTableTypes = IStatisticData.Implementations;
         }
 
@@ -617,23 +617,32 @@ namespace CrossoutLogView.Database.Connection
 
         private static Dictionary<Guid, string> primaryKeys = new Dictionary<Guid, string>()
         {
-            //{ typeof(Map).GUID, nameof(Map.Name) },
             { typeof(User).GUID, nameof(User.UserID) },
         };
 
-        public override void InitializeDataStructure()
+        public override void InitializeConnection()
         {
             if (!Directory.Exists(Strings.DataBasePath)) Directory.CreateDirectory(Strings.DataBasePath);
             if (!File.Exists(Strings.DataBaseStatisticsPath)) SQLiteConnection.CreateFile(Strings.DataBaseStatisticsPath);
             Connection = new SQLiteConnection("Data Source = " + Strings.DataBaseStatisticsPath);
             Connection.Open();
-            //create datatables
+            // Create datatables
             foreach (var type in IStatisticData.Implementations)
             {
                 if (primaryKeys.TryGetValue(type.GUID, out var primaryKey))
                     CreateDataTable(type, primaryKey, Connection);
                 else CreateDataTable(type, Connection);
             }
+        }
+
+        public override async Task FirstInitialize()
+        {
+            // Execute update scripts
+            var assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version ?? new Version(0, 0);
+            using var con = new SQLiteConnection("Data Source = " + Strings.DataBaseStatisticsPath);
+            con.Open();
+            await foreach (var patch in PatchHelper.EnumeratePatches("statistics", assemblyVersion))
+                InvokeNonQuery(patch, con);
         }
     }
 }

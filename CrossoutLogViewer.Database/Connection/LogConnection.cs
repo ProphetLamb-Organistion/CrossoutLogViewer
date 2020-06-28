@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 using static CrossoutLogView.Common.SQLiteFormat;
@@ -19,11 +20,11 @@ namespace CrossoutLogView.Database.Connection
     {
         private static string TimeStampFieldName => nameof(ILogEntry.TimeStamp).ToLowerInvariant();
 
-        public LogConnection()
+        public LogConnection() : base()
         {
-            InitializeDataStructure();
             DatabaseTableTypes = ILogEntry.Implementations;
         }
+
         protected override object InsertVariableHandler(in object obj, in VariableInfo variableInfo) => null;
 
         public List<ILogEntry> RequestAll(long start, long end)
@@ -119,7 +120,7 @@ namespace CrossoutLogView.Database.Connection
             return GetRequestString(type) + String.Format(" WHERE {0} <= {1} ", start, TimeStampFieldName);
         }
 
-        public override void InitializeDataStructure()
+        public override void InitializeConnection()
         {
             if (!Directory.Exists(Strings.DataBasePath)) Directory.CreateDirectory(Strings.DataBasePath);
             if (!File.Exists(Strings.DataBaseLogPath)) SQLiteConnection.CreateFile(Strings.DataBaseLogPath);
@@ -130,6 +131,16 @@ namespace CrossoutLogView.Database.Connection
             {
                 CreateDataTable(t, Connection);
             }
+        }
+
+        public override async Task FirstInitialize()
+        {
+            // Execute update scripts
+            var assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version ?? new Version(0, 0);
+            using var con = new SQLiteConnection("Data Source = " + Strings.DataBaseLogPath);
+            con.Open();
+            await foreach (var patch in PatchHelper.EnumeratePatches("logentries", assemblyVersion))
+                InvokeNonQuery(patch, con);
         }
     }
 }
