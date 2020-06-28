@@ -9,7 +9,7 @@
     <Platforms>AnyCPU</Platforms>
     <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
-
+  
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
@@ -20,6 +20,7 @@
 
   <PropertyGroup>
     <LogicalName>$(RootNamespace).StringResources.resources</LogicalName>
+    <AssemblyVersion>0.1.4.0</AssemblyVersion>
   </PropertyGroup>
   
   <ItemGroup>
@@ -46,6 +47,10 @@
 
   <ItemGroup>
     <None Include="$(SolutionDir)\resources\**" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
