@@ -28,7 +28,9 @@ namespace CrossoutLogView.Updater
             var c = Task.Run(cfg.Update);
             using var img = new ImageUpdater();
             var i = Task.Run(img.Update);
-            Task.WaitAll(c, i);
+            using var ptc = new PatchUpdater();
+            var p = Task.Run(ptc.Update);
+            Task.WaitAll(c, i, p);
         }
 
         private static void Metadata()
@@ -37,7 +39,9 @@ namespace CrossoutLogView.Updater
             var c = cfg.GenerateMetadata(Strings.ConfigPath);
             using var img = new ImageUpdater();
             var i = img.GenerateMetadata(Strings.ImagePath);
-            Task.WaitAll(c, i);
+            using var ptc = new PatchUpdater();
+            var p = ptc.GenerateMetadata(Strings.PatchPath);
+            Task.WaitAll(c, i, p);
         }
     }
 }

@@ -10,7 +10,7 @@ namespace CrossoutLogView.Database.Connection
     {
         public static async IAsyncEnumerable<string> EnumeratePatches(string database, Version minVersion)
         {
-            foreach (var file in Directory.EnumerateFiles(Strings.ScriptsPath))
+            foreach (var file in Directory.EnumerateFiles(Strings.PatchPath))
             {
                 if (VerifyPatch(file, database, minVersion))
                 {

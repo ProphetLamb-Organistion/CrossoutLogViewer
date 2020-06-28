@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace CrossoutLogView.Updater
 {
-    public class ConfigUpdater : UpdaterBase, IDisposable
+    public class PatchUpdater : UpdaterBase, IDisposable
     {
-        public ConfigUpdater()
+        public PatchUpdater()
         {
-            if (!Directory.Exists(Strings.ConfigPath))
-                Directory.CreateDirectory(Strings.ConfigPath);
+            if (!Directory.Exists(Strings.PatchPath))
+                Directory.CreateDirectory(Strings.PatchPath);
             Client = new GitHubClient(new ProductHeaderValue(Strings.RepositoryName));
             WebClient = new WebClient();
         }
@@ -25,16 +25,16 @@ namespace CrossoutLogView.Updater
         public override async Task Update()
         {
             // Obtain remote metadata file
-            var remote = GetRemoteMetadata(Path.Combine(Strings.RemoteConfigPath, Strings.MetadataFile)); // Remote path: resources\images\metadata.json
+            var remote = GetRemoteMetadata(Path.Combine(Strings.RemotePatchPath, Strings.MetadataFile));
             // Generate local file metadata
-            var local = FileMetadata.FromPaths(HashFunction, Directory.GetFiles(Strings.ConfigPath));
+            var local = FileMetadata.FromPaths(HashFunction, Directory.GetFiles(Strings.PatchPath));
             // All files that need updating
             var metadata = ComputeMetadataDelta(local, await remote);
             // Iterate though files in metadata
-            await foreach(var (Name, Value) in GetDirectoryContent(Strings.RemoteConfigPath, ConfigConverter, x => UpdateSelector(metadata, x)))
+            await foreach (var (Name, Value) in GetDirectoryContent(Strings.RemotePatchPath, ConfigConverter, x => UpdateSelector(metadata, x)))
             {
                 // Write file to the config folder
-                using var fs = new FileStream(Path.Combine(Strings.ConfigPath, Name), System.IO.FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
+                using var fs = new FileStream(Path.Combine(Strings.PatchPath, Name), System.IO.FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
                 using var sw = new StreamWriter(fs);
                 await sw.WriteLineAsync(Value);
             }
@@ -42,7 +42,7 @@ namespace CrossoutLogView.Updater
 
         private string ConfigConverter(RepositoryContent content)
         {
-            if (content is null) 
+            if (content is null)
                 return String.Empty;
             using var fs = WebClient.OpenRead(new Uri(content.DownloadUrl));
             using var sr = new StreamReader(fs);

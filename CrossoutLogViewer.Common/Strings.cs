@@ -8,9 +8,10 @@ namespace CrossoutLogView.Common
         public const string DataBasePath = @".\data";
         public const string ConfigPath = @".\config";
         public const string ImagePath = @".\images";
-        public const string ScriptsPath = @".\patches";
+        public const string PatchPath = @".\patches";
         public const string RemoteConfigPath = @"resources\config";
         public const string RemoteImagePath = @"resources\images";
+        public const string RemotePatchPath = @"resources\patches";
         public const string MetadataFile = @"metadata.json";
         public const string ScriptFolderPermissions = @".\fix_folder_permissions.bat";
         public const string DataBaseLogPath = DataBasePath + @"\logentries.db";
