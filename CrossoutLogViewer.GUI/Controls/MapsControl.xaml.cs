@@ -83,9 +83,9 @@ namespace CrossoutLogView.GUI.Controls
             view.Refresh();
         }
 
-        private void OpenUsersClick(object sender, RoutedEventArgs e)
+        private async void OpenUsersClick(object sender, RoutedEventArgs e)
         {
-            PlayerGamesDataGrid.OpenAllGamesUsers();
+            await PlayerGamesDataGrid.OpenAllGamesUsers().ConfigureAwait(false);
         }
 
         #region ILogging support

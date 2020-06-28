@@ -10,6 +10,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -55,20 +56,21 @@ namespace CrossoutLogView.GUI.Controls
             OpenViewModel?.Invoke(this, new OpenModelViewerEventArgs(new UserListModel(users)));
         }
 
-        public void OpenAllGamesUsers()
+        public async Task OpenAllGamesUsers()
         {
-            if (ItemsSource == null) return;
+            var items = Dispatcher.InvokeAsync(() => CollectionViewSource.GetDefaultView(ItemsSource)); //items in collectionview respect the current filter
             var games = new List<Game>();
-            foreach (var item in CollectionViewSource.GetDefaultView(ItemsSource)) //items in collectionview respect filter
+            Parallel.ForEach((await items).Cast<PlayerGameModel>(), delegate (PlayerGameModel item)
             {
-                if (item is PlayerGameModel pgm) games.Add(pgm.Game.Game);
-            }
-            var users = new ObservableCollection<UserModel>();
-            foreach (var user in User.Parse(games))
+                games.Add(item.Game.Game);
+            });
+            var users = await Task.Run(() => User.Parse(games));
+            var models = new UserModel[users.Count];
+            Parallel.For(0, users.Count, delegate (int index)
             {
-                users.Add(new UserModel(user));
-            }
-            OpenViewModel?.Invoke(this, new OpenModelViewerEventArgs(new UserListModel(users)));
+                models[index] = new UserModel(users[index]);
+            });
+            OpenViewModel?.Invoke(this, new OpenModelViewerEventArgs(new UserListModel(new ObservableCollection<UserModel>(models))));
         }
 
         private void OnOpenViewModel(object sender, MouseButtonEventArgs e)

@@ -1,4 +1,6 @@
-﻿using CrossoutLogView.Common;
+﻿using ControlzEx.Standard;
+
+using CrossoutLogView.Common;
 using CrossoutLogView.GUI.Events;
 using CrossoutLogView.GUI.Models;
 using CrossoutLogView.Statistics;
@@ -14,6 +16,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -32,14 +35,16 @@ namespace CrossoutLogView.GUI.Controls
     /// </summary>
     public partial class PartyControl : UserControl
     {
+        private BackgroundWorker updatePartiesWorker = new BackgroundWorker();
+
         public event OpenModelViewerEventHandler OpenViewModel;
         public event ValueChangedEventHandler<UserModel> SelectedUserChanged;
 
         public PartyControl()
         {
-            InitializeComponent();
+            InitializeComponent(); 
+            InitializeWorkers();
         }
-
 
         public ObservableCollection<GameModel> ItemsSource { get => GetValue(ItemsSourceProperty) as ObservableCollection<GameModel>; set => SetValue(ItemsSourceProperty, value); }
         public static readonly DependencyProperty ItemsSourceProperty = DependencyProperty.Register(nameof(ItemsSource), typeof(ObservableCollection<GameModel>), typeof(PartyControl), new PropertyMetadata(OnItemsSourcePropertyChanged));
@@ -47,6 +52,13 @@ namespace CrossoutLogView.GUI.Controls
         public ImmutableList<PartyGamesModel> Parties { get => GetValue(PartiesProperty) as ImmutableList<PartyGamesModel>; set => SetValue(PartiesPropertyKey, value); }
         protected static readonly DependencyPropertyKey PartiesPropertyKey = DependencyProperty.RegisterReadOnly(nameof(Parties), typeof(ImmutableList<PartyGamesModel>), typeof(PartyControl), new PropertyMetadata());
         public static readonly DependencyProperty PartiesProperty = PartiesPropertyKey.DependencyProperty;
+
+        private void UpdateParties(object sender, NotifyCollectionChangedEventArgs e) => UpdateParties();
+        public void UpdateParties()
+        {
+            if (!(ItemsSource is null))
+                updatePartiesWorker.RunWorkerAsync();
+        }
 
         private static void OnItemsSourcePropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
         {
@@ -65,22 +77,28 @@ namespace CrossoutLogView.GUI.Controls
             }
         }
 
-        private void UpdateParties(object sender = null, NotifyCollectionChangedEventArgs e = null)
+        private void InitializeWorkers()
         {
-            if (!(ItemsSource is null))
+            updatePartiesWorker.DoWork += async delegate (object sender, DoWorkEventArgs e)
             {
-                Parties = PartyGamesModel.Parse(ItemsSource).OrderByDescending(x => x.Games.Count).ToImmutableList();
-                if (Parties.Count != 0)
+                // Capture ItemsSource in MTAThread
+                IEnumerable<GameModel> games = await Dispatcher.InvokeAsync(() => ItemsSource);
+                // Parse parties from games
+                var parties = await Task.Run(PartyGamesModel.Parse(games).OrderByDescending(x => x.Games.Count).ToImmutableList);
+                // Register event handlers to update chart on latest selected item changed
+                foreach (var party in parties)
                 {
-                    // Expand first expander, assume its my group
-                    Parties[0].UsersExpanded = true;
-                    // Register event handlers to update chart on latest selected item changed
-                    foreach (var party in Parties)
-                    {
-                        party.PropertyChanged += Party_PropertyChanged;
-                    }
+                    party.PropertyChanged += Party_PropertyChanged;
                 }
-            }
+                // Appy the parties in STAThread
+                await Dispatcher.InvokeAsync(new Action(delegate
+                {
+                    if (parties.Count != 0)
+                        // Expand first expander, assume its my group
+                        parties[0].UsersExpanded = true;
+                    Parties = parties;
+                }));
+            };
         }
 
         private void Party_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -98,6 +116,9 @@ namespace CrossoutLogView.GUI.Controls
                     {
                         party.UsersExpanded = false;
                     }
+                    // Select first user
+                    partyGames.SelectedUser = partyGames.Users[0];
+                    SelectedUserChanged?.Invoke(this, new ValueChangedEventArgs<UserModel>(null, partyGames.SelectedUser));
                 }
             }
         }
@@ -121,6 +142,13 @@ namespace CrossoutLogView.GUI.Controls
         private void UserDateGrid_OpenViewModel(object sender, OpenModelViewerEventArgs e)
         {
             OpenViewModel?.Invoke(this, new OpenModelViewerEventArgs(e.ViewModel));
+        }
+
+        private void UserDateGrid_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            var args = new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta);
+            args.RoutedEvent = ScrollViewer.MouseWheelEvent;
+            (Content as ScrollViewer).RaiseEvent(args);
         }
     }
 
