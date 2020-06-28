@@ -118,7 +118,7 @@ namespace CrossoutLogView.Updater
         {
             if (!Directory.Exists(path))
                 throw new DirectoryNotFoundException(path);
-            var local = FileMetadata.FromPaths(HashFunction, Directory.GetFiles(path));
+            var local = FileMetadata.FromPaths(HashFunction, Directory.GetFiles(path)).Where(x => !Strings.MetadataFile.Equals(x.Name, StringComparison.InvariantCulture)).ToArray();
             await FileMetadataHelper.WriteJson(local, Path.Combine(path, Strings.MetadataFile));
         }
 
