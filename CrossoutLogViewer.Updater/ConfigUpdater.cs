@@ -33,13 +33,12 @@ namespace CrossoutLogView.Updater
             // All files that need updating
             var metadata = ComputeMetadataDelta(local, await remote);
             // Iterate though files in metadata
-            var configEnu = GetDirectoryContent(Strings.RemoteConfigPath, ConfigConverter, x => UpdateSelector(metadata, x)).GetAsyncEnumerator();
-            while (await configEnu.MoveNextAsync())
+            await foreach(var (Name, Value) in GetDirectoryContent(Strings.RemoteConfigPath, ConfigConverter, x => UpdateSelector(metadata, x)))
             {
                 // Write file to the config folder
-                using var fs = new FileStream(Path.Combine(Strings.ConfigPath, configEnu.Current.Name), System.IO.FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
+                using var fs = new FileStream(Path.Combine(Strings.ConfigPath, Name), System.IO.FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
                 using var sw = new StreamWriter(fs);
-                await sw.WriteLineAsync(configEnu.Current.Value);
+                await sw.WriteLineAsync(Value);
             }
         }
 
