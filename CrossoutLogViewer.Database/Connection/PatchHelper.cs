@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace CrossoutLogView.Database.Connection
 {
@@ -10,14 +11,21 @@ namespace CrossoutLogView.Database.Connection
     {
         public static async IAsyncEnumerable<string> EnumeratePatches(string database, Version minVersion)
         {
-            foreach (var file in Directory.EnumerateFiles(Strings.PatchPath))
+            if (File.Exists(Strings.PatchPath))
             {
-                if (VerifyPatch(file, database, minVersion))
+                foreach (var file in Directory.EnumerateFiles(Strings.PatchPath).Where(path => !path.Contains(Strings.MetadataFile, StringComparison.InvariantCultureIgnoreCase)))
                 {
-                    using var fs = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                    using var sr = new StreamReader(fs);
-                    yield return await sr.ReadToEndAsync();
+                    if (VerifyPatch(file, database, minVersion))
+                    {
+                        using var fs = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                        using var sr = new StreamReader(fs);
+                        yield return await sr.ReadToEndAsync();
+                    }
                 }
+            }
+            else
+            {
+                await System.Threading.Tasks.Task.Run(() => Directory.CreateDirectory(Strings.PatchPath));
             }
         }
 

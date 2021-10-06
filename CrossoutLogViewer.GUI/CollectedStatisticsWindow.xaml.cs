@@ -79,7 +79,7 @@ namespace CrossoutLogView.GUI
 
             CollectedStatisticsWindowViewModel.InvalidatedCachedData += OnInvalidateCachedData;
 
-            Title = String.Concat(App.GetWindowResource("Stat_Title"), " (", viewModel.MeUser.User.Name, ")");
+            Title = String.Concat(App.GetWindowResource("Stat_Title"), " (", viewModel.MeUser?.User?.Name ?? "", ")");
             HamburgerMenuControl.Focus();
 
             IsEnabled = true;

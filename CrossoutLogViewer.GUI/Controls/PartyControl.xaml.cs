@@ -111,6 +111,8 @@ namespace CrossoutLogView.GUI.Controls
                 }
                 else if (e.PropertyName == nameof(PartyGamesModel.UsersExpanded) && partyGames.UsersExpanded == true)
                 {
+                    if (Parties is null)
+                        return;
                     // Collapse all expanders except the one that opened
                     foreach (var party in Parties.Where(x => !Object.ReferenceEquals(partyGames, x)))
                     {

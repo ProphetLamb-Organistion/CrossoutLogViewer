@@ -50,6 +50,5 @@ namespace CrossoutLogView.Common
             }
             return -1;
         }
-
     }
 }
